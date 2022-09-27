@@ -1,0 +1,46 @@
+label {
+  display: block;
+}
+
+input {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 2px 5px;
+}
+
+input::placeholder {
+  font-size: small;
+}
+
+.formDiv {
+  margin-bottom: 1rem;
+}
+
+.react-dropdown-select {
+  margin-bottom: 1rem;
+}
+
+.radioButtonsDiv {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.radioButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.radioButtons label {
+  white-space: nowrap;
+}
+
+.checkBoxes {
+  display: flex;
+  gap: 1rem;
+}
+
+.checkBoxes input {
+  width: 0.9rem;
+}

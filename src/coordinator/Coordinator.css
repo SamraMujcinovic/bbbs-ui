@@ -1,0 +1,21 @@
+label {
+  display: block;
+}
+
+input {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 2px 5px;
+}
+
+input::placeholder {
+  font-size: small;
+}
+
+.formDiv {
+  margin-bottom: 1rem;
+}
+
+.react-dropdown-select {
+  margin-bottom: 1rem;
+}
