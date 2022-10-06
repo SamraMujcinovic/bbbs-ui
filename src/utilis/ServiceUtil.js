@@ -1,14 +1,13 @@
 import React from "react";
 
 export function hasAdminGroup(userGroups) {
-  return userGroups.some((group) => group === "admin");
+  return userGroups === "admin";
 }
 
 export function hasCoordinatorGroup(userGroups) {
-  return userGroups.some((group) => group === "coordinator");
+  return userGroups === "coordinator";
 }
 
 export function hasVolunteerGroup(userGroups) {
-  console.log(userGroups);
-  return userGroups.some((group) => group === "volunteer");
+  return userGroups === "volunteer";
 }

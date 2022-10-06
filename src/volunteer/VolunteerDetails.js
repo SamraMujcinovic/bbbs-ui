@@ -6,13 +6,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { hasAdminGroup, hasCoordinatorGroup } from "../utilis/ServiceUtil";
 
 import "../volunteer/Volunteer.css";
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
-import { UserGroups } from "../globalStates/UserGroups";
 
 function VolunteerDetails() {
   // authenticate
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
-  const [userGroups] = useContext(UserGroups);
+  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
+  const [userGroups] = sessionStorage.getItem("roles");
 
   // navigation
   let navigate = useNavigate();
@@ -260,7 +258,11 @@ function VolunteerDetails() {
   if (authenticate) {
     return (
       <div>
-        <h1>Dodaj volontera</h1>
+        {location.state.selectedVolunteer ? (
+          <h1>Volonter</h1>
+        ) : (
+          <h1>Dodaj volontera</h1>
+        )}
 
         <div>
           <div className="formDiv">

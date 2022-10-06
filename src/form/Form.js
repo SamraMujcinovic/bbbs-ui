@@ -3,18 +3,16 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Table from "../table/Table";
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
 import { hasVolunteerGroup } from "../utilis/ServiceUtil";
-import { UserGroups } from "../globalStates/UserGroups";
 
 function Form(props) {
   // navigation
   let navigate = useNavigate();
 
   // authenticate
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
+  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
 
-  const [userGroups] = useContext(UserGroups);
+  const [userGroups] = sessionStorage.getItem("roles");
 
   // table data
   const theadData = [
@@ -90,7 +88,7 @@ function Form(props) {
 
   return (
     <div>
-      This is forms page!
+      <h1>Forme</h1>
       {hasVolunteerGroup(userGroups) ? (
         <button className="btn btn-success" onClick={openAddFormPage}>
           Dodaj formu

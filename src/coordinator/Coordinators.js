@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 import Table from "../table/Table";
 import CoordinatorModal from "./CoordinatorModal";
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
 
 function Coordinators(props) {
   // navigation
   let navigate = useNavigate();
 
   // authenticate
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
+  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
 
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
@@ -106,7 +105,7 @@ function Coordinators(props) {
 
   return (
     <div>
-      This is coordinator page!
+      <h1>Koordinatori</h1>
       <button className="btn btn-success" onClick={openAddModal}>
         Dodaj koordinatora
       </button>

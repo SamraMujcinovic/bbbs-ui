@@ -6,13 +6,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { hasAdminGroup, hasCoordinatorGroup } from "../utilis/ServiceUtil";
 
 import "../child/Child.css";
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
-import { UserGroups } from "../globalStates/UserGroups";
 
 function ChildDetails() {
   // authenticate
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
-  const [userGroups] = useContext(UserGroups);
+  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
+  const [userGroups] = sessionStorage.getItem("roles");
 
   // navigation
   let navigate = useNavigate();
@@ -409,7 +407,7 @@ function ChildDetails() {
   if (authenticate) {
     return (
       <div>
-        <h1>Dodaj dijete</h1>
+        {location.state.selectedChild ? <h1>Dijete</h1> : <h1>Dodaj dijete</h1>}
 
         {location.state.selectedChild ? (
           <div className="formDiv">

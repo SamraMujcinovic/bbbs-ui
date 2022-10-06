@@ -5,17 +5,11 @@ import { useNavigate } from "react-router-dom";
 import jwt from "jwt-decode";
 import { Button, Modal } from "react-bootstrap";
 
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
-import { UserGroups } from "../globalStates/UserGroups";
-
 function LoginForm(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   let navigate = useNavigate();
-
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
-  const [userGroups, setUserGroups] = useContext(UserGroups);
 
   const login = async () => {
     try {
@@ -29,10 +23,8 @@ function LoginForm(props) {
           { withCredentials: true }
         )
         .then((response) => {
-          setAuthenticate(true);
           const token = response.data.data;
           const claims = jwt(token);
-          setUserGroups(claims.group);
           sessionStorage.setItem("token", response.data.data);
           sessionStorage.setItem("roles", claims.group);
           props.handleClose();

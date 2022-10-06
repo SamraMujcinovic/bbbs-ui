@@ -5,15 +5,13 @@ import DatePicker from "react-date-picker";
 import TimePicker from "react-time-picker";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
-import { UserGroups } from "../globalStates/UserGroups";
 import { dateToString, stringToDate } from "../utilis/Date";
 import { numberToTimeString, timeStringToNumber } from "../utilis/Time";
 
 function FormDetails(props) {
   // authenticate
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
-  const [userGroups] = useContext(UserGroups);
+  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
+  const [userGroups] = sessionStorage.getItem("roles");
 
   // navigation
   let navigate = useNavigate();
@@ -199,174 +197,178 @@ function FormDetails(props) {
     };
   };
 
-  return (
-    <div>
-      {formVolunteer ? (
-        <div>
-          <span>Volonter:</span>
-          <input
-            value={`${formVolunteer.user.first_name} ${formVolunteer.user.last_name}`}
-            disabled={true}
-          />
-        </div>
-      ) : null}
+  if (authenticate) {
+    return (
       <div>
+        {location.state.selectedForm ? <h1>Forma</h1> : <h1>Dodaj formu</h1>}
+        {formVolunteer ? (
+          <div>
+            <span>Volonter:</span>
+            <input
+              value={`${formVolunteer.user.first_name} ${formVolunteer.user.last_name}`}
+              disabled={true}
+            />
+          </div>
+        ) : null}
         <div>
-          <span>Datum: </span>
-          <DatePicker
-            onChange={(date) => setFormDate(date)}
-            value={formDate}
-            locale="de-DE"
-            clearIcon={null}
-          />
-        </div>
-        <div>
-          <span>Trajanje:</span>
-          <TimePicker
-            clearIcon={null}
-            clockIcon={null}
-            format="HH:mm"
-            disableClock={true}
-            amPmAriaLabel=""
-            onChange={onDurationChange}
-            value={formDuration}
-          />
-        </div>
-      </div>
-      <div className="formDiv">
-        <span>Vrsta druženja</span>
-        <div className="radioButtonsDiv">
-          <div className="radioButtons">
-            <input
-              type="radio"
-              value="Individualno"
-              name="activity_type"
-              checked={formActivityType === "Individualno"}
-              onChange={onActivityTypeChange}
+          <div>
+            <span>Datum: </span>
+            <DatePicker
+              onChange={(date) => setFormDate(date)}
+              value={formDate}
+              locale="de-DE"
+              clearIcon={null}
             />
-            <label>Individualno</label>
           </div>
-          <div className="radioButtons">
-            <input
-              type="radio"
-              value="Druženje sa drugim parovima"
-              name="activity_type"
-              checked={formActivityType === "Druženje sa drugim parovima"}
-              onChange={onActivityTypeChange}
+          <div>
+            <span>Trajanje:</span>
+            <TimePicker
+              clearIcon={null}
+              clockIcon={null}
+              format="HH:mm"
+              disableClock={true}
+              amPmAriaLabel=""
+              onChange={onDurationChange}
+              value={formDuration}
             />
-            <label>Druženje sa drugim parovima</label>
-          </div>
-          <div className="radioButtons">
-            <input
-              type="radio"
-              value="Grupna aktivnost"
-              name="activity_type"
-              checked={formActivityType === "Grupna aktivnost"}
-              onChange={onActivityTypeChange}
-            />
-            <label>Grupna aktivnost</label>
           </div>
         </div>
-      </div>
-      <div className="formDiv">
-        <span>Ocjena</span>
-        <div className="radioButtonsDiv">
-          <div className="radioButtons">
-            <input
-              type="radio"
-              value="Super"
-              name="evaluation"
-              checked={formEvaluation === "Super"}
-              onChange={onEvaluationChange}
-            />
-            <label>Super</label>
-          </div>
-          <div className="radioButtons">
-            <input
-              type="radio"
-              value="Dobro"
-              name="evaluation"
-              checked={formEvaluation === "Dobro"}
-              onChange={onEvaluationChange}
-            />
-            <label>Dobro</label>
-          </div>
-          <div className="radioButtons">
-            <input
-              type="radio"
-              value="Nije loše"
-              name="evaluation"
-              checked={formEvaluation === "Nije loše"}
-              onChange={onEvaluationChange}
-            />
-            <label>Nije loše</label>
-          </div>
-          <div className="radioButtons">
-            <input
-              type="radio"
-              value="Loše"
-              name="evaluation"
-              checked={formEvaluation === "Loše"}
-              onChange={onEvaluationChange}
-            />
-            <label>Loše</label>
-          </div>
-        </div>
-      </div>
-      <div className="formDiv">
-        <span>Mjesto druženja</span>
-        {hangOutPlaces.map((item) => {
-          return (
-            <div className="checkBoxes" key={item.id}>
+        <div className="formDiv">
+          <span>Vrsta druženja</span>
+          <div className="radioButtonsDiv">
+            <div className="radioButtons">
               <input
-                type="checkbox"
-                value={item.id}
-                checked={hasPlace(item)}
-                onChange={onPlaceChange}
+                type="radio"
+                value="Individualno"
+                name="activity_type"
+                checked={formActivityType === "Individualno"}
+                onChange={onActivityTypeChange}
               />
-              <label>{item.name}</label>
+              <label>Individualno</label>
             </div>
-          );
-        })}
-      </div>
-      <div className="formDiv">
-        <span>Oblasti na koje su bile usmjerene aktivnosti</span>
-        {activityCategories.map((category) => {
-          return (
-            <div key={category.id}>
-              <label>{category.name}</label>
-              {activities.map((activity) => {
-                if (activity.activity_category.name === category.name) {
-                  return (
-                    <div className="checkBoxes" key={activity.id}>
-                      <input
-                        type="checkbox"
-                        value={activity.id}
-                        checked={hasActivity(activity)}
-                        onChange={onActivityChange}
-                      />
-                      <label>{activity.name}</label>
-                    </div>
-                  );
-                }
-                return null;
-              })}
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Druženje sa drugim parovima"
+                name="activity_type"
+                checked={formActivityType === "Druženje sa drugim parovima"}
+                onChange={onActivityTypeChange}
+              />
+              <label>Druženje sa drugim parovima</label>
             </div>
-          );
-        })}
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Grupna aktivnost"
+                name="activity_type"
+                checked={formActivityType === "Grupna aktivnost"}
+                onChange={onActivityTypeChange}
+              />
+              <label>Grupna aktivnost</label>
+            </div>
+          </div>
+        </div>
+        <div className="formDiv">
+          <span>Ocjena</span>
+          <div className="radioButtonsDiv">
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Super"
+                name="evaluation"
+                checked={formEvaluation === "Super"}
+                onChange={onEvaluationChange}
+              />
+              <label>Super</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Dobro"
+                name="evaluation"
+                checked={formEvaluation === "Dobro"}
+                onChange={onEvaluationChange}
+              />
+              <label>Dobro</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Nije loše"
+                name="evaluation"
+                checked={formEvaluation === "Nije loše"}
+                onChange={onEvaluationChange}
+              />
+              <label>Nije loše</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Loše"
+                name="evaluation"
+                checked={formEvaluation === "Loše"}
+                onChange={onEvaluationChange}
+              />
+              <label>Loše</label>
+            </div>
+          </div>
+        </div>
+        <div className="formDiv">
+          <span>Mjesto druženja</span>
+          {hangOutPlaces.map((item) => {
+            return (
+              <div className="checkBoxes" key={item.id}>
+                <input
+                  type="checkbox"
+                  value={item.id}
+                  checked={hasPlace(item)}
+                  onChange={onPlaceChange}
+                />
+                <label>{item.name}</label>
+              </div>
+            );
+          })}
+        </div>
+        <div className="formDiv">
+          <span>Oblasti na koje su bile usmjerene aktivnosti</span>
+          {activityCategories.map((category) => {
+            return (
+              <div key={category.id}>
+                <label>{category.name}</label>
+                {activities.map((activity) => {
+                  if (activity.activity_category.name === category.name) {
+                    return (
+                      <div className="checkBoxes" key={activity.id}>
+                        <input
+                          type="checkbox"
+                          value={activity.id}
+                          checked={hasActivity(activity)}
+                          onChange={onActivityChange}
+                        />
+                        <label>{activity.name}</label>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            );
+          })}
+        </div>
+        <div className="formDiv">
+          <span>Opis druženja</span>
+          <textarea value={formDescription} onChange={onDescriptionChange} />
+        </div>
+        <Button type="submit" onClick={addForm}>
+          Submit
+        </Button>
+        <Button variant="secondary" onClick={navigateToForms}>
+          Close
+        </Button>
       </div>
-      <div className="formDiv">
-        <span>Opis druženja</span>
-        <textarea value={formDescription} onChange={onDescriptionChange} />
-      </div>
-      <Button type="submit" onClick={addForm}>
-        Submit
-      </Button>
-      <Button variant="secondary" onClick={navigateToForms}>
-        Close
-      </Button>
-    </div>
-  );
+    );
+  }
+  return null;
 }
 
 export default FormDetails;

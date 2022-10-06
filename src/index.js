@@ -31,7 +31,7 @@ axios.interceptors.response.use(
         .catch((error) => {
           if (error.response.status === 401) {
             sessionStorage.removeItem("token");
-            console.log("go to login");
+            sessionStorage.removeItem("roles");
             window.location.href = "/";
           }
         });

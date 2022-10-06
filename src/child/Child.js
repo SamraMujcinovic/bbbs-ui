@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
 import Table from "../table/Table";
 import axios from "axios";
 
@@ -16,7 +15,7 @@ function Child(props) {
   }, []);
 
   // authenticate
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
+  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
 
   // organisations and cities to select
   const [organisations, setOrganisations] = useState([]);
@@ -155,7 +154,7 @@ function Child(props) {
 
   return (
     <div>
-      This is child page!
+      <h1>Djeca</h1>
       <button className="btn btn-success" onClick={openAddChildPage}>
         Dodaj dijete
       </button>

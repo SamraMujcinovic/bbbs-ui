@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserAuthenticated } from "../globalStates/AuthenticateContext";
 import Table from "../table/Table";
 import axios from "axios";
 
@@ -9,7 +8,7 @@ function Volunteer(props) {
   let navigate = useNavigate();
 
   // authenticate
-  const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
+  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
 
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
@@ -107,7 +106,7 @@ function Volunteer(props) {
 
   return (
     <div>
-      This is volunteer page!
+      <h1>Volonteri</h1>
       <button className="btn btn-success" onClick={openAddVolunteerPage}>
         Dodaj volontera
       </button>

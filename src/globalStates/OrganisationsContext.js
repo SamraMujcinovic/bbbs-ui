@@ -10,8 +10,6 @@ const getOrganisations = async () => {
     )
     .catch((error) => {
       console.log(error);
-      setAuthenticate(false);
-      navigate(`/login`);
     });
 };
 
