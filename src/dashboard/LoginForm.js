@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import jwt from "jwt-decode";
+import { Button, Modal } from "react-bootstrap";
 
 import { UserAuthenticated } from "../globalStates/AuthenticateContext";
 import { UserGroups } from "../globalStates/UserGroups";
@@ -29,10 +30,12 @@ function LoginForm(props) {
         )
         .then((response) => {
           setAuthenticate(true);
-          const token = response.data.data.access;
+          const token = response.data.data;
           const claims = jwt(token);
-          console.log(claims.group);
           setUserGroups(claims.group);
+          sessionStorage.setItem("token", response.data.data);
+          sessionStorage.setItem("roles", claims.group);
+          props.handleClose();
           navigate(`/`);
         });
     } catch (error) {
@@ -41,26 +44,37 @@ function LoginForm(props) {
   };
 
   return (
-    <div className="container">
-      <label>Username</label>
-      <input
-        className="form-control"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+    <Modal show={props.show} onHide={props.handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Prijavi se</Modal.Title>
+      </Modal.Header>
 
-      <label>Password</label>
-      <input
-        className="form-control"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-      <button className="btn btn-primary" onClick={login}>
-        Login
-      </button>
-    </div>
+      <Modal.Body>
+        <label>Username</label>
+        <input
+          className="form-control"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <label>Password</label>
+        <input
+          className="form-control"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button type="submit" onClick={login}>
+          Potvrdi
+        </Button>
+        <Button variant="secondary" onClick={props.handleClose}>
+          Odustani
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 

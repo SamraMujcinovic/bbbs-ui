@@ -4,7 +4,6 @@ import { Button } from "react-bootstrap";
 import DatePicker from "react-date-picker";
 import TimePicker from "react-time-picker";
 import { useLocation, useNavigate } from "react-router-dom";
-import { hasAdminGroup, hasCoordinatorGroup } from "../utilis/ServiceUtil";
 
 import { UserAuthenticated } from "../globalStates/AuthenticateContext";
 import { UserGroups } from "../globalStates/UserGroups";
@@ -53,7 +52,9 @@ function FormDetails(props) {
   const getForm = async (id) => {
     await axios
       .get(`http://localhost:8000/forms/${id}/`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setInitialData(response.data);
@@ -80,7 +81,9 @@ function FormDetails(props) {
   const getHangOutPlaces = async () => {
     await axios
       .get(`http://localhost:8000/places/`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setHangOutPlaces(response.data);
@@ -93,7 +96,9 @@ function FormDetails(props) {
   const getActivities = async () => {
     await axios
       .get(`http://localhost:8000/activities/`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setActivities(response.data);
@@ -106,7 +111,9 @@ function FormDetails(props) {
   const getActivityCategories = async () => {
     await axios
       .get(`http://localhost:8000/activity-categories/`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setActivityCategoriees(response.data);
@@ -170,7 +177,9 @@ function FormDetails(props) {
   const addForm = async () => {
     await axios
       .post("http://localhost:8000/forms/", getSelectedValues(), {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then(() => navigateToForms())
       .catch((error) => {

@@ -41,12 +41,14 @@ function Coordinators(props) {
 
   const getCoordinators = async () => {
     await axios
-      .get("http://localhost:8000/coordinators/", { withCredentials: true })
+      .get("http://localhost:8000/coordinators/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => getConvertedCoordiantors(response))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
@@ -72,23 +74,27 @@ function Coordinators(props) {
 
   const getOrganisations = async () => {
     await axios
-      .get("http://localhost:8000/organisations/", { withCredentials: true })
+      .get("http://localhost:8000/organisations/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => setOrganisations(response.data))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
   const getCities = async () => {
     await axios
-      .get("http://localhost:8000/cities/", { withCredentials: true })
+      .get("http://localhost:8000/cities/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => setCities(response.data))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
@@ -97,19 +103,6 @@ function Coordinators(props) {
     getOrganisations();
     getCities();
   }, []);
-
-  // napraviti filter komponentu iz koje cu citati selected values i slati  u ovu komponentu kao props
-  // ali kako znati na kojem page-u koje filtere da stavim a koje ne?
-  // mozda preko trenutne rute.. hmm
-  // ili organizaicije i koordinatore drzati u jednoj filter komponenti a ostale dodavati posebno na page-u
-  // ali to sve moze kasnije.. ne trebaju mi ti filteri sada uopce, bitnije je ovo ostalo !!
-  // sljedeci page je volonter - prikaz u tabeli, prikaz detalja o volonteru i njegovih formi, create i update
-  // onda child page - prikaz utabeli, prikaz detalja o djetetu u modalu, create i update
-
-  // BITNOOOOOOOOOO
-  // uradjen je double click na red, ali !!!!
-  // za koordinatora ne treba double click na red jer on ima vec sve informacije u tabeli!!
-  // jedino ako bi se radio neki edit za koordinatore!
 
   return (
     <div>

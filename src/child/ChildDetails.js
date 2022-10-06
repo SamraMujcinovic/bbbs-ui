@@ -131,7 +131,10 @@ function ChildDetails() {
           organisation: childOrganisation[0].id,
           city: childCity[0].id,
         },
-        withCredentials: true,
+
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setCoordinators(response.data.map(covertToCoordinatorData));
@@ -165,7 +168,10 @@ function ChildDetails() {
           gender: getChildsGender(),
           status: "False",
         },
-        withCredentials: true,
+
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setVolunteers(response.data.map(covertToVolunteerData));
@@ -190,7 +196,9 @@ function ChildDetails() {
   const getMentoringReasons = async () => {
     await axios
       .get("http://localhost:8000/mentoring-reasons/", {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setMentoringReasons(response.data);
@@ -203,7 +211,9 @@ function ChildDetails() {
   const getMentoringReasonCategories = async () => {
     await axios
       .get("http://localhost:8000/mentoring-reasons-categories/", {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setMentoringReasonCategories(response.data);
@@ -216,7 +226,9 @@ function ChildDetails() {
   const getDevelopmentalDifficulties = async () => {
     await axios
       .get("http://localhost:8000/developmental-difficulties/", {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setDevelopmentalDifficulties(response.data);
@@ -229,7 +241,9 @@ function ChildDetails() {
   const getChild = async (id) => {
     await axios
       .get(`http://localhost:8000/childs/${id}/`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setInitialData(response.data);
@@ -382,7 +396,9 @@ function ChildDetails() {
   const addChild = async () => {
     await axios
       .post("http://localhost:8000/childs/", getSelectedValues(), {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then(() => navigateToChilds())
       .catch((error) => {

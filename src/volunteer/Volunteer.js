@@ -68,34 +68,40 @@ function Volunteer(props) {
 
   const getVolunteers = async () => {
     await axios
-      .get("http://localhost:8000/volunteers/", { withCredentials: true })
+      .get("http://localhost:8000/volunteers/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => getConvertedVolunteers(response))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
   const getOrganisations = async () => {
     await axios
-      .get("http://localhost:8000/organisations/", { withCredentials: true })
+      .get("http://localhost:8000/organisations/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => setOrganisations(response.data))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
   const getCities = async () => {
     await axios
-      .get("http://localhost:8000/cities/", { withCredentials: true })
+      .get("http://localhost:8000/cities/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => setCities(response.data))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 

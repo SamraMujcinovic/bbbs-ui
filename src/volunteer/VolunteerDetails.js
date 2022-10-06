@@ -104,7 +104,9 @@ function VolunteerDetails() {
   const getVolunteer = async (id) => {
     await axios
       .get(`http://localhost:8000/volunteers/${id}/`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setInitialData(response.data);
@@ -149,7 +151,10 @@ function VolunteerDetails() {
           organisation: volunteerOrganisation[0].id,
           city: volunteerOrganisation[0].id,
         },
-        withCredentials: true,
+
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setCoordinators(response.data.map(covertToCoordinatorData));
@@ -242,7 +247,9 @@ function VolunteerDetails() {
   const addVolunteer = async () => {
     await axios
       .post("http://localhost:8000/volunteers/", getSelectedValues(), {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then(() => navigateToVolunteers())
       .catch((error) => {

@@ -7,16 +7,9 @@ function MainPage(props) {
 
   const [authenticate, setAuthenticate] = useContext(UserAuthenticated);
 
-  const navigateToLogin = () => {
-    let path = `login`;
-    navigate(path);
-  };
-
   return (
     <div>
       <h3>This is main page!</h3>
-
-      <button onClick={navigateToLogin}>Login</button>
     </div>
   );
 }

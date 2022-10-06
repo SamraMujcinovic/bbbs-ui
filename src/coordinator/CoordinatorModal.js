@@ -23,6 +23,16 @@ function CoordinatorModal(props) {
     setCoordinatorFirstName(props.data.first_name);
     setCoordinatorLastame(props.data.last_name);
     setCoordinatorEmail(props.data.email);
+
+    setCoordinatorOrganisation(
+      props.organisations.filter(
+        (value) => value.name === props.data.organisation
+      )
+    );
+
+    setCoordinatorCity(
+      props.cities.filter((value) => value.name === props.data.city)
+    );
   };
 
   const getModalData = () => {
@@ -40,7 +50,9 @@ function CoordinatorModal(props) {
   const addCoordinator = async () => {
     await axios
       .post("http://localhost:8000/coordinators/", getModalData(), {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => props.handleClose())
       .catch((error) => {

@@ -40,12 +40,14 @@ function Form(props) {
 
   const getForms = async () => {
     await axios
-      .get("http://localhost:8000/forms/", { withCredentials: true })
+      .get("http://localhost:8000/forms/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => getConvertedForms(response))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 

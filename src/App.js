@@ -1,7 +1,6 @@
 import "./App.css";
 import React, { useState } from "react";
 import MainPage from "./dashboard/MainPage";
-import LoginForm from "./dashboard/LoginForm";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Coordinators from "./coordinator/Coordinators";
 import Volunteer from "./volunteer/Volunteer";
@@ -32,7 +31,6 @@ function App() {
             <Sidebar>
               <Routes>
                 <Route exact path="/" element={<MainPage />} />
-                <Route exact path="/login" element={<LoginForm />} />
                 <Route exact path="/coordinators" element={<Coordinators />} />
                 <Route exact path="/volunteers" element={<Volunteer />} />
                 <Route

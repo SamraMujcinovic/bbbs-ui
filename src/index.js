@@ -4,6 +4,55 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.css";
+import axios from "axios";
+
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+
+  async function(error) {
+    const originalRequest = error.config;
+
+    if (
+      error.response.status === 401 &&
+      originalRequest.url === "http://127.0.0.1:3000/login/refresh"
+    ) {
+      return Promise.reject(error);
+    }
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const newAxios = axios.create();
+      const res = await newAxios
+        .post("/login/refresh", {
+          withCredentials: true,
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            sessionStorage.removeItem("token");
+            console.log("go to login");
+            window.location.href = "/";
+          }
+        });
+
+      if (res.status === 200) {
+        // first remove old token, then set new
+        sessionStorage.removeItem("token");
+        sessionStorage.setItem("token", res.data.access);
+
+        return axios({
+          method: originalRequest.method,
+          url: originalRequest.url,
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        });
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);

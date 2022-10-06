@@ -87,41 +87,49 @@ function Child(props) {
   // APIs
   const getChilds = async () => {
     await axios
-      .get("http://localhost:8000/childs/", { withCredentials: true })
+      .get("http://localhost:8000/childs/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => getConvertedChilds(response))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
   const getOrganisations = async () => {
     await axios
-      .get("http://localhost:8000/organisations/", { withCredentials: true })
+      .get("http://localhost:8000/organisations/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => setOrganisations(response.data))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
   const getCities = async () => {
     await axios
-      .get("http://localhost:8000/cities/", { withCredentials: true })
+      .get("http://localhost:8000/cities/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
       .then((response) => setCities(response.data))
       .catch((error) => {
         console.log(error);
-        setAuthenticate(false);
-        navigate(`/login`);
       });
   };
 
   const getCoordinators = async () => {
     await axios
       .get("http://localhost:8000/coordinators/", {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
       })
       .then((response) => {
         setCoordinators(response.data.map(covertToCoordinatorData));
