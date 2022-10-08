@@ -1,5 +1,3 @@
-import React from "react";
-
 export function numberToTimeString(number) {
   const hours = parseInt(number);
   const hoursToString = hours < 10 ? `0${hours}` : `${hours}`;

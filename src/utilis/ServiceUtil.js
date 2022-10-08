@@ -1,5 +1,3 @@
-import React from "react";
-
 export function hasAdminGroup(userGroups) {
   return userGroups === "admin";
 }

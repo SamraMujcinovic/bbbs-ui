@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import axios from "axios";
@@ -13,9 +13,6 @@ function Child(props) {
     getCities();
     getCoordinators();
   }, []);
-
-  // authenticate
-  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
 
   // organisations and cities to select
   const [organisations, setOrganisations] = useState([]);
@@ -75,7 +72,7 @@ function Child(props) {
     navigate(path, {
       state: {
         selectedChild: selectedChild,
-        isEditMode: selectedChild != undefined,
+        isEditMode: selectedChild !== undefined,
         organisations: organisations,
         cities: cities,
         coordinators: coordinators,

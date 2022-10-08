@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -9,10 +9,7 @@ function Form(props) {
   // navigation
   let navigate = useNavigate();
 
-  // authenticate
-  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
-
-  const [userGroups] = sessionStorage.getItem("roles");
+  const userGroups = sessionStorage.getItem("roles");
 
   // table data
   const theadData = [
@@ -26,7 +23,6 @@ function Form(props) {
     "",
   ];
   const [forms, setForms] = useState([]);
-  const [selectedTableRow, setSelectedTableRow] = useState({});
 
   useEffect(() => {
     getForms();
@@ -81,7 +77,7 @@ function Form(props) {
     navigate(path, {
       state: {
         selectedForm: selectedForm,
-        isViewMode: selectedForm != undefined,
+        isViewMode: selectedForm !== undefined,
       },
     });
   };

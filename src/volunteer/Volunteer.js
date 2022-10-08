@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import axios from "axios";
@@ -6,9 +6,6 @@ import axios from "axios";
 function Volunteer(props) {
   // navigation
   let navigate = useNavigate();
-
-  // authenticate
-  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
 
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
@@ -37,7 +34,7 @@ function Volunteer(props) {
     navigate(path, {
       state: {
         selectedVolunteer: selectedVolunteer,
-        isEditMode: selectedVolunteer != undefined,
+        isEditMode: selectedVolunteer !== undefined,
         organisations: organisations,
         cities: cities,
         volunteers: volunteers,

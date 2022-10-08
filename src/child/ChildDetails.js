@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Select from "react-dropdown-select";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,8 +9,8 @@ import "../child/Child.css";
 
 function ChildDetails() {
   // authenticate
-  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
-  const [userGroups] = sessionStorage.getItem("roles");
+  const authenticate = sessionStorage.getItem("token");
+  const userGroups = sessionStorage.getItem("roles");
 
   // navigation
   let navigate = useNavigate();
@@ -321,9 +321,9 @@ function ChildDetails() {
   const hasDevelopmentalDifficulty = (difficulty) => {
     return childsDevelopmentalDifficulties.some((value) => {
       if (value.id) {
-        return value.id == difficulty.id;
+        return value.id === difficulty.id;
       }
-      return value == difficulty.id;
+      return value === difficulty.id;
     });
   };
 
@@ -337,9 +337,9 @@ function ChildDetails() {
   const hasMentoringReason = (reason) => {
     return childsMentoringReason.some((value) => {
       if (value.id) {
-        return value.id == reason.id;
+        return value.id === reason.id;
       }
-      return value == reason.id;
+      return value === reason.id;
     });
   };
 

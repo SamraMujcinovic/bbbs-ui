@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import Select from "react-dropdown-select";
 import { useLocation, useNavigate } from "react-router-dom";
-import { hasAdminGroup, hasCoordinatorGroup } from "../utilis/ServiceUtil";
+import { hasAdminGroup } from "../utilis/ServiceUtil";
 
 import "../volunteer/Volunteer.css";
 
 function VolunteerDetails() {
   // authenticate
-  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
-  const [userGroups] = sessionStorage.getItem("roles");
+  const authenticate = sessionStorage.getItem("token");
+  const userGroups = sessionStorage.getItem("roles");
 
   // navigation
   let navigate = useNavigate();

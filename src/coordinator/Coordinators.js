@@ -1,17 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 import Table from "../table/Table";
 import CoordinatorModal from "./CoordinatorModal";
 
 function Coordinators(props) {
-  // navigation
-  let navigate = useNavigate();
-
-  // authenticate
-  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
-
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
   const [coordinators, setCoordinators] = useState([]);

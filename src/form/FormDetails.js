@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import DatePicker from "react-date-picker";
@@ -10,8 +10,7 @@ import { numberToTimeString, timeStringToNumber } from "../utilis/Time";
 
 function FormDetails(props) {
   // authenticate
-  const [authenticate, setAuthenticate] = sessionStorage.getItem("token");
-  const [userGroups] = sessionStorage.getItem("roles");
+  const authenticate = sessionStorage.getItem("token");
 
   // navigation
   let navigate = useNavigate();
@@ -153,9 +152,9 @@ function FormDetails(props) {
   const hasPlace = (place) => {
     return formPlace.some((value) => {
       if (value.id) {
-        return value.id == place.id;
+        return value.id === place.id;
       }
-      return value == place.id;
+      return value === place.id;
     });
   };
 
@@ -166,9 +165,9 @@ function FormDetails(props) {
   const hasActivity = (activity) => {
     return formActivities.some((value) => {
       if (value.id) {
-        return value.id == activity.id;
+        return value.id === activity.id;
       }
-      return value == activity.id;
+      return value === activity.id;
     });
   };
 

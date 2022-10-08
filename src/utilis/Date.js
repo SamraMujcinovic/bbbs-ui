@@ -1,5 +1,3 @@
-import React from "react";
-
 export function dateToString(date) {
   const selectedDate = new Date(date);
   const day =
