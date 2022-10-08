@@ -21,6 +21,7 @@ function ChildDetails() {
   };
 
   const location = useLocation();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // child details
   const [childsFirstName, setChildsFirstName] = useState("");
@@ -67,6 +68,7 @@ function ChildDetails() {
     getMentoringReasonCategories();
     getDevelopmentalDifficulties();
     if (location.state.selectedChild) {
+      setIsEditMode(true);
       getChild(location.state.selectedChild.id);
     }
   }, []);
@@ -404,6 +406,16 @@ function ChildDetails() {
       });
   };
 
+  const shouldDisableForm = () => {
+    if (
+      hasAdminGroup(userGroups) ||
+      (hasCoordinatorGroup(userGroups) && !isEditMode)
+    ) {
+      return false;
+    }
+    return true;
+  };
+
   if (authenticate) {
     return (
       <div>
@@ -443,6 +455,7 @@ function ChildDetails() {
           placeholder="Godina rodjenja"
           valueField="label"
           labelField="value"
+          disabled={shouldDisableForm()}
         />
         <div className="formDiv">
           <span>Spol</span>
@@ -454,6 +467,7 @@ function ChildDetails() {
                 name="gender"
                 checked={childsGender === "Muški"}
                 onChange={onGenderChange}
+                disabled={shouldDisableForm()}
               />
               <label>Muški</label>
             </div>
@@ -464,6 +478,7 @@ function ChildDetails() {
                 name="gender"
                 checked={childsGender === "Ženski"}
                 onChange={onGenderChange}
+                disabled={shouldDisableForm()}
               />
               <label>Ženski</label>
             </div>
@@ -474,6 +489,7 @@ function ChildDetails() {
                 name="gender"
                 checked={childsGender === "Ostali"}
                 onChange={onGenderChange}
+                disabled={shouldDisableForm()}
               />
               <label>Ostali</label>
             </div>
@@ -489,7 +505,6 @@ function ChildDetails() {
               placeholder="Organizacija"
               valueField="id"
               labelField="name"
-              disabled={location.state.isEditMode}
             />
 
             <label>Grad</label>
@@ -500,7 +515,6 @@ function ChildDetails() {
               placeholder="Grad"
               valueField="id"
               labelField="name"
-              disabled={location.state.isEditMode}
             />
 
             <label>Koordinator</label>
@@ -511,9 +525,7 @@ function ChildDetails() {
               placeholder="Koordinator"
               valueField="id"
               labelField="name"
-              disabled={
-                !childOrganisation || !childCity || location.state.isEditMode
-              }
+              disabled={!childOrganisation || !childCity}
             />
           </div>
         ) : null}
@@ -545,6 +557,7 @@ function ChildDetails() {
                 name="school_status"
                 checked={childSchoolStatus === "Pohađa"}
                 onChange={onSchoolStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Pohađa</label>
             </div>
@@ -557,6 +570,7 @@ function ChildDetails() {
                   childSchoolStatus === "Pohađa po prilagođenom programu"
                 }
                 onChange={onSchoolStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Pohađa po prilagođenom programu</label>
             </div>
@@ -567,6 +581,7 @@ function ChildDetails() {
                 name="school_status"
                 checked={childSchoolStatus === "Pohađa specijalno obrazovanje"}
                 onChange={onSchoolStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Pohađa specijalno obrazovanje</label>
             </div>
@@ -577,6 +592,7 @@ function ChildDetails() {
                 name="school_status"
                 checked={childSchoolStatus === "Ne pohađa"}
                 onChange={onSchoolStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Ne pohađa</label>
             </div>
@@ -592,6 +608,7 @@ function ChildDetails() {
                 name="family_model"
                 checked={childsFamilyModel === "Potpuna porodica"}
                 onChange={onFamilyModelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Potpuna porodica</label>
             </div>
@@ -604,6 +621,7 @@ function ChildDetails() {
                   childsFamilyModel === "Jednoroditeljska/nepotpuna porodica"
                 }
                 onChange={onFamilyModelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Jednoroditeljska/nepotpuna porodica</label>
             </div>
@@ -614,6 +632,7 @@ function ChildDetails() {
                 name="family_model"
                 checked={childsFamilyModel === "Skrbnici/hranitelji"}
                 onChange={onFamilyModelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Skrbnici/hranitelji</label>
             </div>
@@ -624,6 +643,7 @@ function ChildDetails() {
                 name="family_model"
                 checked={childsFamilyModel === "Institucija"}
                 onChange={onFamilyModelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Institucija</label>
             </div>
@@ -639,6 +659,7 @@ function ChildDetails() {
                 name="status"
                 checked={childsStatus}
                 onChange={onStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Aktivan</label>
             </div>
@@ -649,6 +670,7 @@ function ChildDetails() {
                 name="status"
                 checked={!childsStatus}
                 onChange={onStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Neaktivan</label>
             </div>
@@ -664,6 +686,7 @@ function ChildDetails() {
                 name="guardian_consent"
                 checked={childsGuardianConsent}
                 onChange={onGuardianConsentChange}
+                disabled={shouldDisableForm()}
               />
               <label>Posjeduje</label>
             </div>
@@ -674,6 +697,7 @@ function ChildDetails() {
                 name="guardian_consent"
                 checked={!childsGuardianConsent}
                 onChange={onGuardianConsentChange}
+                disabled={shouldDisableForm()}
               />
               <label>Ne posjeduje</label>
             </div>
@@ -690,6 +714,7 @@ function ChildDetails() {
                   value={item.id}
                   checked={hasDevelopmentalDifficulty(item)}
                   onChange={onDifficultyChange}
+                  disabled={shouldDisableForm()}
                 />
                 <label>{item.name}</label>
               </div>
@@ -711,6 +736,7 @@ function ChildDetails() {
                           value={mentoringReason.id}
                           checked={hasMentoringReason(mentoringReason)}
                           onChange={onMentoringReasonChange}
+                          disabled={shouldDisableForm()}
                         />
                         <label>{mentoringReason.name}</label>
                       </div>
@@ -723,9 +749,11 @@ function ChildDetails() {
           })}
         </div>
 
-        <Button type="submit" onClick={addChild}>
-          Submit
-        </Button>
+        {shouldDisableForm() ? null : (
+          <Button type="submit" onClick={addChild}>
+            Submit
+          </Button>
+        )}
         <Button variant="secondary" onClick={navigateToChilds}>
           Close
         </Button>

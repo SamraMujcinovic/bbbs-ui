@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import Select from "react-dropdown-select";
 import { useLocation, useNavigate } from "react-router-dom";
-import { hasAdminGroup } from "../utilis/ServiceUtil";
+import { hasAdminGroup, hasCoordinatorGroup } from "../utilis/ServiceUtil";
 
 import "../volunteer/Volunteer.css";
 
@@ -21,6 +21,7 @@ function VolunteerDetails() {
   };
 
   const location = useLocation();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // volunteer details
   const [volunteerFirstName, setVolunteerFirstName] = useState("");
@@ -58,6 +59,7 @@ function VolunteerDetails() {
   useEffect(() => {
     setYearsToSelect(createYearsArray());
     if (location.state.selectedVolunteer) {
+      setIsEditMode(true);
       getVolunteer(location.state.selectedVolunteer.id);
     }
   }, []);
@@ -255,6 +257,16 @@ function VolunteerDetails() {
       });
   };
 
+  const shouldDisableForm = () => {
+    if (
+      hasAdminGroup(userGroups) ||
+      (hasCoordinatorGroup(userGroups) && !isEditMode)
+    ) {
+      return false;
+    }
+    return true;
+  };
+
   if (authenticate) {
     return (
       <div>
@@ -271,6 +283,7 @@ function VolunteerDetails() {
               type="text"
               value={volunteerFirstName}
               onChange={(e) => setVolunteerFirstName(e.target.value)}
+              disabled={shouldDisableForm()}
             />
           </div>
           <div className="formDiv">
@@ -279,6 +292,7 @@ function VolunteerDetails() {
               type="text"
               value={volunteerLastName}
               onChange={(e) => setVolunteerLastName(e.target.value)}
+              disabled={shouldDisableForm()}
             />
           </div>
           <div className="formDiv">
@@ -287,6 +301,7 @@ function VolunteerDetails() {
               type="text"
               value={volunteerEmail}
               onChange={(e) => setVolunteerEmail(e.target.value)}
+              disabled={shouldDisableForm()}
             />
           </div>
           <div className="formDiv">
@@ -295,6 +310,7 @@ function VolunteerDetails() {
               type="text"
               value={volunteerPhoneNumber}
               onChange={(e) => setVolunteerPhoneNumber(e.target.value)}
+              disabled={shouldDisableForm()}
             />
           </div>
         </div>
@@ -307,6 +323,7 @@ function VolunteerDetails() {
             placeholder="Godina rodjenja"
             valueField="label"
             labelField="value"
+            disabled={shouldDisableForm()}
           />
           <div className="formDiv">
             <span>Spol</span>
@@ -318,6 +335,7 @@ function VolunteerDetails() {
                   name="gender"
                   checked={volunteerGender === "Muški"}
                   onChange={onGenderChange}
+                  disabled={shouldDisableForm()}
                 />
                 <label>Muški</label>
               </div>
@@ -328,6 +346,7 @@ function VolunteerDetails() {
                   name="gender"
                   checked={volunteerGender === "Ženski"}
                   onChange={onGenderChange}
+                  disabled={shouldDisableForm()}
                 />
                 <label>Ženski</label>
               </div>
@@ -338,6 +357,7 @@ function VolunteerDetails() {
                   name="gender"
                   checked={volunteerGender === "Ostali"}
                   onChange={onGenderChange}
+                  disabled={shouldDisableForm()}
                 />
                 <label>Ostali</label>
               </div>
@@ -355,7 +375,6 @@ function VolunteerDetails() {
                 placeholder="Organizacija"
                 valueField="id"
                 labelField="name"
-                disabled={location.state.isEditMode}
               />
 
               <label>Grad</label>
@@ -366,7 +385,6 @@ function VolunteerDetails() {
                 placeholder="Grad"
                 valueField="id"
                 labelField="name"
-                disabled={location.state.isEditMode}
               />
 
               <label>Koordinator</label>
@@ -377,11 +395,7 @@ function VolunteerDetails() {
                 placeholder="Koordinator"
                 valueField="id"
                 labelField="name"
-                disabled={
-                  !volunteerOrganisation ||
-                  !volunteerCity ||
-                  location.state.isEditMode
-                }
+                disabled={!volunteerOrganisation || !volunteerCity}
               />
             </div>
           ) : null}
@@ -406,6 +420,7 @@ function VolunteerDetails() {
                 name="status"
                 checked={volunteerStatus}
                 onChange={onStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Aktivan</label>
             </div>
@@ -416,6 +431,7 @@ function VolunteerDetails() {
                 name="status"
                 checked={!volunteerStatus}
                 onChange={onStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Neaktivan</label>
             </div>
@@ -431,6 +447,7 @@ function VolunteerDetails() {
                 name="good_conduct"
                 checked={volunteerGoodConductCertificate}
                 onChange={onGoodConductCertificateChange}
+                disabled={shouldDisableForm()}
               />
               <label>Posjeduje</label>
             </div>
@@ -441,6 +458,7 @@ function VolunteerDetails() {
                 name="good_conduct"
                 checked={!volunteerGoodConductCertificate}
                 onChange={onGoodConductCertificateChange}
+                disabled={shouldDisableForm()}
               />
               <label>Ne posjeduje</label>
             </div>
@@ -456,6 +474,7 @@ function VolunteerDetails() {
                 name="education_level"
                 checked={volunteerEducationLevel === "Srednja skola"}
                 onChange={onEducationLevelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Srednja skola</label>
             </div>
@@ -466,6 +485,7 @@ function VolunteerDetails() {
                 name="education_level"
                 checked={volunteerEducationLevel === "Bachelor"}
                 onChange={onEducationLevelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Bachelor</label>
             </div>
@@ -476,6 +496,7 @@ function VolunteerDetails() {
                 name="education_level"
                 checked={volunteerEducationLevel === "Master"}
                 onChange={onEducationLevelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Master</label>
             </div>
@@ -486,6 +507,7 @@ function VolunteerDetails() {
                 name="education_level"
                 checked={volunteerEducationLevel === "Doktor nauka"}
                 onChange={onEducationLevelChange}
+                disabled={shouldDisableForm()}
               />
               <label>Doktor nauka</label>
             </div>
@@ -497,6 +519,7 @@ function VolunteerDetails() {
             type="text"
             value={volunteerFacultyDepartment ? volunteerFacultyDepartment : ""}
             onChange={(e) => setVolunteerFacultyDepartment(e.target.value)}
+            disabled={shouldDisableForm()}
           />
         </div>
         <div className="formDiv">
@@ -509,6 +532,7 @@ function VolunteerDetails() {
                 name="employment_status"
                 checked={volunteerEmploymentStatus === "Zaposlen"}
                 onChange={onEmploymentStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Zaposlen</label>
             </div>
@@ -519,6 +543,7 @@ function VolunteerDetails() {
                 name="employment_status"
                 checked={volunteerEmploymentStatus === "Nezaposlen"}
                 onChange={onEmploymentStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Nezaposlen</label>
             </div>
@@ -529,15 +554,18 @@ function VolunteerDetails() {
                 name="employment_status"
                 checked={volunteerEmploymentStatus === "Student"}
                 onChange={onEmploymentStatusChange}
+                disabled={shouldDisableForm()}
               />
               <label>Student</label>
             </div>
           </div>
         </div>
 
-        <Button type="submit" onClick={addVolunteer}>
-          Submit
-        </Button>
+        {shouldDisableForm() ? null : (
+          <Button type="submit" onClick={addVolunteer}>
+            Submit
+          </Button>
+        )}
         <Button variant="secondary" onClick={navigateToVolunteers}>
           Close
         </Button>

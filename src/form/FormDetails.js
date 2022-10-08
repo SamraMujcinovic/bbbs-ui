@@ -7,10 +7,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { dateToString, stringToDate } from "../utilis/Date";
 import { numberToTimeString, timeStringToNumber } from "../utilis/Time";
+import { hasAdminGroup, hasVolunteerGroup } from "../utilis/ServiceUtil";
 
 function FormDetails(props) {
   // authenticate
   const authenticate = sessionStorage.getItem("token");
+  const userRoles = sessionStorage.getItem("roles");
 
   // navigation
   let navigate = useNavigate();
@@ -21,6 +23,7 @@ function FormDetails(props) {
   };
 
   const location = useLocation();
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // form details
   const [formDate, setFormDate] = useState(new Date());
@@ -39,6 +42,7 @@ function FormDetails(props) {
 
   useEffect(() => {
     if (location.state.selectedForm) {
+      setIsEditMode(true);
       getForm(location.state.selectedForm.id);
     }
     getHangOutPlaces();
@@ -196,6 +200,16 @@ function FormDetails(props) {
     };
   };
 
+  const shouldDisableForm = () => {
+    if (
+      (hasVolunteerGroup(userRoles) && !isEditMode) ||
+      hasAdminGroup(userRoles)
+    ) {
+      return false;
+    }
+    return true;
+  };
+
   if (authenticate) {
     return (
       <div>
@@ -217,6 +231,7 @@ function FormDetails(props) {
               value={formDate}
               locale="de-DE"
               clearIcon={null}
+              disabled={shouldDisableForm()}
             />
           </div>
           <div>
@@ -229,6 +244,7 @@ function FormDetails(props) {
               amPmAriaLabel=""
               onChange={onDurationChange}
               value={formDuration}
+              disabled={shouldDisableForm()}
             />
           </div>
         </div>
@@ -242,6 +258,7 @@ function FormDetails(props) {
                 name="activity_type"
                 checked={formActivityType === "Individualno"}
                 onChange={onActivityTypeChange}
+                disabled={shouldDisableForm()}
               />
               <label>Individualno</label>
             </div>
@@ -252,6 +269,7 @@ function FormDetails(props) {
                 name="activity_type"
                 checked={formActivityType === "Druženje sa drugim parovima"}
                 onChange={onActivityTypeChange}
+                disabled={shouldDisableForm()}
               />
               <label>Druženje sa drugim parovima</label>
             </div>
@@ -262,6 +280,7 @@ function FormDetails(props) {
                 name="activity_type"
                 checked={formActivityType === "Grupna aktivnost"}
                 onChange={onActivityTypeChange}
+                disabled={shouldDisableForm()}
               />
               <label>Grupna aktivnost</label>
             </div>
@@ -277,6 +296,7 @@ function FormDetails(props) {
                 name="evaluation"
                 checked={formEvaluation === "Super"}
                 onChange={onEvaluationChange}
+                disabled={shouldDisableForm()}
               />
               <label>Super</label>
             </div>
@@ -287,6 +307,7 @@ function FormDetails(props) {
                 name="evaluation"
                 checked={formEvaluation === "Dobro"}
                 onChange={onEvaluationChange}
+                disabled={shouldDisableForm()}
               />
               <label>Dobro</label>
             </div>
@@ -297,6 +318,7 @@ function FormDetails(props) {
                 name="evaluation"
                 checked={formEvaluation === "Nije loše"}
                 onChange={onEvaluationChange}
+                disabled={shouldDisableForm()}
               />
               <label>Nije loše</label>
             </div>
@@ -307,6 +329,7 @@ function FormDetails(props) {
                 name="evaluation"
                 checked={formEvaluation === "Loše"}
                 onChange={onEvaluationChange}
+                disabled={shouldDisableForm()}
               />
               <label>Loše</label>
             </div>
@@ -322,6 +345,7 @@ function FormDetails(props) {
                   value={item.id}
                   checked={hasPlace(item)}
                   onChange={onPlaceChange}
+                  disabled={shouldDisableForm()}
                 />
                 <label>{item.name}</label>
               </div>
@@ -343,6 +367,7 @@ function FormDetails(props) {
                           value={activity.id}
                           checked={hasActivity(activity)}
                           onChange={onActivityChange}
+                          disabled={shouldDisableForm()}
                         />
                         <label>{activity.name}</label>
                       </div>
@@ -358,9 +383,11 @@ function FormDetails(props) {
           <span>Opis druženja</span>
           <textarea value={formDescription} onChange={onDescriptionChange} />
         </div>
-        <Button type="submit" onClick={addForm}>
-          Submit
-        </Button>
+        {shouldDisableForm() ? null : (
+          <Button type="submit" onClick={addForm}>
+            Submit
+          </Button>
+        )}
         <Button variant="secondary" onClick={navigateToForms}>
           Close
         </Button>
