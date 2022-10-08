@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Select from "react-dropdown-select";
 import { useLocation, useNavigate } from "react-router-dom";
-import { hasAdminGroup, hasCoordinatorGroup } from "../utilis/ServiceUtil";
+import {
+  hasAdminGroup,
+  hasCoordinatorGroup,
+  hasVolunteerGroup,
+} from "../utilis/ServiceUtil";
 
 import "../child/Child.css";
 
@@ -416,7 +420,7 @@ function ChildDetails() {
     return true;
   };
 
-  if (authenticate) {
+  if (authenticate && !hasVolunteerGroup(userGroups)) {
     return (
       <div>
         {location.state.selectedChild ? <h1>Dijete</h1> : <h1>Dodaj dijete</h1>}

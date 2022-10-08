@@ -3,7 +3,11 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import Select from "react-dropdown-select";
 import { useLocation, useNavigate } from "react-router-dom";
-import { hasAdminGroup, hasCoordinatorGroup } from "../utilis/ServiceUtil";
+import {
+  hasAdminGroup,
+  hasCoordinatorGroup,
+  hasVolunteerGroup,
+} from "../utilis/ServiceUtil";
 
 import "../volunteer/Volunteer.css";
 
@@ -267,7 +271,7 @@ function VolunteerDetails() {
     return true;
   };
 
-  if (authenticate) {
+  if (authenticate && !hasVolunteerGroup(userGroups)) {
     return (
       <div>
         {location.state.selectedVolunteer ? (

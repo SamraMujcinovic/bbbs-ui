@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import axios from "axios";
+import { hasVolunteerGroup } from "../utilis/ServiceUtil";
 
 function Child(props) {
   // navigation
   let navigate = useNavigate();
+
+  // authentication
+  const authenticate = sessionStorage.getItem("token");
+  const userRoles = sessionStorage.getItem("roles");
 
   useEffect(() => {
     getChilds();
@@ -149,19 +154,22 @@ function Child(props) {
     };
   };
 
-  return (
-    <div>
-      <h1>Djeca</h1>
-      <button className="btn btn-success" onClick={openAddChildPage}>
-        Dodaj dijete
-      </button>
-      <Table
-        theadData={theadData}
-        tbodyData={childs}
-        getRowData={getSelectedRow}
-      />
-    </div>
-  );
+  if (authenticate && !hasVolunteerGroup(userRoles)) {
+    return (
+      <div>
+        <h1>Djeca</h1>
+        <button className="btn btn-success" onClick={openAddChildPage}>
+          Dodaj dijete
+        </button>
+        <Table
+          theadData={theadData}
+          tbodyData={childs}
+          getRowData={getSelectedRow}
+        />
+      </div>
+    );
+  }
+  return null;
 }
 
 export default Child;

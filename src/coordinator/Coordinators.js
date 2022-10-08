@@ -3,8 +3,13 @@ import axios from "axios";
 
 import Table from "../table/Table";
 import CoordinatorModal from "./CoordinatorModal";
+import { hasAdminGroup } from "../utilis/ServiceUtil";
 
 function Coordinators(props) {
+  // authentication
+  const authenticate = sessionStorage.getItem("token");
+  const userRoles = sessionStorage.getItem("roles");
+
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
   const [coordinators, setCoordinators] = useState([]);
@@ -96,28 +101,31 @@ function Coordinators(props) {
     getCities();
   }, []);
 
-  return (
-    <div>
-      <h1>Koordinatori</h1>
-      <button className="btn btn-success" onClick={openAddModal}>
-        Dodaj koordinatora
-      </button>
-      <Table
-        theadData={theadData}
-        tbodyData={coordinators}
-        getRowData={getSelectedRow}
-      />
-      {show ? (
-        <CoordinatorModal
-          show={show}
-          data={selectedTableRow}
-          handleClose={handleClose}
-          organisations={organisations}
-          cities={cities}
+  if (authenticate && hasAdminGroup(userRoles)) {
+    return (
+      <div>
+        <h1>Koordinatori</h1>
+        <button className="btn btn-success" onClick={openAddModal}>
+          Dodaj koordinatora
+        </button>
+        <Table
+          theadData={theadData}
+          tbodyData={coordinators}
+          getRowData={getSelectedRow}
         />
-      ) : null}
-    </div>
-  );
+        {show ? (
+          <CoordinatorModal
+            show={show}
+            data={selectedTableRow}
+            handleClose={handleClose}
+            organisations={organisations}
+            cities={cities}
+          />
+        ) : null}
+      </div>
+    );
+  }
+  return null;
 }
 
 export default Coordinators;

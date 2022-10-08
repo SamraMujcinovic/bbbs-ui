@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import axios from "axios";
+import { hasVolunteerGroup } from "../utilis/ServiceUtil";
 
 function Volunteer(props) {
   // navigation
   let navigate = useNavigate();
+
+  // authentication
+  const authenticate = sessionStorage.getItem("token");
+  const userRoles = sessionStorage.getItem("roles");
 
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
@@ -101,19 +106,22 @@ function Volunteer(props) {
       });
   };
 
-  return (
-    <div>
-      <h1>Volonteri</h1>
-      <button className="btn btn-success" onClick={openAddVolunteerPage}>
-        Dodaj volontera
-      </button>
-      <Table
-        theadData={theadData}
-        tbodyData={volunteers}
-        getRowData={getSelectedRow}
-      />
-    </div>
-  );
+  if (authenticate && !hasVolunteerGroup(userRoles)) {
+    return (
+      <div>
+        <h1>Volonteri</h1>
+        <button className="btn btn-success" onClick={openAddVolunteerPage}>
+          Dodaj volontera
+        </button>
+        <Table
+          theadData={theadData}
+          tbodyData={volunteers}
+          getRowData={getSelectedRow}
+        />
+      </div>
+    );
+  }
+  return null;
 }
 
 export default Volunteer;
