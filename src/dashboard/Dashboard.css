@@ -70,6 +70,61 @@ main {
   color: blue;
 }
 
+.logoutButtonDiv {
+  float: right;
+}
+
+.logoutButtonDiv button {
+  background: none;
+  border: none;
+  margin-right: 0.5rem;
+}
+
+.logoutButtonDiv button:hover {
+  cursor: pointer;
+  color: blue;
+}
+
+.forgotPasswordButton {
+  color: blue;
+  text-decoration: underline;
+  margin-top: 1rem;
+  border: none;
+  background: none;
+}
+
+.forgotPasswordButton:hover {
+  cursor: pointer;
+}
+
+.settingsDiv {
+  background-color: rgb(235, 229, 229);
+  border-radius: 2rem;
+}
+
+.settingsDiv button {
+  color: black;
+  border: none;
+  background: none;
+  margin: 0.5rem;
+}
+
+.settingsDiv button:hover {
+  cursor: pointer;
+  color: blue;
+}
+
+.errorMessage {
+  color: rgb(230, 72, 72);
+}
+
+.modal-body {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  padding: 1rem;
+}
+
 @media (min-width: 1400px) {
   .container {
     max-width: none;

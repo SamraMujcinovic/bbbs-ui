@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import LoginForm from "../LoginForm";
-import axios from "axios";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import ChangePasswordForm from "../ChangePasswordForm";
+import { logout } from "../LogoutAPI";
 
 const Sidebar = ({ children }) => {
   const menuItem = [
@@ -27,9 +29,6 @@ const Sidebar = ({ children }) => {
     },
   ];
 
-  // navigation
-  let navigate = useNavigate();
-
   const authenticate = sessionStorage.getItem("token");
   const userRole = sessionStorage.getItem("roles");
 
@@ -44,28 +43,18 @@ const Sidebar = ({ children }) => {
     handleOpen();
   };
 
-  const logout = async () => {
-    try {
-      await axios
-        .post(
-          "http://localhost:8000/logout",
-          {
-            all: 1,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then(() => {
-          sessionStorage.removeItem("token");
-          sessionStorage.removeItem("roles");
-          navigate(`/`);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+  // change password modal
+  const [settingsOpened, setSettingsOpened] = useState(false);
+
+  const [showChangePassModal, setShowChangePassModal] = useState(false);
+  const handleChangePassClose = () => {
+    setShowChangePassModal(false);
+  };
+  const handleChangePassOpen = () => setShowChangePassModal(true);
+
+  const openChangePassForm = () => {
+    console.log("here");
+    handleChangePassOpen();
   };
 
   return (
@@ -95,9 +84,25 @@ const Sidebar = ({ children }) => {
       <div className="sidebarContent">
         <div className="loginButtonDiv">
           {sessionStorage.getItem("token") ? (
-            <button className="loginButton" onClick={logout}>
-              Logout
-            </button>
+            <div className="logoutButtonDiv">
+              <button onClick={logout}>Logout</button>
+              {settingsOpened ? (
+                <button onClick={() => setSettingsOpened(false)}>
+                  <FaChevronUp />
+                </button>
+              ) : (
+                <button onClick={() => setSettingsOpened(true)}>
+                  <FaChevronDown />
+                </button>
+              )}
+              {settingsOpened ? (
+                <div className="settingsDiv">
+                  <button onClick={openChangePassForm}>
+                    Promijeni lozinku
+                  </button>
+                </div>
+              ) : null}
+            </div>
           ) : (
             <button className="loginButton" onClick={openLoginForm}>
               Login
@@ -105,6 +110,12 @@ const Sidebar = ({ children }) => {
           )}
         </div>
         {show ? <LoginForm show={show} handleClose={handleClose} /> : null}
+        {showChangePassModal ? (
+          <ChangePasswordForm
+            show={showChangePassModal}
+            handleClose={handleChangePassClose}
+          />
+        ) : null}
         {authenticate ? <main>{children}</main> : null}
       </div>
     </div>

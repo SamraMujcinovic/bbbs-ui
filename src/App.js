@@ -13,12 +13,14 @@ import FormDetails from "./form/FormDetails";
 import Sidebar from "./dashboard/components/Sidebar";
 
 import "./dashboard/Dashboard.css";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <>
       {/* This is the alias of BrowserRouter i.e. Router */}
       <Router>
+        <ToastContainer />
         <Sidebar>
           <Routes>
             <Route exact path="/" element={<MainPage />} />
