@@ -14,15 +14,7 @@ function Child(props) {
 
   useEffect(() => {
     getChilds();
-    getOrganisations();
-    getCities();
-    getCoordinators();
   }, []);
-
-  // organisations and cities to select
-  const [organisations, setOrganisations] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [coordinators, setCoordinators] = useState([]);
 
   // Table
   // table data
@@ -78,9 +70,6 @@ function Child(props) {
       state: {
         selectedChild: selectedChild,
         isEditMode: selectedChild !== undefined,
-        organisations: organisations,
-        cities: cities,
-        coordinators: coordinators,
       },
     });
   };
@@ -97,61 +86,6 @@ function Child(props) {
       .catch((error) => {
         console.log(error);
       });
-  };
-
-  const getOrganisations = async () => {
-    await axios
-      .get("http://localhost:8000/organisations/", {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      })
-      .then((response) => setOrganisations(response.data))
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getCities = async () => {
-    await axios
-      .get("http://localhost:8000/cities/", {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      })
-      .then((response) => setCities(response.data))
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getCoordinators = async () => {
-    await axios
-      .get("http://localhost:8000/coordinators/", {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      })
-      .then((response) => {
-        setCoordinators(response.data.map(covertToCoordinatorData));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const covertToCoordinatorData = (coordinator) => {
-    return {
-      id: coordinator.id,
-      first_name: coordinator.user.first_name,
-      last_name: coordinator.user.last_name,
-      name: `${coordinator.user.first_name} ${coordinator.user.last_name}`,
-      email: coordinator.user.email,
-      organisation: coordinator.coordinator_organisation[0].name,
-      organisation_id: coordinator.coordinator_organisation[0].id,
-      city: coordinator.coordinator_city[0].name,
-      city_id: coordinator.coordinator_city[0].id,
-    };
   };
 
   if (authenticate && !hasVolunteerGroup(userRoles)) {

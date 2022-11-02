@@ -44,3 +44,16 @@ input::placeholder {
 .checkBoxes input {
   width: 0.9rem;
 }
+
+.invalid-developmental-difficulty {
+  color: red;
+}
+
+.invalid-mentoring-reason {
+  color: red;
+}
+
+.mentoringReasonCategoryDiv {
+  display: flex;
+  gap: 1.5rem;
+}

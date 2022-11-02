@@ -7,6 +7,8 @@ import {
   hasAdminGroup,
   hasCoordinatorGroup,
   hasVolunteerGroup,
+  phoneNumberRegex,
+  validEmailRegex,
 } from "../utilis/ServiceUtil";
 
 import "../volunteer/Volunteer.css";
@@ -37,19 +39,14 @@ function VolunteerDetails() {
   const [yearsToSelect, setYearsToSelect] = useState([]);
 
   const [volunteerPhoneNumber, setVolunteerPhoneNumber] = useState("");
-  const [volunteerEducationLevel, setVolunteerEducationLevel] = useState(
-    "Srednja skola"
-  );
-  const [volunteerFacultyDepartment, setVolunteerFacultyDepartment] = useState(
-    ""
-  );
-  const [volunteerEmploymentStatus, setVolunteerEmploymentStatus] = useState(
-    "Zaposlen"
-  );
-  const [
-    volunteerGoodConductCertificate,
-    setVolunteerGoodConductCertificate,
-  ] = useState(false);
+  const [volunteerEducationLevel, setVolunteerEducationLevel] =
+    useState("Srednja skola");
+  const [volunteerFacultyDepartment, setVolunteerFacultyDepartment] =
+    useState("");
+  const [volunteerEmploymentStatus, setVolunteerEmploymentStatus] =
+    useState("Zaposlen");
+  const [volunteerGoodConductCertificate, setVolunteerGoodConductCertificate] =
+    useState(false);
   const [volunteerStatus, setVolunteerStatus] = useState(false);
   const [volunteerCoordinator, setVolunteerCoordinator] = useState(undefined);
   const [volunteerOrganisation, setVolunteerOrganisation] = useState();
@@ -59,9 +56,17 @@ function VolunteerDetails() {
 
   // data to select
   const [coordinators, setCoordinators] = useState([]);
+  const [organisations, setOrganisations] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  // validation
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
 
   useEffect(() => {
     setYearsToSelect(createYearsArray());
+    getOrganisations();
+    getCities();
     if (location.state.selectedVolunteer) {
       setIsEditMode(true);
       getVolunteer(location.state.selectedVolunteer.id);
@@ -103,6 +108,32 @@ function VolunteerDetails() {
     }
 
     return years;
+  };
+
+  const getOrganisations = async () => {
+    await axios
+      .get("http://localhost:8000/organisations/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => setOrganisations(response.data))
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getCities = async () => {
+    await axios
+      .get("http://localhost:8000/cities/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => setCities(response.data))
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const getVolunteer = async (id) => {
@@ -153,7 +184,7 @@ function VolunteerDetails() {
       .get(`http://localhost:8000/coordinators/`, {
         params: {
           organisation: volunteerOrganisation[0].id,
-          city: volunteerOrganisation[0].id,
+          city: volunteerCity[0].id,
         },
 
         headers: {
@@ -218,12 +249,30 @@ function VolunteerDetails() {
 
   const onOrganisationChange = (value) => {
     setVolunteerOrganisation(value);
-    setVolunteerCoordinator(undefined);
+    onCityChange(undefined);
   };
 
   const onCityChange = (value) => {
     setVolunteerCity(value);
     setVolunteerCoordinator(undefined);
+  };
+
+  const onEmailChange = (e) => {
+    setVolunteerEmail(e.target.value);
+    if (!validEmailRegex.test(e.target.value) && e.target.value !== "") {
+      setIsEmailValid(false);
+    } else {
+      setIsEmailValid(true);
+    }
+  };
+
+  const onPhoneNumberChange = (e) => {
+    setVolunteerPhoneNumber(e.target.value);
+    if (!phoneNumberRegex.test(e.target.value) && e.target.value !== "") {
+      setIsPhoneNumberValid(false);
+    } else {
+      setIsPhoneNumberValid(true);
+    }
   };
 
   const getSelectedValues = () => {
@@ -271,6 +320,34 @@ function VolunteerDetails() {
     return true;
   };
 
+  const enableSubmitButton = () => {
+    return (
+      checkValidations() &&
+      volunteerFirstName &&
+      volunteerLastName &&
+      volunteerEmail &&
+      volunteerPhoneNumber &&
+      volunteerBirthYear &&
+      volunteerBirthYear.length > 0 &&
+      volunteerGender &&
+      volunteerStatus !== undefined &&
+      volunteerGoodConductCertificate !== undefined &&
+      volunteerEducationLevel &&
+      volunteerEmploymentStatus &&
+      ((volunteerOrganisation &&
+        volunteerOrganisation.length > 0 &&
+        volunteerCity &&
+        volunteerCity.length > 0 &&
+        volunteerCoordinator &&
+        volunteerCoordinator.length > 0) ||
+        hasCoordinatorGroup(userGroups))
+    );
+  };
+
+  const checkValidations = () => {
+    return isEmailValid && isPhoneNumberValid;
+  };
+
   if (authenticate && !hasVolunteerGroup(userGroups)) {
     return (
       <div>
@@ -282,7 +359,7 @@ function VolunteerDetails() {
 
         <div>
           <div className="formDiv">
-            <label>Ime</label>
+            <label className="title">Ime</label>
             <input
               type="text"
               value={volunteerFirstName}
@@ -291,7 +368,7 @@ function VolunteerDetails() {
             />
           </div>
           <div className="formDiv">
-            <label>Prezime</label>
+            <label className="title">Prezime</label>
             <input
               type="text"
               value={volunteerLastName}
@@ -300,26 +377,29 @@ function VolunteerDetails() {
             />
           </div>
           <div className="formDiv">
-            <label>E-mail</label>
+            <label className="title">E-mail</label>
             <input
-              type="text"
+              className={"" + (!isEmailValid ? "invalid-email" : "")}
+              type="email"
               value={volunteerEmail}
-              onChange={(e) => setVolunteerEmail(e.target.value)}
+              onChange={onEmailChange}
               disabled={shouldDisableForm()}
             />
           </div>
           <div className="formDiv">
-            <label>Telefon</label>
+            <label className="title">Telefon</label>
             <input
+              className={"" + (!isPhoneNumberValid ? "invalid-email" : "")}
               type="text"
+              placeholder="061123123"
               value={volunteerPhoneNumber}
-              onChange={(e) => setVolunteerPhoneNumber(e.target.value)}
+              onChange={onPhoneNumberChange}
               disabled={shouldDisableForm()}
             />
           </div>
         </div>
         <div>
-          <label>Godina rođenja</label>
+          <label className="title">Godina rođenja</label>
           <Select
             values={volunteerBirthYear}
             options={yearsToSelect}
@@ -330,7 +410,7 @@ function VolunteerDetails() {
             disabled={shouldDisableForm()}
           />
           <div className="formDiv">
-            <span>Spol</span>
+            <span className="title">Spol</span>
             <div className="radioButtonsDiv">
               <div className="radioButtons">
                 <input
@@ -371,27 +451,28 @@ function VolunteerDetails() {
         <div>
           {hasAdminGroup(userGroups) ? (
             <div>
-              <label>Organizacija</label>
+              <label className="title">Organizacija</label>
               <Select
                 values={volunteerOrganisation}
-                options={location.state.organisations}
+                options={organisations}
                 onChange={(values) => onOrganisationChange(values)}
                 placeholder="Organizacija"
                 valueField="id"
                 labelField="name"
               />
 
-              <label>Grad</label>
+              <label className="title">Grad</label>
               <Select
-                options={location.state.cities}
+                options={cities}
                 values={volunteerCity}
                 onChange={(values) => onCityChange(values)}
                 placeholder="Grad"
                 valueField="id"
                 labelField="name"
+                disabled={!volunteerOrganisation}
               />
 
-              <label>Koordinator</label>
+              <label className="title">Koordinator</label>
               <Select
                 values={volunteerCoordinator}
                 options={coordinators}
@@ -405,7 +486,7 @@ function VolunteerDetails() {
           ) : null}
           {location.state.isEditMode ? (
             <div className="formDiv">
-              <label>Dijete</label>
+              <label className="title">Dijete</label>
               <input
                 type="text"
                 value={childsCode ? childsCode : ""}
@@ -415,7 +496,7 @@ function VolunteerDetails() {
           ) : null}
         </div>
         <div className="formDiv">
-          <span>Status u programu</span>
+          <span className="title">Status u programu</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -442,7 +523,7 @@ function VolunteerDetails() {
           </div>
         </div>
         <div className="formDiv">
-          <span>Potvrda o nekažnjavanju:</span>
+          <span className="title">Potvrda o nekažnjavanju:</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -469,7 +550,7 @@ function VolunteerDetails() {
           </div>
         </div>
         <div className="formDiv">
-          <span>Nivo obrazovanja</span>
+          <span className="title">Nivo obrazovanja</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -518,7 +599,7 @@ function VolunteerDetails() {
           </div>
         </div>
         <div className="formDiv">
-          <label>Fakultet/odsjek</label>
+          <label className="title">Fakultet/odsjek</label>
           <input
             type="text"
             value={volunteerFacultyDepartment ? volunteerFacultyDepartment : ""}
@@ -527,7 +608,7 @@ function VolunteerDetails() {
           />
         </div>
         <div className="formDiv">
-          <span>Radni stauts</span>
+          <span className="title">Radni stauts</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -566,12 +647,17 @@ function VolunteerDetails() {
         </div>
 
         {shouldDisableForm() ? null : (
-          <Button type="submit" onClick={addVolunteer}>
-            Submit
+          <Button
+            type="submit"
+            className="submitButton"
+            onClick={addVolunteer}
+            disabled={!enableSubmitButton()}
+          >
+            Potvrdi
           </Button>
         )}
         <Button variant="secondary" onClick={navigateToVolunteers}>
-          Close
+          Zatvori
         </Button>
       </div>
     );

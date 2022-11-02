@@ -15,13 +15,14 @@ function Coordinators(props) {
   const [coordinators, setCoordinators] = useState([]);
   const [selectedTableRow, setSelectedTableRow] = useState(undefined);
 
+  // send data to modal
+  const [organisations, setOrganisations] = useState([]);
+  const [cities, setCities] = useState([]);
+
   const getSelectedRow = (row) => {
     setSelectedTableRow(row);
     openAddModal();
   };
-
-  const [organisations, setOrganisations] = useState([]);
-  const [cities, setCities] = useState([]);
 
   // add-modal
   const [show, setShow] = useState(false);
@@ -69,6 +70,12 @@ function Coordinators(props) {
     };
   };
 
+  useEffect(() => {
+    getCoordinators();
+    getOrganisations();
+    getCities();
+  }, []);
+
   const getOrganisations = async () => {
     await axios
       .get("http://localhost:8000/organisations/", {
@@ -94,12 +101,6 @@ function Coordinators(props) {
         console.log(error);
       });
   };
-
-  useEffect(() => {
-    getCoordinators();
-    getOrganisations();
-    getCities();
-  }, []);
 
   if (authenticate && hasAdminGroup(userRoles)) {
     return (

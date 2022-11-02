@@ -1,0 +1,57 @@
+.invalid-date {
+  border: 1px red solid;
+}
+
+.dateInput {
+  width: 7.5rem;
+}
+
+.invalid-duration {
+  border: 1px red solid;
+}
+
+.invalid-description {
+  border: 1px red solid;
+}
+
+textarea {
+  width: 100%;
+}
+
+.invalid-place {
+  color: red;
+}
+
+.invalid-activity {
+  color: red;
+}
+
+.activityCategoryDiv {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.dateTimeDiv {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.dateSpan {
+  margin-right: 4px;
+}
+
+.timeSpan {
+  margin-right: 4px;
+}
+
+.react-time-picker__wrapper {
+  border: thin solid #ccc;
+}
+
+.categoryTitle {
+  margin-bottom: 0.25rem;
+  margin-top: 0.5rem;
+}

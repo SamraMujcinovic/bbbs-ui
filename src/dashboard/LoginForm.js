@@ -9,8 +9,6 @@ import { validEmailRegex } from "../utilis/ServiceUtil";
 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-import { toast } from "react-toastify";
-
 function LoginForm(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,11 +23,12 @@ function LoginForm(props) {
   };
 
   const [error, setError] = useState(false);
+  const [responseError, setResponseError] = useState(false);
 
   const [showLoginForm, setShowLoginForm] = useState(true);
 
   useEffect(() => {
-    setShowLoginForm(props.show);
+    setShowLoginForm(true);
   }, []);
 
   let navigate = useNavigate();
@@ -49,6 +48,7 @@ function LoginForm(props) {
 
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
+    setResponseError(false);
     if (!validEmailRegex.test(e.target.value) && e.target.value !== "") {
       setError(true);
     } else {
@@ -56,8 +56,12 @@ function LoginForm(props) {
     }
   };
 
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+    setResponseError(false);
+  };
+
   const login = async () => {
-    const id = toast.loading("Prijava...");
     try {
       await axios
         .post(
@@ -69,22 +73,17 @@ function LoginForm(props) {
           { withCredentials: true }
         )
         .then((response) => {
-          toast.dismiss(id);
           const token = response.data.data;
           const claims = jwt(token);
+          const user = "" + claims.first_name + " " + claims.last_name;
           sessionStorage.setItem("token", response.data.data);
           sessionStorage.setItem("roles", claims.group);
+          sessionStorage.setItem("user", user);
           props.handleClose();
           navigate(`/`);
         });
     } catch (error) {
-      toast.update(id, {
-        render: "E-Mail ili lozinka nisu ispravni!",
-        type: "error",
-        isLoading: false,
-        autoClose: false,
-        closeButton: true,
-      });
+      setResponseError(true);
     }
   };
 
@@ -99,23 +98,20 @@ function LoginForm(props) {
           <div>
             <label>Email</label>
             <input
-              className="form-control "
+              className={"form-control " + (error ? "invalid-email" : "")}
               type="email"
               value={username}
               onChange={onUsernameChange}
             />
-            {error ? (
-              <span className="errorMessage">E-Mail nije validan!</span>
-            ) : null}
           </div>
 
-          <div>
+          <div className="passwordDiv">
             <label>Password</label>
             <input
               className="form-control"
               type={passwordType}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={onPasswordChange}
             />
             <button
               className="btn btn-outline-primary"
@@ -124,6 +120,11 @@ function LoginForm(props) {
             >
               {passwordType === "password" ? <FaEye /> : <FaEyeSlash />}
             </button>
+            {responseError && (
+              <span className="response-error">
+                E-Mail ili lozinka nisu ispravni!
+              </span>
+            )}
           </div>
 
           <div>

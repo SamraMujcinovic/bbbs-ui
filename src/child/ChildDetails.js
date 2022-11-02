@@ -36,9 +36,8 @@ function ChildDetails() {
   const [yearsToSelect, setYearsToSelect] = useState([]);
 
   const [childSchoolStatus, setChildsSchoolStatus] = useState("Pohađa");
-  const [childsFamilyModel, setChildsFamilyModel] = useState(
-    "Potpuna porodica"
-  );
+  const [childsFamilyModel, setChildsFamilyModel] =
+    useState("Potpuna porodica");
   const [childsStatus, setChildsStatus] = useState(false);
   const [childsVolunteer, setChildsVolunteer] = useState(undefined);
   const [childsCoordinator, setChildsCoordinator] = useState(undefined);
@@ -47,21 +46,26 @@ function ChildDetails() {
   const [childCity, setChildsCity] = useState();
 
   const [childsMentoringReason, setChildMentoringReason] = useState([]);
-  const [
-    childsDevelopmentalDifficulties,
-    setChildsDevelopmentalDifficulties,
-  ] = useState([]);
+  const [childsDevelopmentalDifficulties, setChildsDevelopmentalDifficulties] =
+    useState([]);
 
   // data to select
   const [coordinators, setCoordinators] = useState([]);
   const [volunteers, setVolunteers] = useState([]);
+  const [organisations, setOrganisations] = useState([]);
+  const [cities, setCities] = useState([]);
   const [developmentalDifficulties, setDevelopmentalDifficulties] = useState(
     []
   );
+  const [
+    selectedDevelopmentalDifficulties,
+    setSelectedDevelopmentalDifficulties,
+  ] = useState([]);
   const [mentoringReasons, setMentoringReasons] = useState([]);
   const [mentoringReasonCategories, setMentoringReasonCategories] = useState(
     []
   );
+  const [selectedMentoringReasons, setSelectedMentoringReasons] = useState([]);
 
   // data represented in edit mode
   const [childsVolunteerInput, setChildsVolunteerInput] = useState("");
@@ -71,6 +75,8 @@ function ChildDetails() {
     getMentoringReasons();
     getMentoringReasonCategories();
     getDevelopmentalDifficulties();
+    getOrganisations();
+    getCities();
     if (location.state.selectedChild) {
       setIsEditMode(true);
       getChild(location.state.selectedChild.id);
@@ -127,6 +133,32 @@ function ChildDetails() {
   };
 
   // APIs
+
+  const getOrganisations = async () => {
+    await axios
+      .get("http://localhost:8000/organisations/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => setOrganisations(response.data))
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getCities = async () => {
+    await axios
+      .get("http://localhost:8000/cities/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => setCities(response.data))
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const getCoordinators = async () => {
     await axios
@@ -270,7 +302,9 @@ function ChildDetails() {
     setChildsFamilyModel(selectedChild.family_model);
     setChildsStatus(selectedChild.status);
     setChildsGuardianConsent(selectedChild.guardian_consent);
+
     setChildsCoordinator(selectedChild.coordinator);
+
     setChildsVolunteer(selectedChild.volunteer);
     if (selectedChild.volunteer) {
       setChildsVolunteerInput(
@@ -279,9 +313,19 @@ function ChildDetails() {
     }
 
     setChildsDevelopmentalDifficulties(
+      selectedChild.developmental_difficulties.map(
+        (difficulty) => difficulty.id
+      )
+    );
+    setSelectedDevelopmentalDifficulties(
       selectedChild.developmental_difficulties
     );
-    setChildMentoringReason(selectedChild.mentoring_reason);
+
+    setChildMentoringReason(
+      selectedChild.mentoring_reason.map((reason) => reason.id)
+    );
+    setSelectedMentoringReasons(selectedChild.mentoring_reason);
+
     setChildsOrganisation(selectedChild.child_organisation);
     setChildsCity(selectedChild.child_city);
   };
@@ -318,35 +362,59 @@ function ChildDetails() {
   };
 
   const onDifficultyChange = (event) => {
-    setChildsDevelopmentalDifficulties([
-      ...childsDevelopmentalDifficulties,
-      Number(event.target.value),
-    ]);
+    const selectedDifficulty = developmentalDifficulties.filter(
+      (difficulty) => difficulty.id === Number(event.target.value)
+    )[0];
+
+    if (hasDevelopmentalDifficulty(selectedDifficulty)) {
+      // if already exist => deselect that difficulty
+      setSelectedDevelopmentalDifficulties(
+        selectedDevelopmentalDifficulties.filter((difficulty) => {
+          return difficulty.id !== selectedDifficulty.id;
+        })
+      );
+    } else {
+      setSelectedDevelopmentalDifficulties([
+        ...selectedDevelopmentalDifficulties,
+        selectedDifficulty,
+      ]);
+    }
   };
 
   const hasDevelopmentalDifficulty = (difficulty) => {
-    return childsDevelopmentalDifficulties.some((value) => {
-      if (value.id) {
+    return (
+      selectedDevelopmentalDifficulties?.filter((value) => {
         return value.id === difficulty.id;
-      }
-      return value === difficulty.id;
-    });
+      }).length > 0
+    );
   };
 
   const onMentoringReasonChange = (event) => {
-    setChildMentoringReason([
-      ...childsMentoringReason,
-      Number(event.target.value),
-    ]);
+    const selectedReason = mentoringReasons.filter(
+      (reason) => reason.id === Number(event.target.value)
+    )[0];
+
+    if (hasMentoringReason(selectedReason)) {
+      // if already exist => deselect that reason
+      setSelectedMentoringReasons(
+        selectedMentoringReasons.filter((reason) => {
+          return reason.id !== selectedReason.id;
+        })
+      );
+    } else {
+      setSelectedMentoringReasons([
+        ...selectedMentoringReasons,
+        selectedReason,
+      ]);
+    }
   };
 
   const hasMentoringReason = (reason) => {
-    return childsMentoringReason.some((value) => {
-      if (value.id) {
+    return (
+      selectedMentoringReasons?.filter((value) => {
         return value.id === reason.id;
-      }
-      return value === reason.id;
-    });
+      }).length > 0
+    );
   };
 
   const onCoordinatorChange = (event) => {
@@ -382,9 +450,13 @@ function ChildDetails() {
       gender: childsGender,
       birth_year: childsBirthYear[0].value,
       school_status: childSchoolStatus,
-      developmental_difficulties: childsDevelopmentalDifficulties,
+      developmental_difficulties: selectedDevelopmentalDifficulties.map(
+        (difficulty) => Number(difficulty.id)
+      ),
       family_model: childsFamilyModel,
-      mentoring_reason: childsMentoringReason,
+      mentoring_reason: selectedMentoringReasons.map((reason) =>
+        Number(reason.id)
+      ),
       guardian_consent: childsGuardianConsent,
       volunteer:
         childsVolunteer && childsVolunteer.length > 0
@@ -420,6 +492,45 @@ function ChildDetails() {
     return true;
   };
 
+  const enableSubmitButton = () => {
+    return (
+      checkMentoringReasonValidity() &&
+      checkDevelopmentalDifficultyValidity() &&
+      ((childsFirstName && childsLastName) || isEditMode) &&
+      childsBirthYear &&
+      childsBirthYear.length > 0 &&
+      childsGender &&
+      childSchoolStatus !== undefined &&
+      childSchoolStatus &&
+      childsFamilyModel &&
+      childsGuardianConsent !== undefined &&
+      childsDevelopmentalDifficulties &&
+      selectedMentoringReasons &&
+      ((childOrganisation &&
+        childOrganisation.length > 0 &&
+        childCity &&
+        childCity.length > 0 &&
+        childsCoordinator &&
+        childsCoordinator.length > 0) ||
+        hasCoordinatorGroup(userGroups))
+    );
+  };
+
+  const checkMentoringReasonValidity = () => {
+    return (
+      selectedMentoringReasons &&
+      selectedMentoringReasons.length > 0 &&
+      selectedMentoringReasons.length <= 5
+    );
+  };
+
+  const checkDevelopmentalDifficultyValidity = () => {
+    return (
+      selectedDevelopmentalDifficulties &&
+      selectedDevelopmentalDifficulties.length > 0
+    );
+  };
+
   if (authenticate && !hasVolunteerGroup(userGroups)) {
     return (
       <div>
@@ -427,13 +538,13 @@ function ChildDetails() {
 
         {location.state.selectedChild ? (
           <div className="formDiv">
-            <label>Kod</label>
+            <label className="title">Kod</label>
             <input type="text" disabled={true} value={childsCode} />
           </div>
         ) : null}
         {location.state.selectedChild ? null : (
           <div className="formDiv">
-            <label>Ime</label>
+            <label className="title">Ime</label>
             <input
               type="text"
               value={childsFirstName}
@@ -443,7 +554,7 @@ function ChildDetails() {
         )}
         {location.state.selectedChild ? null : (
           <div className="formDiv">
-            <label>Prezime</label>
+            <label className="title">Prezime</label>
             <input
               type="text"
               value={childsLastName}
@@ -451,7 +562,7 @@ function ChildDetails() {
             />
           </div>
         )}
-        <label>Godina rođenja</label>
+        <label className="title">Godina rođenja</label>
         <Select
           values={childsBirthYear}
           options={yearsToSelect}
@@ -462,7 +573,7 @@ function ChildDetails() {
           disabled={shouldDisableForm()}
         />
         <div className="formDiv">
-          <span>Spol</span>
+          <span className="title">Spol</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -501,27 +612,28 @@ function ChildDetails() {
         </div>
         {hasAdminGroup(userGroups) ? (
           <div>
-            <label>Organizacija</label>
+            <label className="title">Organizacija</label>
             <Select
               values={childOrganisation}
-              options={location.state.organisations}
+              options={organisations}
               onChange={(values) => onOrganisationChange(values)}
               placeholder="Organizacija"
               valueField="id"
               labelField="name"
             />
 
-            <label>Grad</label>
+            <label className="title">Grad</label>
             <Select
-              options={location.state.cities}
+              options={cities}
               values={childCity}
               onChange={(values) => onCityChange(values)}
               placeholder="Grad"
               valueField="id"
               labelField="name"
+              disabled={!childOrganisation}
             />
 
-            <label>Koordinator</label>
+            <label className="title">Koordinator</label>
             <Select
               values={childsCoordinator}
               options={coordinators}
@@ -533,7 +645,7 @@ function ChildDetails() {
             />
           </div>
         ) : null}
-        <label>Volonter</label>
+        <label className="title">Volonter</label>
         {location.state.isEditMode ? (
           <div className="formDiv">
             <input type="text" value={childsVolunteerInput} disabled={true} />
@@ -551,59 +663,64 @@ function ChildDetails() {
             }
           />
         )}
+
         <div className="formDiv">
-          <span>Škola</span>
+          <span className="title">Status u programu</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
                 type="radio"
-                value="Pohađa"
-                name="school_status"
-                checked={childSchoolStatus === "Pohađa"}
-                onChange={onSchoolStatusChange}
+                value={true}
+                name="status"
+                checked={childsStatus}
+                onChange={onStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Pohađa</label>
+              <label>Aktivan</label>
             </div>
             <div className="radioButtons">
               <input
                 type="radio"
-                value="Pohađa po prilagođenom programu"
-                name="school_status"
-                checked={
-                  childSchoolStatus === "Pohađa po prilagođenom programu"
-                }
-                onChange={onSchoolStatusChange}
+                value={false}
+                name="status"
+                checked={!childsStatus}
+                onChange={onStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Pohađa po prilagođenom programu</label>
-            </div>
-            <div className="radioButtons">
-              <input
-                type="radio"
-                value="Pohađa specijalno obrazovanje"
-                name="school_status"
-                checked={childSchoolStatus === "Pohađa specijalno obrazovanje"}
-                onChange={onSchoolStatusChange}
-                disabled={shouldDisableForm()}
-              />
-              <label>Pohađa specijalno obrazovanje</label>
-            </div>
-            <div className="radioButtons">
-              <input
-                type="radio"
-                value="Ne pohađa"
-                name="school_status"
-                checked={childSchoolStatus === "Ne pohađa"}
-                onChange={onSchoolStatusChange}
-                disabled={shouldDisableForm()}
-              />
-              <label>Ne pohađa</label>
+              <label>Neaktivan</label>
             </div>
           </div>
         </div>
         <div className="formDiv">
-          <span>Sa kim dijete živi?</span>
+          <span className="title">Saglasnost skrbnika</span>
+          <div className="radioButtonsDiv">
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value={true}
+                name="guardian_consent"
+                checked={childsGuardianConsent}
+                onChange={onGuardianConsentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Posjeduje</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value={false}
+                name="guardian_consent"
+                checked={!childsGuardianConsent}
+                onChange={onGuardianConsentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Ne posjeduje</label>
+            </div>
+          </div>
+        </div>
+
+        <div className="formDiv">
+          <span className="title">Sa kim dijete živi?</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -653,63 +770,61 @@ function ChildDetails() {
             </div>
           </div>
         </div>
+
         <div className="formDiv">
-          <span>Status u programu</span>
+          <span className="title">Škola</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
                 type="radio"
-                value={true}
-                name="status"
-                checked={childsStatus}
-                onChange={onStatusChange}
+                value="Pohađa"
+                name="school_status"
+                checked={childSchoolStatus === "Pohađa"}
+                onChange={onSchoolStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Aktivan</label>
+              <label>Pohađa</label>
             </div>
             <div className="radioButtons">
               <input
                 type="radio"
-                value={false}
-                name="status"
-                checked={!childsStatus}
-                onChange={onStatusChange}
+                value="Pohađa po prilagođenom programu"
+                name="school_status"
+                checked={
+                  childSchoolStatus === "Pohađa po prilagođenom programu"
+                }
+                onChange={onSchoolStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Neaktivan</label>
-            </div>
-          </div>
-        </div>
-        <div className="formDiv">
-          <span>Saglasnost skrbnika</span>
-          <div className="radioButtonsDiv">
-            <div className="radioButtons">
-              <input
-                type="radio"
-                value={true}
-                name="guardian_consent"
-                checked={childsGuardianConsent}
-                onChange={onGuardianConsentChange}
-                disabled={shouldDisableForm()}
-              />
-              <label>Posjeduje</label>
+              <label>Pohađa po prilagođenom programu</label>
             </div>
             <div className="radioButtons">
               <input
                 type="radio"
-                value={false}
-                name="guardian_consent"
-                checked={!childsGuardianConsent}
-                onChange={onGuardianConsentChange}
+                value="Pohađa specijalno obrazovanje"
+                name="school_status"
+                checked={childSchoolStatus === "Pohađa specijalno obrazovanje"}
+                onChange={onSchoolStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Ne posjeduje</label>
+              <label>Pohađa specijalno obrazovanje</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Ne pohađa"
+                name="school_status"
+                checked={childSchoolStatus === "Ne pohađa"}
+                onChange={onSchoolStatusChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Ne pohađa</label>
             </div>
           </div>
         </div>
 
         <div className="formDiv">
-          <span>Poteškoće u razvoju</span>
+          <span className="title">Poteškoće u razvoju</span>
           {developmentalDifficulties.map((item) => {
             return (
               <div className="checkBoxes" key={item.id}>
@@ -724,42 +839,59 @@ function ChildDetails() {
               </div>
             );
           })}
+          {!checkDevelopmentalDifficultyValidity() && (
+            <span className="invalid-developmental-difficulty">
+              Mora biti izabrana barem jedna opcija!
+            </span>
+          )}
         </div>
         <div className="formDiv">
-          <span>Razlog mentorstva</span>
-          {mentoringReasonCategories.map((category) => {
-            return (
-              <div key={category.id}>
-                <label>{category.name}</label>
-                {mentoringReasons.map((mentoringReason) => {
-                  if (mentoringReason.category.name === category.name) {
-                    return (
-                      <div className="checkBoxes" key={mentoringReason.id}>
-                        <input
-                          type="checkbox"
-                          value={mentoringReason.id}
-                          checked={hasMentoringReason(mentoringReason)}
-                          onChange={onMentoringReasonChange}
-                          disabled={shouldDisableForm()}
-                        />
-                        <label>{mentoringReason.name}</label>
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-            );
-          })}
+          <span className="title">Razlog mentorstva</span>
+          <div className="mentoringReasonCategoryDiv">
+            {mentoringReasonCategories.map((category) => {
+              return (
+                <div key={category.id}>
+                  <label className="categoryTitle">{category.name}</label>
+                  {mentoringReasons.map((mentoringReason) => {
+                    if (mentoringReason.category.name === category.name) {
+                      return (
+                        <div className="checkBoxes" key={mentoringReason.id}>
+                          <input
+                            type="checkbox"
+                            value={mentoringReason.id}
+                            checked={hasMentoringReason(mentoringReason)}
+                            onChange={onMentoringReasonChange}
+                            disabled={shouldDisableForm()}
+                          />
+                          <label>{mentoringReason.name}</label>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
+              );
+            })}
+          </div>
+          {!checkMentoringReasonValidity() && (
+            <span className="invalid-mentoring-reason">
+              Izaberite najmanje jednu, a najviše 5 opcija!
+            </span>
+          )}
         </div>
 
         {shouldDisableForm() ? null : (
-          <Button type="submit" onClick={addChild}>
-            Submit
+          <Button
+            className="submitButton"
+            type="submit"
+            onClick={addChild}
+            disabled={!enableSubmitButton()}
+          >
+            Potvrdi
           </Button>
         )}
         <Button variant="secondary" onClick={navigateToChilds}>
-          Close
+          Zatvori
         </Button>
       </div>
     );

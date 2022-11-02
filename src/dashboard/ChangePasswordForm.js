@@ -11,6 +11,8 @@ function ChangePasswordForm(props) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
+  const [responseError, setResponseError] = useState(false);
+
   const [oldPasswordType, setOldPasswordType] = useState("password");
   const toggleOldPassword = () => {
     if (oldPasswordType === "password") {
@@ -52,6 +54,11 @@ function ChangePasswordForm(props) {
     }
   };
 
+  const onOldPasswordChange = (e) => {
+    setOldPassword(e.target.value);
+    setResponseError(false);
+  };
+
   const changePassword = async () => {
     const id = toast.loading("Promjena lozinke...");
     await axios
@@ -78,13 +85,8 @@ function ChangePasswordForm(props) {
         logout();
       })
       .catch(() => {
-        toast.update(id, {
-          render: "Stara lozinka nije ispravna!",
-          type: "error",
-          isLoading: false,
-          autoClose: false,
-          closeButton: true,
-        });
+        toast.dismiss(id);
+        setResponseError(true);
       });
   };
 
@@ -92,17 +94,17 @@ function ChangePasswordForm(props) {
     <div>
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Reset password</Modal.Title>
+          <Modal.Title>Promijeni šifru</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <div>
+          <div className="passwordDiv">
             <label>Stara lozinka</label>
             <input
               className="form-control "
               type={oldPasswordType}
               value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
+              onChange={onOldPasswordChange}
             />
             <button
               className="btn btn-outline-primary"
@@ -111,9 +113,14 @@ function ChangePasswordForm(props) {
             >
               {oldPasswordType === "password" ? <FaEye /> : <FaEyeSlash />}
             </button>
+            {responseError && (
+              <span className="response-error">
+                Stara lozinka nije ispravna!
+              </span>
+            )}
           </div>
 
-          <div>
+          <div className="passwordDiv">
             <label>Nova lozinka</label>
             <input
               className="form-control "
@@ -130,7 +137,7 @@ function ChangePasswordForm(props) {
             </button>
           </div>
 
-          <div>
+          <div className="passwordDiv">
             <label>Ponovi lozinku</label>
             <input
               className="form-control "

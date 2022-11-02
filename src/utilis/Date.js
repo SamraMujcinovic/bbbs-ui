@@ -5,7 +5,7 @@ export function dateToString(date) {
       ? `0${selectedDate.getDate()}`
       : selectedDate.getDate();
   const month =
-    selectedDate.getMonth() < 10
+    selectedDate.getMonth() + 1 < 10
       ? `0${selectedDate.getMonth() + 1}`
       : selectedDate.getMonth() + 1;
 
@@ -20,3 +20,25 @@ export function stringToDate(string) {
 
   return new Date(year, month, day);
 }
+
+export const days = ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"];
+export const months = [
+  "Januar",
+  "Februar",
+  "Mart",
+  "April",
+  "Maj",
+  "Juni",
+  "Juli",
+  "August",
+  "Septembar",
+  "Oktobar",
+  "Novembar",
+  "Decembar",
+];
+
+// TODO:
+// testirati kako sada ovaj date radi sa dodavanjem
+// uraditi time picker ovako kao ovaj date
+// i one godine sto sam ja stavila kao dropdown promijeniti da budu isti ovaj date picker samo za godine!
+// uraditi validacije na ostalim poljima

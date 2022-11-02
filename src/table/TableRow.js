@@ -8,7 +8,10 @@ function TableRow(props) {
         return key !== "id" && <td key={key}>{val}</td>;
       })}
       <td>
-        <button onClick={() => props.getRowInfo(props.data)}>
+        <button
+          className="editButton"
+          onClick={() => props.getRowInfo(props.data)}
+        >
           <FaPen />
         </button>
       </td>

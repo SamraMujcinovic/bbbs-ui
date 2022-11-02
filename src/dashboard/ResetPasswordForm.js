@@ -9,9 +9,11 @@ import { validEmailRegex } from "../utilis/ServiceUtil";
 function ResetPasswordForm(props) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
+  const [responseError, setResponseError] = useState(false);
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
+    setResponseError(false);
     if (!validEmailRegex.test(e.target.value) && e.target.value !== "") {
       setError(true);
     } else {
@@ -35,13 +37,8 @@ function ResetPasswordForm(props) {
         });
       })
       .catch(() => {
-        toast.update(id, {
-          render: "Korisnik sa unesenim e-mailom ne postoji!",
-          type: "error",
-          isLoading: false,
-          autoClose: false,
-          closeButton: true,
-        });
+        toast.dismiss(id);
+        setResponseError(true);
       });
   };
 
@@ -49,20 +46,22 @@ function ResetPasswordForm(props) {
     <div>
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Reset password</Modal.Title>
+          <Modal.Title>Resetuj šifru</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <label>Email</label>
           <input
-            className="form-control "
+            className={"" + (error ? "invalid-email" : "")}
             type="email"
             value={email}
             onChange={onEmailChange}
           />
-          {error ? (
-            <span className="errorMessage">E-Mail nije validan!</span>
-          ) : null}
+          {responseError && (
+            <span className="response-error">
+              Korisnik sa unesenim e-mailom ne postoji!
+            </span>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button

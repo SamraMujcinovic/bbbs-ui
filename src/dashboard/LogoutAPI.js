@@ -17,6 +17,7 @@ export async function logout() {
       .then(() => {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("roles");
+        sessionStorage.removeItem("user");
         window.location.href = "/";
       });
   } catch (error) {

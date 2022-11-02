@@ -11,7 +11,7 @@ axios.interceptors.response.use(
     return response;
   },
 
-  async function(error) {
+  async function (error) {
     const originalRequest = error.config;
 
     if (
@@ -32,6 +32,7 @@ axios.interceptors.response.use(
           if (error.response.status === 401) {
             sessionStorage.removeItem("token");
             sessionStorage.removeItem("roles");
+            sessionStorage.removeItem("user");
             window.location.href = "/";
           }
         });

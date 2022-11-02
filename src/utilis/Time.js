@@ -9,9 +9,13 @@ export function numberToTimeString(number) {
 }
 
 export function timeStringToNumber(timeString) {
-  const time = timeString.split(":");
-  const hours = Number(time[0]);
-  const minutes = Number(time[1]);
+  if (timeString) {
+    const time = timeString.split(":");
+    const hours = Number(time[0]);
+    const minutes = Number(time[1]);
 
-  return (hours * 60 + minutes) / 60;
+    return (hours * 60 + minutes) / 60;
+  }
+
+  return undefined;
 }

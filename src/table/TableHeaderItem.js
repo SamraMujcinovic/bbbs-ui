@@ -2,9 +2,9 @@ import React from "react";
 
 function TableHeaderItem({ item }) {
   return (
-    <td key={item} title={item}>
+    <th key={item} title={item}>
       {item}
-    </td>
+    </th>
   );
 }
 

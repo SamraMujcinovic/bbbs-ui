@@ -31,6 +31,7 @@ const Sidebar = ({ children }) => {
 
   const authenticate = sessionStorage.getItem("token");
   const userRole = sessionStorage.getItem("roles");
+  const user = sessionStorage.getItem("user");
 
   // login-modal
   const [show, setShow] = useState(false);
@@ -53,12 +54,11 @@ const Sidebar = ({ children }) => {
   const handleChangePassOpen = () => setShowChangePassModal(true);
 
   const openChangePassForm = () => {
-    console.log("here");
     handleChangePassOpen();
   };
 
   return (
-    <div className="container">
+    <div className="sidebarContainerDiv">
       <div className="sidebar">
         <div className="top_section">
           <h1 style={{ display: "block" }} className="logo">
@@ -85,18 +85,22 @@ const Sidebar = ({ children }) => {
         <div className="loginButtonDiv">
           {sessionStorage.getItem("token") ? (
             <div className="logoutButtonDiv">
-              <button onClick={logout}>Logout</button>
-              {settingsOpened ? (
-                <button onClick={() => setSettingsOpened(false)}>
-                  <FaChevronUp />
-                </button>
-              ) : (
-                <button onClick={() => setSettingsOpened(true)}>
-                  <FaChevronDown />
-                </button>
-              )}
+              <div className="usernameDiv">
+                {settingsOpened ? (
+                  <button onClick={() => setSettingsOpened(false)}>
+                    {user}
+                    <FaChevronUp className="settingsIcon" />
+                  </button>
+                ) : (
+                  <button onClick={() => setSettingsOpened(true)}>
+                    {user}
+                    <FaChevronDown className="settingsIcon" />
+                  </button>
+                )}
+              </div>
               {settingsOpened ? (
                 <div className="settingsDiv">
+                  <button onClick={logout}>Odjavi se</button>
                   <button onClick={openChangePassForm}>
                     Promijeni lozinku
                   </button>
@@ -105,7 +109,7 @@ const Sidebar = ({ children }) => {
             </div>
           ) : (
             <button className="loginButton" onClick={openLoginForm}>
-              Login
+              Prijavi se
             </button>
           )}
         </div>

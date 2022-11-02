@@ -20,13 +20,8 @@ function Volunteer(props) {
     navigateToVolunteerDetails(row);
   };
 
-  const [organisations, setOrganisations] = useState([]);
-  const [cities, setCities] = useState([]);
-
   useEffect(() => {
     getVolunteers();
-    getOrganisations();
-    getCities();
   }, []);
 
   // add volunteer page
@@ -40,9 +35,6 @@ function Volunteer(props) {
       state: {
         selectedVolunteer: selectedVolunteer,
         isEditMode: selectedVolunteer !== undefined,
-        organisations: organisations,
-        cities: cities,
-        volunteers: volunteers,
       },
     });
   };
@@ -75,32 +67,6 @@ function Volunteer(props) {
         },
       })
       .then((response) => getConvertedVolunteers(response))
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getOrganisations = async () => {
-    await axios
-      .get("http://localhost:8000/organisations/", {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      })
-      .then((response) => setOrganisations(response.data))
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getCities = async () => {
-    await axios
-      .get("http://localhost:8000/cities/", {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      })
-      .then((response) => setCities(response.data))
       .catch((error) => {
         console.log(error);
       });
