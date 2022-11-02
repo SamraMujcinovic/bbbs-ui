@@ -14,7 +14,7 @@ export const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
 
-export const phoneNumberRegex = RegExp("^0[0-9]{8}$");
+export const phoneNumberRegex = RegExp("^0[0-9]{8,9}$");
 
 export function countWords(text) {
   text = text.replace(/(^\s*)|(\s*$)/gi, ""); //exclude  start and end white-space

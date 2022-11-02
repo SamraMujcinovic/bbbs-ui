@@ -14,7 +14,7 @@ export function timeStringToNumber(timeString) {
     const hours = Number(time[0]);
     const minutes = Number(time[1]);
 
-    return (hours * 60 + minutes) / 60;
+    return Number(((hours * 60 + minutes) / 60).toFixed(2));
   }
 
   return undefined;
