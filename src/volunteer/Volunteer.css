@@ -44,3 +44,7 @@ input::placeholder {
 .checkBoxes input {
   width: 0.9rem;
 }
+
+.buttons {
+  display: flex;
+}

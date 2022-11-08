@@ -244,6 +244,17 @@ function VolunteerDetails() {
   };
 
   const onCoordinatorChange = (event) => {
+    if (
+      event &&
+      volunteerCoordinator &&
+      event[0] &&
+      volunteerCoordinator[0] &&
+      event[0].id !== volunteerCoordinator[0].id
+    ) {
+      // if coordinator changed
+      console.log("helooo");
+      setChildsCode("");
+    }
     setVolunteerCoordinator(event);
   };
 
@@ -310,11 +321,25 @@ function VolunteerDetails() {
       });
   };
 
+  const updateVolunteer = async () => {
+    await axios
+      .put(
+        `http://localhost:8000/volunteers/${location.state.selectedVolunteer.id}/`,
+        getSelectedValues(),
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then(() => navigateToVolunteers())
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const shouldDisableForm = () => {
-    if (
-      hasAdminGroup(userGroups) ||
-      (hasCoordinatorGroup(userGroups) && !isEditMode)
-    ) {
+    if (hasAdminGroup(userGroups) || hasCoordinatorGroup(userGroups)) {
       return false;
     }
     return true;
@@ -383,7 +408,7 @@ function VolunteerDetails() {
               type="email"
               value={volunteerEmail}
               onChange={onEmailChange}
-              disabled={shouldDisableForm()}
+              disabled={isEditMode}
             />
           </div>
           <div className="formDiv">
@@ -419,7 +444,7 @@ function VolunteerDetails() {
                   name="gender"
                   checked={volunteerGender === "Muški"}
                   onChange={onGenderChange}
-                  disabled={shouldDisableForm()}
+                  disabled={isEditMode}
                 />
                 <label>Muški</label>
               </div>
@@ -430,7 +455,7 @@ function VolunteerDetails() {
                   name="gender"
                   checked={volunteerGender === "Ženski"}
                   onChange={onGenderChange}
-                  disabled={shouldDisableForm()}
+                  disabled={isEditMode}
                 />
                 <label>Ženski</label>
               </div>
@@ -441,7 +466,7 @@ function VolunteerDetails() {
                   name="gender"
                   checked={volunteerGender === "Ostali"}
                   onChange={onGenderChange}
-                  disabled={shouldDisableForm()}
+                  disabled={isEditMode}
                 />
                 <label>Ostali</label>
               </div>
@@ -646,19 +671,34 @@ function VolunteerDetails() {
           </div>
         </div>
 
-        {shouldDisableForm() ? null : (
-          <Button
-            type="submit"
-            className="submitButton"
-            onClick={addVolunteer}
-            disabled={!enableSubmitButton()}
-          >
-            Potvrdi
+        <div className="buttons">
+          {shouldDisableForm() ? null : (
+            <div>
+              {!isEditMode ? (
+                <Button
+                  className="submitButton"
+                  type="submit"
+                  onClick={addVolunteer}
+                  disabled={!enableSubmitButton()}
+                >
+                  Potvrdi
+                </Button>
+              ) : (
+                <Button
+                  className="submitButton"
+                  type="submit"
+                  onClick={updateVolunteer}
+                  disabled={!enableSubmitButton()}
+                >
+                  Izmijeni
+                </Button>
+              )}
+            </div>
+          )}
+          <Button variant="secondary" onClick={navigateToVolunteers}>
+            Zatvori
           </Button>
-        )}
-        <Button variant="secondary" onClick={navigateToVolunteers}>
-          Zatvori
-        </Button>
+        </div>
       </div>
     );
   }

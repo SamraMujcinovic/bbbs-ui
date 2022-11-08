@@ -45,6 +45,10 @@ axios.interceptors.response.use(
         return axios({
           method: originalRequest.method,
           url: originalRequest.url,
+          data:
+            originalRequest.data !== undefined
+              ? JSON.parse(originalRequest.data)
+              : undefined,
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("token"),
           },

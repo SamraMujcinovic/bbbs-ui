@@ -55,6 +55,23 @@ function CoordinatorModal(props) {
       });
   };
 
+  const updateCoordinator = async () => {
+    await axios
+      .put(
+        `http://localhost:8000/coordinators/${props.data.id}/`,
+        getModalData(),
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((response) => props.handleClose())
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const getModalData = () => {
     return {
       user: {
@@ -121,6 +138,7 @@ function CoordinatorModal(props) {
               placeholder="name@example.com"
               value={coordinatorEmail}
               onChange={onEmailChange}
+              disabled={props.data !== undefined}
             />
           </div>
           <div>
@@ -132,6 +150,7 @@ function CoordinatorModal(props) {
               placeholder="Organizacija"
               valueField="name"
               labelField="name"
+              disabled={props.data !== undefined}
             />
           </div>
           <div>
@@ -143,18 +162,29 @@ function CoordinatorModal(props) {
               placeholder="Grad"
               valueField="name"
               labelField="name"
+              disabled={props.data !== undefined}
             />
           </div>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button
-            type="submit"
-            onClick={addCoordinator}
-            disabled={disableSubmitButton()}
-          >
-            Potvrdi
-          </Button>
+          {props.data ? (
+            <Button
+              type="submit"
+              onClick={updateCoordinator}
+              disabled={disableSubmitButton()}
+            >
+              Izmijeni
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              onClick={addCoordinator}
+              disabled={disableSubmitButton()}
+            >
+              Potvrdi
+            </Button>
+          )}
           <Button variant="secondary" onClick={props.handleClose}>
             Zatvori
           </Button>

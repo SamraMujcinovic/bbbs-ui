@@ -28,6 +28,7 @@ function ChildDetails() {
   const [isEditMode, setIsEditMode] = useState(false);
 
   // child details
+  const [child, setChild] = useState(undefined);
   const [childsFirstName, setChildsFirstName] = useState("");
   const [childsLastName, setChildsLastName] = useState("");
   const [childsCode, setChildsCode] = useState("");
@@ -116,6 +117,20 @@ function ChildDetails() {
     }
   }, [coordinators]);
 
+  useEffect(() => {
+    // use this way, it does not work on the other way!!!
+    if (
+      location.state.selectedChild &&
+      location.state.selectedChild.volunteer
+    ) {
+      setChildsVolunteer(
+        volunteers.filter((volunteer) => {
+          return volunteer.childCode === location.state.selectedChild.code;
+        })
+      );
+    }
+  }, [volunteers]);
+
   // data to select
   const createYearsArray = () => {
     const currentYear = new Date().getFullYear();
@@ -203,6 +218,9 @@ function ChildDetails() {
           coordinator: coordinator,
           gender: getChildsGender(),
           status: "False",
+          child: location.state.selectedChild
+            ? location.state.selectedChild.id
+            : undefined,
         },
 
         headers: {
@@ -226,6 +244,7 @@ function ChildDetails() {
       email: volunteer.user.email,
       organisation: volunteer.volunteer_organisation[0].name,
       city: volunteer.volunteer_city[0].name,
+      childCode: volunteer.child,
     };
   };
 
@@ -282,6 +301,7 @@ function ChildDetails() {
         },
       })
       .then((response) => {
+        setChild(response.data);
         setInitialData(response.data);
       })
       .catch((error) => {
@@ -304,13 +324,6 @@ function ChildDetails() {
     setChildsGuardianConsent(selectedChild.guardian_consent);
 
     setChildsCoordinator(selectedChild.coordinator);
-
-    setChildsVolunteer(selectedChild.volunteer);
-    if (selectedChild.volunteer) {
-      setChildsVolunteerInput(
-        `${selectedChild.volunteer.user.first_name} ${selectedChild.volunteer.user.last_name}`
-      );
-    }
 
     setChildsDevelopmentalDifficulties(
       selectedChild.developmental_difficulties.map(
@@ -420,6 +433,7 @@ function ChildDetails() {
   const onCoordinatorChange = (event) => {
     setChildsCoordinator(event);
     setChildsVolunteer(undefined);
+    setVolunteers([]);
   };
 
   const onOrganisationChange = (value) => {
@@ -441,6 +455,38 @@ function ChildDetails() {
       return "Z";
     }
     return "N";
+  };
+
+  const addChild = async () => {
+    await axios
+      .post("http://localhost:8000/childs/", getSelectedValues(), {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then(() => navigateToChilds())
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const updateChild = async () => {
+    await axios
+      .put(
+        `http://localhost:8000/childs/${location.state.selectedChild.id}/`,
+        getSelectedValues(),
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then(() => {
+        navigateToChilds();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const getSelectedValues = () => {
@@ -469,24 +515,8 @@ function ChildDetails() {
     };
   };
 
-  const addChild = async () => {
-    await axios
-      .post("http://localhost:8000/childs/", getSelectedValues(), {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      })
-      .then(() => navigateToChilds())
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   const shouldDisableForm = () => {
-    if (
-      hasAdminGroup(userGroups) ||
-      (hasCoordinatorGroup(userGroups) && !isEditMode)
-    ) {
+    if (hasAdminGroup(userGroups) || hasCoordinatorGroup(userGroups)) {
       return false;
     }
     return true;
@@ -582,7 +612,7 @@ function ChildDetails() {
                 name="gender"
                 checked={childsGender === "Muški"}
                 onChange={onGenderChange}
-                disabled={shouldDisableForm()}
+                disabled={isEditMode}
               />
               <label>Muški</label>
             </div>
@@ -593,7 +623,7 @@ function ChildDetails() {
                 name="gender"
                 checked={childsGender === "Ženski"}
                 onChange={onGenderChange}
-                disabled={shouldDisableForm()}
+                disabled={isEditMode}
               />
               <label>Ženski</label>
             </div>
@@ -604,7 +634,7 @@ function ChildDetails() {
                 name="gender"
                 checked={childsGender === "Ostali"}
                 onChange={onGenderChange}
-                disabled={shouldDisableForm()}
+                disabled={isEditMode}
               />
               <label>Ostali</label>
             </div>
@@ -646,23 +676,18 @@ function ChildDetails() {
           </div>
         ) : null}
         <label className="title">Volonter</label>
-        {location.state.isEditMode ? (
-          <div className="formDiv">
-            <input type="text" value={childsVolunteerInput} disabled={true} />
-          </div>
-        ) : (
-          <Select
-            values={childsVolunteer}
-            options={volunteers}
-            onChange={(values) => setChildsVolunteer(values)}
-            placeholder="Volonter"
-            valueField="id"
-            labelField="name"
-            disabled={
-              (hasAdminGroup(userGroups) && !childsCoordinator) || !childsGender
-            }
-          />
-        )}
+
+        <Select
+          values={childsVolunteer}
+          options={volunteers}
+          onChange={(values) => setChildsVolunteer(values)}
+          placeholder="Volonter"
+          valueField="id"
+          labelField="name"
+          disabled={
+            (hasAdminGroup(userGroups) && !childsCoordinator) || !childsGender
+          }
+        />
 
         <div className="formDiv">
           <span className="title">Status u programu</span>
@@ -880,19 +905,34 @@ function ChildDetails() {
           )}
         </div>
 
-        {shouldDisableForm() ? null : (
-          <Button
-            className="submitButton"
-            type="submit"
-            onClick={addChild}
-            disabled={!enableSubmitButton()}
-          >
-            Potvrdi
+        <div className="buttons">
+          {shouldDisableForm() ? null : (
+            <div>
+              {!isEditMode ? (
+                <Button
+                  className="submitButton"
+                  type="submit"
+                  onClick={addChild}
+                  disabled={!enableSubmitButton()}
+                >
+                  Potvrdi
+                </Button>
+              ) : (
+                <Button
+                  className="submitButton"
+                  type="submit"
+                  onClick={updateChild}
+                  disabled={!enableSubmitButton()}
+                >
+                  Izmijeni
+                </Button>
+              )}
+            </div>
+          )}
+          <Button variant="secondary" onClick={navigateToChilds}>
+            Zatvori
           </Button>
-        )}
-        <Button variant="secondary" onClick={navigateToChilds}>
-          Zatvori
-        </Button>
+        </div>
       </div>
     );
   }

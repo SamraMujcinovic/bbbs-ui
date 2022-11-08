@@ -298,10 +298,8 @@ function FormDetails(props) {
   };
 
   const shouldDisableForm = () => {
-    if (
-      (hasVolunteerGroup(userRoles) && !isEditMode) ||
-      hasAdminGroup(userRoles)
-    ) {
+    // disable editing forms for all roles!
+    if (hasVolunteerGroup(userRoles) && !isEditMode) {
       return false;
     }
     return true;
