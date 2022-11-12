@@ -1,11 +1,32 @@
 import React from "react";
-import { FaPen } from "react-icons/fa";
+import { FaCheck, FaExclamation, FaPen } from "react-icons/fa";
 
 function TableRow(props) {
   return (
     <tr onDoubleClick={() => props.getRowInfo(props.data)}>
       {Object.entries(props.data).map(([key, val]) => {
-        return key !== "id" && <td key={key}>{val}</td>;
+        if (key !== "evaluation") {
+          return key !== "id" && <td key={key}>{val}</td>;
+        } else {
+          if (val === "Loše") {
+            return (
+              <td key={key}>
+                <FaExclamation className="badEvaluation" />
+              </td>
+            );
+          } else {
+            return (
+              <td key={key}>
+                <FaCheck
+                  className={
+                    "" +
+                    (val === "Super" ? "greatEvaluation" : "goodEvaluation")
+                  }
+                />
+              </td>
+            );
+          }
+        }
       })}
       <td>
         <button

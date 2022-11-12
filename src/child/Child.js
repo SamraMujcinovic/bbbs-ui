@@ -47,7 +47,7 @@ function Child(props) {
   const theadData = [
     "Kod",
     "Spol",
-    "Godina rodjenja",
+    "Godina rođenja",
     "Volonter",
     "Organizacija",
     "Grad",

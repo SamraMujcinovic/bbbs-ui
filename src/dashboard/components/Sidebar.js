@@ -60,10 +60,13 @@ const Sidebar = ({ children }) => {
   return (
     <div className="sidebarContainerDiv">
       <div className="sidebar">
-        <div className="top_section">
-          <h1 style={{ display: "block" }} className="logo">
-            BBBS
-          </h1>
+        <div className="logo">
+          <div>
+            <img src={require("../../images/logo.png")} />
+          </div>
+          <div>
+            <h1>SBSS</h1>
+          </div>
         </div>
         {menuItem
           .filter((item) => item.roles.includes(userRole))

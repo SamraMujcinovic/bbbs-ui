@@ -580,13 +580,13 @@ function VolunteerDetails() {
             <div className="radioButtons">
               <input
                 type="radio"
-                value="Srednja skola"
+                value="Srednja škola"
                 name="education_level"
-                checked={volunteerEducationLevel === "Srednja skola"}
+                checked={volunteerEducationLevel === "Srednja škola"}
                 onChange={onEducationLevelChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Srednja skola</label>
+              <label>Srednja škola</label>
             </div>
             <div className="radioButtons">
               <input

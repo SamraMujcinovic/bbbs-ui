@@ -10,14 +10,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { dateToString, days, months, stringToDate } from "../utilis/Date";
 import { numberToTimeString, timeStringToNumber } from "../utilis/Time";
-import {
-  countWords,
-  escapeInput,
-  hasAdminGroup,
-  hasVolunteerGroup,
-} from "../utilis/ServiceUtil";
+import { countWords, hasVolunteerGroup } from "../utilis/ServiceUtil";
 
 import "../form/Form.css";
+import { toast } from "react-toastify";
 
 function FormDetails(props) {
   // authenticate
@@ -46,6 +42,7 @@ function FormDetails(props) {
   const [formActivities, setFormActivities] = useState([]);
   const [formDescription, setFormDescription] = useState("");
   const [formVolunteer, setFormVolunteer] = useState("");
+  const [formChild, setFormChild] = useState("");
 
   // data to select
   const [hangOutPlaces, setHangOutPlaces] = useState([]);
@@ -95,6 +92,7 @@ function FormDetails(props) {
       setFormDescription(selectedForm.description);
     }
     setFormVolunteer(selectedForm.volunteer);
+    setFormChild(selectedForm.child);
   };
 
   const getHangOutPlaces = async () => {
@@ -226,7 +224,15 @@ function FormDetails(props) {
       })
       .then(() => navigateToForms())
       .catch((error) => {
-        console.log(error);
+        if (error.response.data.hasOwnProperty("303")) {
+          toast("Unos druženja za izabrani datum već postoji!", {
+            type: "error",
+            position: "top-center",
+            autoClose: false,
+            hideProgressBar: true,
+          });
+        }
+        console.log(error.response.data.hasOwnProperty("303"));
       });
   };
 
@@ -357,6 +363,12 @@ function FormDetails(props) {
             />
           </div>
         ) : null}
+        {formChild ? (
+          <div>
+            <span className="title">Dijete:</span>
+            <input value={formChild} disabled={true} />
+          </div>
+        ) : null}
         <div className="dateTimeDiv">
           <div>
             <span className="title dateSpan">Datum: </span>
@@ -464,17 +476,6 @@ function FormDetails(props) {
                 disabled={shouldDisableForm()}
               />
               <label>Dobro</label>
-            </div>
-            <div className="radioButtons">
-              <input
-                type="radio"
-                value="Nije loše"
-                name="evaluation"
-                checked={formEvaluation === "Nije loše"}
-                onChange={onEvaluationChange}
-                disabled={shouldDisableForm()}
-              />
-              <label>Nije loše</label>
             </div>
             <div className="radioButtons">
               <input

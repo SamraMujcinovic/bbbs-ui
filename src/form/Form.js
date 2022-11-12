@@ -10,6 +10,7 @@ function Form(props) {
   let navigate = useNavigate();
 
   const userGroups = sessionStorage.getItem("roles");
+  const [currentVolunteer, setCurrentVolunteer] = useState(undefined);
 
   // table data
   const theadData = [
@@ -26,7 +27,25 @@ function Form(props) {
 
   useEffect(() => {
     getForms();
+    if (hasVolunteerGroup(userGroups)) {
+      getVolunteer();
+    }
   }, []);
+
+  const getVolunteer = async () => {
+    await axios
+      .get(`http://localhost:8000/volunteers/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setCurrentVolunteer(response?.data[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const getSelectedRow = (row) => {
     navigateToFormDetails(row);
@@ -59,7 +78,7 @@ function Form(props) {
       id: form.id,
       date: form.date,
       volunteer: `${form.volunteer.user.first_name} ${form.volunteer.user.last_name}`,
-      child: form.volunteer.child,
+      child: form.child,
       organisation: form.volunteer.volunteer_organisation[0].name,
       city: form.volunteer.volunteer_city[0].name,
       duration: form.duration,
@@ -85,7 +104,9 @@ function Form(props) {
   return (
     <div>
       <h1>Forme</h1>
-      {hasVolunteerGroup(userGroups) ? (
+      {hasVolunteerGroup(userGroups) &&
+      currentVolunteer?.child !== undefined &&
+      currentVolunteer?.child !== null ? (
         <button className="btn btn-success" onClick={openAddFormPage}>
           Dodaj formu
         </button>

@@ -22,8 +22,8 @@ main {
   height: 100vh;
 }
 .sidebar {
-  background: #222;
-  color: #eee;
+  background: #014;
+  color: rgb(76, 124, 212);
   height: 100vh;
   width: 15rem;
   position: fixed;
@@ -32,13 +32,15 @@ main {
   width: 100%;
   margin-left: 15rem;
 }
-.top_section {
+
+.logo {
   display: flex;
+  flex-direction: column;
   align-items: center;
   padding: 20px 15px;
-}
-.logo {
-  font-size: 30px;
+  justify-content: center;
+  color: #0655c9;
+  border-bottom: 1px solid #b6bdb9;
 }
 .bars {
   display: flex;
@@ -47,19 +49,20 @@ main {
 }
 .link {
   display: flex;
-  color: #eee;
+  color: #0655c9;
   padding: 10px 15px;
   gap: 15px;
   text-decoration: none;
+  font-weight: bold;
 }
 .link:hover {
-  background: #434343;
-  color: #eee;
+  background: #b6bdb9;
+  color: #0655c9;
   transition: all 0.5s;
 }
 .active {
-  background: #434343;
-  color: #eee;
+  background: #b6bdb9;
+  color: #0655c9;
 }
 .link_text {
   font-size: 20px;
@@ -112,6 +115,7 @@ main {
   display: flex;
   justify-content: flex-end;
   min-width: 160px;
+  margin-top: 0.5rem;
 }
 
 .settingsDiv {
@@ -182,4 +186,8 @@ main {
 
 .submitButton {
   margin-right: 0.5rem;
+}
+
+.btn-success {
+  background: #0655c9 !important;
 }
