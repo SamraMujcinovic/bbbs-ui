@@ -192,7 +192,7 @@ function VolunteerDetails() {
         },
       })
       .then((response) => {
-        setCoordinators(response.data.map(covertToCoordinatorData));
+        setCoordinators(response.data.results.map(covertToCoordinatorData));
       })
       .catch((error) => {
         console.log(error);
@@ -252,7 +252,6 @@ function VolunteerDetails() {
       event[0].id !== volunteerCoordinator[0].id
     ) {
       // if coordinator changed
-      console.log("helooo");
       setChildsCode("");
     }
     setVolunteerCoordinator(event);

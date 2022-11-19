@@ -2,13 +2,20 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import Table from "../table/Table";
+import ReactPaginate from "react-paginate";
+
 import CoordinatorModal from "./CoordinatorModal";
-import { hasAdminGroup } from "../utilis/ServiceUtil";
+import { hasAdminGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 
 function Coordinators(props) {
   // authentication
   const authenticate = sessionStorage.getItem("token");
   const userRoles = sessionStorage.getItem("roles");
+
+  // pagination
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
@@ -43,8 +50,15 @@ function Coordinators(props) {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
+        params: {
+          page: currentPage,
+        },
       })
-      .then((response) => getConvertedCoordiantors(response))
+      .then((response) => {
+        setTotalElements(response.data.count);
+        setTotalPages(Math.ceil(response.data.count / PAGE_SIZE));
+        getConvertedCoordiantors(response.data);
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -52,7 +66,7 @@ function Coordinators(props) {
 
   const getConvertedCoordiantors = (unConvertedCoordinators) => {
     let newCoordinators = [];
-    unConvertedCoordinators.data.forEach((coordinator) => {
+    unConvertedCoordinators.results.forEach((coordinator) => {
       newCoordinators.push(covertToCoordinatorData(coordinator));
     });
     setCoordinators(newCoordinators);
@@ -75,6 +89,10 @@ function Coordinators(props) {
     getOrganisations();
     getCities();
   }, []);
+
+  useEffect(() => {
+    getCoordinators();
+  }, [currentPage]);
 
   const getOrganisations = async () => {
     await axios
@@ -102,6 +120,10 @@ function Coordinators(props) {
       });
   };
 
+  const handlePaginationChange = (event) => {
+    setCurrentPage(event.selected + 1);
+  };
+
   if (authenticate && hasAdminGroup(userRoles)) {
     return (
       <div>
@@ -114,6 +136,16 @@ function Coordinators(props) {
           tbodyData={coordinators}
           getRowData={getSelectedRow}
         />
+        <div className="paginationDiv">
+          <ReactPaginate
+            className="pagination"
+            onPageChange={handlePaginationChange}
+            pageCount={totalPages}
+            renderOnZeroPageCount={null}
+            previousLabel="<"
+            nextLabel=">"
+          />
+        </div>
         {show ? (
           <CoordinatorModal
             show={show}

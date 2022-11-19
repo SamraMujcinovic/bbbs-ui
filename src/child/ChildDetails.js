@@ -188,7 +188,7 @@ function ChildDetails() {
         },
       })
       .then((response) => {
-        setCoordinators(response.data.map(covertToCoordinatorData));
+        setCoordinators(response.data.results.map(covertToCoordinatorData));
       })
       .catch((error) => {
         console.log(error);
@@ -228,7 +228,7 @@ function ChildDetails() {
         },
       })
       .then((response) => {
-        setVolunteers(response.data.map(covertToVolunteerData));
+        setVolunteers(response.data.results.map(covertToVolunteerData));
       })
       .catch((error) => {
         console.log(error);

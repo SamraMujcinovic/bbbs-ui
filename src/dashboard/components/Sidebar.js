@@ -64,9 +64,6 @@ const Sidebar = ({ children }) => {
           <div>
             <img src={require("../../images/logo.png")} />
           </div>
-          <div>
-            <h1>SBSS</h1>
-          </div>
         </div>
         {menuItem
           .filter((item) => item.roles.includes(userRole))

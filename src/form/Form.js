@@ -3,7 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import Table from "../table/Table";
-import { hasVolunteerGroup } from "../utilis/ServiceUtil";
+import ReactPaginate from "react-paginate";
+
+import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 
 function Form(props) {
   // navigation
@@ -11,6 +13,11 @@ function Form(props) {
 
   const userGroups = sessionStorage.getItem("roles");
   const [currentVolunteer, setCurrentVolunteer] = useState(undefined);
+
+  // pagination
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // table data
   const theadData = [
@@ -32,6 +39,10 @@ function Form(props) {
     }
   }, []);
 
+  useEffect(() => {
+    getForms();
+  }, [currentPage]);
+
   const getVolunteer = async () => {
     await axios
       .get(`http://localhost:8000/volunteers/`, {
@@ -40,7 +51,7 @@ function Form(props) {
         },
       })
       .then((response) => {
-        setCurrentVolunteer(response?.data[0]);
+        setCurrentVolunteer(response?.data.results[0]);
       })
       .catch((error) => {
         console.log(error);
@@ -57,8 +68,15 @@ function Form(props) {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
+        params: {
+          page: currentPage,
+        },
       })
-      .then((response) => getConvertedForms(response))
+      .then((response) => {
+        setTotalElements(response.data.count);
+        setTotalPages(Math.ceil(response.data.count / PAGE_SIZE));
+        getConvertedForms(response.data);
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -66,7 +84,7 @@ function Form(props) {
 
   const getConvertedForms = (unConvertedForms) => {
     let newForms = [];
-    unConvertedForms.data.forEach((form) => {
+    unConvertedForms.results.forEach((form) => {
       newForms.push(covertToFormData(form));
     });
     setForms(newForms);
@@ -101,6 +119,10 @@ function Form(props) {
     });
   };
 
+  const handlePaginationChange = (event) => {
+    setCurrentPage(event.selected + 1);
+  };
+
   return (
     <div>
       <h1>Forme</h1>
@@ -116,6 +138,16 @@ function Form(props) {
         tbodyData={forms}
         getRowData={getSelectedRow}
       />
+      <div className="paginationDiv">
+        <ReactPaginate
+          className="pagination"
+          onPageChange={handlePaginationChange}
+          pageCount={totalPages}
+          renderOnZeroPageCount={null}
+          previousLabel="<"
+          nextLabel=">"
+        />
+      </div>
     </div>
   );
 }

@@ -191,3 +191,13 @@ main {
 .btn-success {
   background: #0655c9 !important;
 }
+
+.paginationDiv {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+}

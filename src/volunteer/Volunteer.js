@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import axios from "axios";
-import { hasVolunteerGroup } from "../utilis/ServiceUtil";
+import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
+
+import ReactPaginate from "react-paginate";
 
 function Volunteer(props) {
   // navigation
@@ -11,6 +13,11 @@ function Volunteer(props) {
   // authentication
   const authenticate = sessionStorage.getItem("token");
   const userRoles = sessionStorage.getItem("roles");
+
+  // pagination
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // table data
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
@@ -23,6 +30,10 @@ function Volunteer(props) {
   useEffect(() => {
     getVolunteers();
   }, []);
+
+  useEffect(() => {
+    getVolunteers();
+  }, [currentPage]);
 
   // add volunteer page
   const openAddVolunteerPage = () => {
@@ -53,7 +64,7 @@ function Volunteer(props) {
 
   const getConvertedVolunteers = (unConvertedVolunteers) => {
     let newVolunteers = [];
-    unConvertedVolunteers.data.forEach((volunteer) => {
+    unConvertedVolunteers.results.forEach((volunteer) => {
       newVolunteers.push(covertToVolunteerData(volunteer));
     });
     setVolunteers(newVolunteers);
@@ -65,11 +76,22 @@ function Volunteer(props) {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
+        params: {
+          page: currentPage,
+        },
       })
-      .then((response) => getConvertedVolunteers(response))
+      .then((response) => {
+        setTotalElements(response.data.count);
+        setTotalPages(Math.ceil(response.data.count / PAGE_SIZE));
+        getConvertedVolunteers(response.data);
+      })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handlePaginationChange = (event) => {
+    setCurrentPage(event.selected + 1);
   };
 
   if (authenticate && !hasVolunteerGroup(userRoles)) {
@@ -79,11 +101,22 @@ function Volunteer(props) {
         <button className="btn btn-success" onClick={openAddVolunteerPage}>
           Dodaj volontera
         </button>
+
         <Table
           theadData={theadData}
           tbodyData={volunteers}
           getRowData={getSelectedRow}
         />
+        <div className="paginationDiv">
+          <ReactPaginate
+            className="pagination"
+            onPageChange={handlePaginationChange}
+            pageCount={totalPages}
+            renderOnZeroPageCount={null}
+            previousLabel="<"
+            nextLabel=">"
+          />
+        </div>
       </div>
     );
   }

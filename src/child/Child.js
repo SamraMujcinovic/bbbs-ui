@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import axios from "axios";
-import { hasVolunteerGroup } from "../utilis/ServiceUtil";
+import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
+
+import "../table/Pagination.css";
+
+import ReactPaginate from "react-paginate";
 
 function Child(props) {
   // navigation
@@ -12,9 +16,18 @@ function Child(props) {
   const authenticate = sessionStorage.getItem("token");
   const userRoles = sessionStorage.getItem("roles");
 
+  // pagination
+  const [totalElements, setTotalElements] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     getChilds();
   }, []);
+
+  useEffect(() => {
+    getChilds();
+  }, [currentPage]);
 
   // Table
   // table data
@@ -22,7 +35,7 @@ function Child(props) {
   // formatting table data
   const getConvertedChilds = (unConvertedChilds) => {
     let newChilds = [];
-    unConvertedChilds.data.forEach((child) => {
+    unConvertedChilds.results.forEach((child) => {
       newChilds.push(covertToChildsData(child));
     });
     setChilds(newChilds);
@@ -81,11 +94,22 @@ function Child(props) {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
+        params: {
+          page: currentPage,
+        },
       })
-      .then((response) => getConvertedChilds(response))
+      .then((response) => {
+        setTotalElements(response.data.count);
+        setTotalPages(Math.ceil(response.data.count / PAGE_SIZE));
+        getConvertedChilds(response.data);
+      })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handlePaginationChange = (event) => {
+    setCurrentPage(event.selected + 1);
   };
 
   if (authenticate && !hasVolunteerGroup(userRoles)) {
@@ -95,11 +119,22 @@ function Child(props) {
         <button className="btn btn-success" onClick={openAddChildPage}>
           Dodaj dijete
         </button>
+
         <Table
           theadData={theadData}
           tbodyData={childs}
           getRowData={getSelectedRow}
         />
+        <div className="paginationDiv">
+          <ReactPaginate
+            className="pagination"
+            onPageChange={handlePaginationChange}
+            pageCount={totalPages}
+            renderOnZeroPageCount={null}
+            previousLabel="<"
+            nextLabel=">"
+          />
+        </div>
       </div>
     );
   }
