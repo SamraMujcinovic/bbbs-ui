@@ -40,7 +40,7 @@ function VolunteerDetails() {
 
   const [volunteerPhoneNumber, setVolunteerPhoneNumber] = useState("");
   const [volunteerEducationLevel, setVolunteerEducationLevel] =
-    useState("Srednja skola");
+    useState("Srednja škola");
   const [volunteerFacultyDepartment, setVolunteerFacultyDepartment] =
     useState("");
   const [volunteerEmploymentStatus, setVolunteerEmploymentStatus] =
