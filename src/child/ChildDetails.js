@@ -496,6 +496,7 @@ function ChildDetails() {
       gender: childsGender,
       birth_year: childsBirthYear[0].value,
       school_status: childSchoolStatus,
+      status: childsStatus,
       developmental_difficulties: selectedDevelopmentalDifficulties.map(
         (difficulty) => Number(difficulty.id)
       ),
