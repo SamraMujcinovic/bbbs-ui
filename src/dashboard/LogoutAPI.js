@@ -4,7 +4,7 @@ export async function logout() {
   try {
     await axios
       .post(
-        "http://localhost:8000/logout",
+        `${process.env.REACT_APP_API_URL}/logout`,
         {
           all: 1,
         },

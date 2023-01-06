@@ -72,7 +72,7 @@ function Volunteer(props) {
 
   const getVolunteers = async () => {
     await axios
-      .get("http://localhost:8000/volunteers/", {
+      .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },

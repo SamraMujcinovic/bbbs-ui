@@ -151,7 +151,7 @@ function ChildDetails() {
 
   const getOrganisations = async () => {
     await axios
-      .get("http://localhost:8000/organisations/", {
+      .get(`${process.env.REACT_APP_API_URL}/organisations/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -164,7 +164,7 @@ function ChildDetails() {
 
   const getCities = async () => {
     await axios
-      .get("http://localhost:8000/cities/", {
+      .get(`${process.env.REACT_APP_API_URL}/cities/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -177,7 +177,7 @@ function ChildDetails() {
 
   const getCoordinators = async () => {
     await axios
-      .get(`http://localhost:8000/coordinators/`, {
+      .get(`${process.env.REACT_APP_API_URL}/coordinators/`, {
         params: {
           organisation: childOrganisation[0].id,
           city: childCity[0].id,
@@ -211,7 +211,7 @@ function ChildDetails() {
 
   const getVolunteers = async (organisation, city, coordinator) => {
     await axios
-      .get(`http://localhost:8000/volunteers/`, {
+      .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
         params: {
           organisation: organisation,
           city: city,
@@ -250,7 +250,7 @@ function ChildDetails() {
 
   const getMentoringReasons = async () => {
     await axios
-      .get("http://localhost:8000/mentoring-reasons/", {
+      .get(`${process.env.REACT_APP_API_URL}/mentoring-reasons/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -265,7 +265,7 @@ function ChildDetails() {
 
   const getMentoringReasonCategories = async () => {
     await axios
-      .get("http://localhost:8000/mentoring-reasons-categories/", {
+      .get(`${process.env.REACT_APP_API_URL}/mentoring-reasons-categories/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -280,7 +280,7 @@ function ChildDetails() {
 
   const getDevelopmentalDifficulties = async () => {
     await axios
-      .get("http://localhost:8000/developmental-difficulties/", {
+      .get(`${process.env.REACT_APP_API_URL}/developmental-difficulties/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -295,7 +295,7 @@ function ChildDetails() {
 
   const getChild = async (id) => {
     await axios
-      .get(`http://localhost:8000/childs/${id}/`, {
+      .get(`${process.env.REACT_APP_API_URL}/childs/${id}/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -459,7 +459,7 @@ function ChildDetails() {
 
   const addChild = async () => {
     await axios
-      .post("http://localhost:8000/childs/", getSelectedValues(), {
+      .post(`${process.env.REACT_APP_API_URL}/childs/`, getSelectedValues(), {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -473,7 +473,7 @@ function ChildDetails() {
   const updateChild = async () => {
     await axios
       .put(
-        `http://localhost:8000/childs/${location.state.selectedChild.id}/`,
+        `${process.env.REACT_APP_API_URL}/childs/${location.state.selectedChild.id}/`,
         getSelectedValues(),
         {
           headers: {

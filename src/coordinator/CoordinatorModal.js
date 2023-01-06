@@ -44,7 +44,7 @@ function CoordinatorModal(props) {
 
   const addCoordinator = async () => {
     await axios
-      .post("http://localhost:8000/coordinators/", getModalData(), {
+      .post(`${process.env.REACT_APP_API_URL}/coordinators/`, getModalData(), {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -58,7 +58,7 @@ function CoordinatorModal(props) {
   const updateCoordinator = async () => {
     await axios
       .put(
-        `http://localhost:8000/coordinators/${props.data.id}/`,
+        `${process.env.REACT_APP_API_URL}/coordinators/${props.data.id}/`,
         getModalData(),
         {
           headers: {

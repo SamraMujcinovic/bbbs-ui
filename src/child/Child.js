@@ -90,7 +90,7 @@ function Child(props) {
   // APIs
   const getChilds = async () => {
     await axios
-      .get("http://localhost:8000/childs/", {
+      .get(`${process.env.REACT_APP_API_URL}/childs/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },

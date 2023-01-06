@@ -112,7 +112,7 @@ function VolunteerDetails() {
 
   const getOrganisations = async () => {
     await axios
-      .get("http://localhost:8000/organisations/", {
+      .get(`${process.env.REACT_APP_API_URL}/organisations/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -125,7 +125,7 @@ function VolunteerDetails() {
 
   const getCities = async () => {
     await axios
-      .get("http://localhost:8000/cities/", {
+      .get(`${process.env.REACT_APP_API_URL}/cities/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -138,7 +138,7 @@ function VolunteerDetails() {
 
   const getVolunteer = async (id) => {
     await axios
-      .get(`http://localhost:8000/volunteers/${id}/`, {
+      .get(`${process.env.REACT_APP_API_URL}/volunteers/${id}/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -181,7 +181,7 @@ function VolunteerDetails() {
 
   const getCoordinators = async () => {
     await axios
-      .get(`http://localhost:8000/coordinators/`, {
+      .get(`${process.env.REACT_APP_API_URL}/coordinators/`, {
         params: {
           organisation: volunteerOrganisation[0].id,
           city: volunteerCity[0].id,
@@ -309,7 +309,7 @@ function VolunteerDetails() {
 
   const addVolunteer = async () => {
     await axios
-      .post("http://localhost:8000/volunteers/", getSelectedValues(), {
+      .post(`${process.env.REACT_APP_API_URL}/volunteers/`, getSelectedValues(), {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -323,7 +323,7 @@ function VolunteerDetails() {
   const updateVolunteer = async () => {
     await axios
       .put(
-        `http://localhost:8000/volunteers/${location.state.selectedVolunteer.id}/`,
+        `${process.env.REACT_APP_API_URL}/volunteers/${location.state.selectedVolunteer.id}/`,
         getSelectedValues(),
         {
           headers: {

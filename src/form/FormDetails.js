@@ -67,7 +67,7 @@ function FormDetails(props) {
 
   const getForm = async (id) => {
     await axios
-      .get(`http://localhost:8000/forms/${id}/`, {
+      .get(`${process.env.REACT_APP_API_URL}/forms/${id}/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -97,7 +97,7 @@ function FormDetails(props) {
 
   const getHangOutPlaces = async () => {
     await axios
-      .get(`http://localhost:8000/places/`, {
+      .get(`${process.env.REACT_APP_API_URL}/places/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -112,7 +112,7 @@ function FormDetails(props) {
 
   const getActivities = async () => {
     await axios
-      .get(`http://localhost:8000/activities/`, {
+      .get(`${process.env.REACT_APP_API_URL}/activities/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -127,7 +127,7 @@ function FormDetails(props) {
 
   const getActivityCategories = async () => {
     await axios
-      .get(`http://localhost:8000/activity-categories/`, {
+      .get(`${process.env.REACT_APP_API_URL}/activity-categories/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -217,7 +217,7 @@ function FormDetails(props) {
 
   const addForm = async () => {
     await axios
-      .post("http://localhost:8000/forms/", getSelectedValues(), {
+      .post(`${process.env.REACT_APP_API_URL}/forms/`, getSelectedValues(), {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },

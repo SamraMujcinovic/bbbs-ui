@@ -45,7 +45,7 @@ function Form(props) {
 
   const getVolunteer = async () => {
     await axios
-      .get(`http://localhost:8000/volunteers/`, {
+      .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -64,7 +64,7 @@ function Form(props) {
 
   const getForms = async () => {
     await axios
-      .get("http://localhost:8000/forms/", {
+      .get(`${process.env.REACT_APP_API_URL}/forms/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },

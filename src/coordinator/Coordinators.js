@@ -46,7 +46,7 @@ function Coordinators(props) {
 
   const getCoordinators = async () => {
     await axios
-      .get("http://localhost:8000/coordinators/", {
+      .get(`${process.env.REACT_APP_API_URL}/coordinators/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -96,7 +96,7 @@ function Coordinators(props) {
 
   const getOrganisations = async () => {
     await axios
-      .get("http://localhost:8000/organisations/", {
+      .get(`${process.env.REACT_APP_API_URL}/organisations/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -109,7 +109,7 @@ function Coordinators(props) {
 
   const getCities = async () => {
     await axios
-      .get("http://localhost:8000/cities/", {
+      .get(`${process.env.REACT_APP_API_URL}/cities/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
