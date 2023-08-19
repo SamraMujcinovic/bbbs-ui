@@ -39,7 +39,7 @@ function ChildDetails() {
   const [childSchoolStatus, setChildsSchoolStatus] = useState("Pohađa");
   const [childsFamilyModel, setChildsFamilyModel] =
     useState("Potpuna porodica");
-  const [childsStatus, setChildsStatus] = useState(false);
+  const [childsStatus, setChildsStatus] = useState(true);
   const [childsVolunteer, setChildsVolunteer] = useState(undefined);
   const [childsCoordinator, setChildsCoordinator] = useState(undefined);
   const [childsGuardianConsent, setChildsGuardianConsent] = useState(false);
@@ -217,7 +217,7 @@ function ChildDetails() {
           city: city,
           coordinator: coordinator,
           gender: getChildsGender(),
-          status: "False",
+          status: "True",
           child: location.state.selectedChild
             ? location.state.selectedChild.id
             : undefined,

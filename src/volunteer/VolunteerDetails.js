@@ -47,7 +47,7 @@ function VolunteerDetails() {
     useState("Zaposlen");
   const [volunteerGoodConductCertificate, setVolunteerGoodConductCertificate] =
     useState(false);
-  const [volunteerStatus, setVolunteerStatus] = useState(false);
+  const [volunteerStatus, setVolunteerStatus] = useState(true);
   const [volunteerCoordinator, setVolunteerCoordinator] = useState(undefined);
   const [volunteerOrganisation, setVolunteerOrganisation] = useState();
   const [volunteerCity, setVolunteerCity] = useState();
