@@ -63,7 +63,7 @@ function ChangePasswordForm(props) {
     const id = toast.loading("Promjena lozinke...");
     await axios
       .post(
-        "http://localhost:8000/password",
+        `${process.env.REACT_APP_API_URL}/password`,
         {
           newPassword,
           oldPassword,

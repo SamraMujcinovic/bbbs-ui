@@ -24,7 +24,7 @@ function ResetPasswordForm(props) {
   const resetPassword = async () => {
     const id = toast.loading("Reseting password...");
     await axios
-      .post("http://localhost:8000/password/reset", {
+      .post(`${process.env.REACT_APP_API_URL}/password/reset`, {
         email,
       })
       .then(() => {

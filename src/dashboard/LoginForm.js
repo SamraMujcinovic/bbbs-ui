@@ -62,10 +62,11 @@ function LoginForm(props) {
   };
 
   const login = async () => {
+    console.log(`${process.env.REACT_APP_API_URL}`)
     try {
       await axios
         .post(
-          "http://localhost:8000/login",
+          `${process.env.REACT_APP_API_URL}/login`,
           {
             username,
             password,
