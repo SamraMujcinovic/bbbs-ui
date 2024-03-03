@@ -27,6 +27,11 @@ const Sidebar = ({ children }) => {
       name: "Forme",
       roles: ["admin", "coordinator", "volunteer"],
     },
+    {
+      path: "/hours",
+      name: "Sati",
+      roles: ["admin", "coordinator", "volunteer"],
+    },
   ];
 
   const authenticate = sessionStorage.getItem("token");

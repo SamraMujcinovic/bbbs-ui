@@ -4,6 +4,7 @@ import MainPage from "./dashboard/MainPage";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Coordinators from "./coordinator/Coordinators";
 import Volunteer from "./volunteer/Volunteer";
+import VolunteerHours from "./volunteer/VolunteerHours";
 import Child from "./child/Child";
 
 import ChildDetails from "./child/ChildDetails";
@@ -31,6 +32,7 @@ function App() {
               path="/volunteers/details"
               element={<VolunteerDetails />}
             />
+            <Route exact path="/hours" element={<VolunteerHours />} />
             <Route exact path="/childs" element={<Child />} />
             <Route exact path="/childs/details" element={<ChildDetails />} />
             <Route exact path="/forms" element={<Form />} />
