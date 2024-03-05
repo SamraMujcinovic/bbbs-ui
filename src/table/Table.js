@@ -1,32 +1,60 @@
 import React from "react";
-import TableRow from "./TableRow";
-import TableHeaderItem from "./TableHeaderItem";
 import "./Table.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
-function Table(props) {
+const Table = ({ data, header, actions }) => {
   return (
-    <table className={props.customClass}>
+    <table>
       <thead>
         <tr>
-          {props.theadData.map((h) => {
-            return <TableHeaderItem key={h} item={h} />;
-          })}
+          {header.map((key) => (
+            <th key={key}>{key}</th>
+          ))}
+          <th>Akcije</th>
         </tr>
       </thead>
       <tbody>
-        {props.tbodyData.length > 0 &&
-          props.tbodyData.map((item) => {
-            return (
-              <TableRow
-                key={item.id}
-                data={item}
-                getRowInfo={props.getRowData}
-              />
-            );
-          })}
+        {data.map((row, rowIndex) => (
+          <tr key={rowIndex} onDoubleClick={() => actions[0].onClick(row)}>
+            {Object.keys(row).map(
+              (key) =>
+                key != "id" &&
+                (key != "evaluation" ? (
+                  <td key={key}>{row[key]}</td>
+                ) : (
+                  <td key={key}>
+                    <i
+                      className={
+                        row[key] === "Loše"
+                          ? "fas fa-exclamation-circle redIcon"
+                          : row[key] === "Dobro"
+                          ? "fas fa-check orangeIcon"
+                          : "fas fa-check greenIcon"
+                      }
+                    ></i>
+                  </td>
+                ))
+            )}
+            <td>
+              {actions?.length &&
+                actions?.map((action, actionIndex) =>
+                  action.showAction(row) ? (
+                    <button
+                      className="iconButton"
+                      key={actionIndex}
+                      onClick={() => action.onClick(row)}
+                      title={action.name}
+                    >
+                      <i className={action.iconClass}></i>
+                    </button>
+                  ) : null
+                )}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
-}
+};
 
 export default Table;

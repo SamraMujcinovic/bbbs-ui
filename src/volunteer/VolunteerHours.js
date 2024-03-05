@@ -6,6 +6,9 @@ import ReactPaginate from "react-paginate";
 
 import { PAGE_SIZE } from "../utilis/ServiceUtil";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function VolunteerHours(props) {
   // authentication
   const authenticate = sessionStorage.getItem("token");
@@ -16,20 +19,8 @@ function VolunteerHours(props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // table data
-  const theadData = [
-    "Ime",
-    "Prezime",
-    "Organizacija",
-    "Grad",
-    "Ukupni sati",
-    "",
-  ];
+  const theadData = ["Ime", "Prezime", "Organizacija", "Grad", "Ukupni sati"];
   const [volunteerHours, setVolunteerHours] = useState([]);
-  const [selectedTableRow, setSelectedTableRow] = useState(undefined);
-
-  const getSelectedRow = (row) => {
-    setSelectedTableRow(row);
-  };
 
   const getvolunteerHours = async () => {
     await axios
@@ -64,6 +55,36 @@ function VolunteerHours(props) {
     };
   };
 
+  const sendReminderEmailToVolunteer = async (volunteer_user_id) => {
+    const id = toast.loading("Slanje E-Maila...");
+    await axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/reminders`,
+        {
+          volunteer_user_id: volunteer_user_id,
+          monthAndYear: "2022-12-01",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then(() => {
+        toast.update(id, {
+          render: "E-Mail je poslan!",
+          type: "success",
+          isLoading: false,
+          autoClose: false,
+          closeButton: true,
+        });
+      })
+      .catch((error) => {
+        toast.dismiss(id);
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     getvolunteerHours();
   }, [currentPage]);
@@ -72,15 +93,24 @@ function VolunteerHours(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const sendReminderEmail = (row) => {
+    sendReminderEmailToVolunteer(row.id);
+  };
+
+  const actions = [
+    {
+      name: "Posalji e-mail",
+      iconClass: "far fa-envelope redIcon",
+      onClick: sendReminderEmail,
+      showAction: (row) => row.hours < 4,
+    },
+  ];
+
   if (authenticate) {
     return (
       <div>
         <h1>Sati volontera</h1>
-        <Table
-          theadData={theadData}
-          tbodyData={volunteerHours}
-          getRowData={getSelectedRow}
-        />
+        <Table header={theadData} data={volunteerHours} actions={actions} />
         <div className="paginationDiv">
           <ReactPaginate
             className="pagination"

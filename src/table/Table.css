@@ -25,23 +25,31 @@ td:last-child {
   border-right: 0;
 }
 
+td i {
+  font-size: 20px;
+  margin-inline: 1rem;
+}
+
+button {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+.redIcon {
+  color: rgb(206, 66, 66);
+}
+
+.orangeIcon {
+  color: orange;
+}
+
+.greenIcon {
+  color: rgb(64, 172, 64);
+}
+
 .editButton {
   color: orange;
   border: none;
   background: none;
-}
-
-.badEvaluation {
-  color: rgb(206, 66, 66);
-  width: 100%;
-}
-
-.goodEvaluation {
-  color: orange;
-  width: 100%;
-}
-
-.greatEvaluation {
-  color: rgb(64, 172, 64);
-  width: 100%;
 }

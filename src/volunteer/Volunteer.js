@@ -20,10 +20,10 @@ function Volunteer(props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // table data
-  const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
+  const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad"];
   const [volunteers, setVolunteers] = useState([]);
 
-  const getSelectedRow = (row) => {
+  const editVolunteeer = (row) => {
     navigateToVolunteerDetails(row);
   };
 
@@ -94,6 +94,15 @@ function Volunteer(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const actions = [
+    {
+      name: "Edituj",
+      iconClass: "fas fa-pencil-alt orangeIcon",
+      onClick: editVolunteeer,
+      showAction: () => true,
+    },
+  ];
+
   if (authenticate && !hasVolunteerGroup(userRoles)) {
     return (
       <div>
@@ -102,11 +111,7 @@ function Volunteer(props) {
           Dodaj volontera
         </button>
 
-        <Table
-          theadData={theadData}
-          tbodyData={volunteers}
-          getRowData={getSelectedRow}
-        />
+        <Table header={theadData} data={volunteers} actions={actions} />
         <div className="paginationDiv">
           <ReactPaginate
             className="pagination"

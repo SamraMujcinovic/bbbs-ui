@@ -64,11 +64,10 @@ function Child(props) {
     "Volonter",
     "Organizacija",
     "Grad",
-    "",
   ];
 
   // table functions
-  const getSelectedRow = (row) => {
+  const editChlid = (row) => {
     navigateToChildDetails(row);
   };
 
@@ -112,6 +111,15 @@ function Child(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const actions = [
+    {
+      name: "Edituj",
+      iconClass: "fas fa-pencil-alt orangeIcon",
+      onClick: editChlid,
+      showAction: () => true,
+    },
+  ];
+
   if (authenticate && !hasVolunteerGroup(userRoles)) {
     return (
       <div>
@@ -120,11 +128,7 @@ function Child(props) {
           Dodaj dijete
         </button>
 
-        <Table
-          theadData={theadData}
-          tbodyData={childs}
-          getRowData={getSelectedRow}
-        />
+        <Table header={theadData} data={childs} actions={actions} />
         <div className="paginationDiv">
           <ReactPaginate
             className="pagination"

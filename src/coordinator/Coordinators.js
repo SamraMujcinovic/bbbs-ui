@@ -18,7 +18,7 @@ function Coordinators(props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // table data
-  const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad", ""];
+  const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad"];
   const [coordinators, setCoordinators] = useState([]);
   const [selectedTableRow, setSelectedTableRow] = useState(undefined);
 
@@ -26,7 +26,7 @@ function Coordinators(props) {
   const [organisations, setOrganisations] = useState([]);
   const [cities, setCities] = useState([]);
 
-  const getSelectedRow = (row) => {
+  const editCoordinator = (row) => {
     setSelectedTableRow(row);
     openAddModal();
   };
@@ -124,6 +124,15 @@ function Coordinators(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const actions = [
+    {
+      name: "Edituj",
+      iconClass: "fas fa-pencil-alt orangeIcon",
+      onClick: editCoordinator,
+      showAction: () => true,
+    },
+  ];
+
   if (authenticate && hasAdminGroup(userRoles)) {
     return (
       <div>
@@ -131,11 +140,7 @@ function Coordinators(props) {
         <button className="btn btn-success" onClick={openAddModal}>
           Dodaj koordinatora
         </button>
-        <Table
-          theadData={theadData}
-          tbodyData={coordinators}
-          getRowData={getSelectedRow}
-        />
+        <Table header={theadData} data={coordinators} actions={actions} />
         <div className="paginationDiv">
           <ReactPaginate
             className="pagination"

@@ -28,7 +28,6 @@ function Form(props) {
     "Grad",
     "Trajanje",
     "Ocjena",
-    "",
   ];
   const [forms, setForms] = useState([]);
 
@@ -58,7 +57,7 @@ function Form(props) {
       });
   };
 
-  const getSelectedRow = (row) => {
+  const editForm = (row) => {
     navigateToFormDetails(row);
   };
 
@@ -123,6 +122,15 @@ function Form(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const actions = [
+    {
+      name: "Edituj",
+      iconClass: "fas fa-pencil-alt orangeIcon",
+      onClick: editForm,
+      showAction: () => true,
+    },
+  ];
+
   return (
     <div>
       <h1>Forme</h1>
@@ -133,11 +141,7 @@ function Form(props) {
           Dodaj formu
         </button>
       ) : null}
-      <Table
-        theadData={theadData}
-        tbodyData={forms}
-        getRowData={getSelectedRow}
-      />
+      <Table header={theadData} data={forms} actions={actions} />
       <div className="paginationDiv">
         <ReactPaginate
           className="pagination"
