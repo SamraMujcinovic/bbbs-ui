@@ -110,17 +110,19 @@ function Volunteer(props) {
         <button className="btn btn-success" onClick={openAddVolunteerPage}>
           Dodaj volontera
         </button>
-
-        <Table header={theadData} data={volunteers} actions={actions} />
-        <div className="paginationDiv">
-          <ReactPaginate
-            className="pagination"
-            onPageChange={handlePaginationChange}
-            pageCount={totalPages}
-            renderOnZeroPageCount={null}
-            previousLabel="<"
-            nextLabel=">"
-          />
+        <div className="footerDiv">
+          <Table header={theadData} data={volunteers} actions={actions} />
+          <div className="paginationDiv">
+            <div></div>
+            <ReactPaginate
+              className="pagination"
+              onPageChange={handlePaginationChange}
+              pageCount={totalPages}
+              renderOnZeroPageCount={null}
+              previousLabel="<"
+              nextLabel=">"
+            />
+          </div>
         </div>
       </div>
     );

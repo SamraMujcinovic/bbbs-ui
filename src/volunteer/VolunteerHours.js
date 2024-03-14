@@ -110,16 +110,19 @@ function VolunteerHours(props) {
     return (
       <div>
         <h1>Sati volontera</h1>
-        <Table header={theadData} data={volunteerHours} actions={actions} />
-        <div className="paginationDiv">
-          <ReactPaginate
-            className="pagination"
-            onPageChange={handlePaginationChange}
-            pageCount={totalPages}
-            renderOnZeroPageCount={null}
-            previousLabel="<"
-            nextLabel=">"
-          />
+        <div className="footerDiv">
+          <Table header={theadData} data={volunteerHours} actions={actions} />
+          <div className="paginationDiv">
+            <div></div>
+            <ReactPaginate
+              className="pagination"
+              onPageChange={handlePaginationChange}
+              pageCount={totalPages}
+              renderOnZeroPageCount={null}
+              previousLabel="<"
+              nextLabel=">"
+            />
+          </div>
         </div>
       </div>
     );

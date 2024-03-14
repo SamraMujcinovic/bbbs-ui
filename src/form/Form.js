@@ -19,6 +19,8 @@ function Form(props) {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [totalHours, setTotalHours] = useState(0);
+
   // table data
   const theadData = [
     "Datum",
@@ -33,6 +35,7 @@ function Form(props) {
 
   useEffect(() => {
     getForms();
+    getTotalHoursSum();
     if (hasVolunteerGroup(userGroups)) {
       getVolunteer();
     }
@@ -40,6 +43,7 @@ function Form(props) {
 
   useEffect(() => {
     getForms();
+    getTotalHoursSum();
   }, [currentPage]);
 
   const getVolunteer = async () => {
@@ -103,6 +107,21 @@ function Form(props) {
     };
   };
 
+  const getTotalHoursSum = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/forms/totals`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setTotalHours(response.data.totalHours);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   // add volunteer page
   const openAddFormPage = () => {
     navigateToFormDetails(undefined);
@@ -141,16 +160,19 @@ function Form(props) {
           Dodaj formu
         </button>
       ) : null}
-      <Table header={theadData} data={forms} actions={actions} />
-      <div className="paginationDiv">
-        <ReactPaginate
-          className="pagination"
-          onPageChange={handlePaginationChange}
-          pageCount={totalPages}
-          renderOnZeroPageCount={null}
-          previousLabel="<"
-          nextLabel=">"
-        />
+      <div className="footerDiv">
+        <Table header={theadData} data={forms} actions={actions} />
+        <div className="paginationDiv">
+          <div>Suma sati: {totalHours}</div>
+          <ReactPaginate
+            className="pagination"
+            onPageChange={handlePaginationChange}
+            pageCount={totalPages}
+            renderOnZeroPageCount={null}
+            previousLabel="<"
+            nextLabel=">"
+          />
+        </div>
       </div>
     </div>
   );

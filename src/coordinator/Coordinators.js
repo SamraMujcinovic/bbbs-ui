@@ -140,16 +140,19 @@ function Coordinators(props) {
         <button className="btn btn-success" onClick={openAddModal}>
           Dodaj koordinatora
         </button>
-        <Table header={theadData} data={coordinators} actions={actions} />
-        <div className="paginationDiv">
-          <ReactPaginate
-            className="pagination"
-            onPageChange={handlePaginationChange}
-            pageCount={totalPages}
-            renderOnZeroPageCount={null}
-            previousLabel="<"
-            nextLabel=">"
-          />
+        <div className="footerDiv">
+          <Table header={theadData} data={coordinators} actions={actions} />
+          <div className="paginationDiv">
+            <div></div>
+            <ReactPaginate
+              className="pagination"
+              onPageChange={handlePaginationChange}
+              pageCount={totalPages}
+              renderOnZeroPageCount={null}
+              previousLabel="<"
+              nextLabel=">"
+            />
+          </div>
         </div>
         {show ? (
           <CoordinatorModal
