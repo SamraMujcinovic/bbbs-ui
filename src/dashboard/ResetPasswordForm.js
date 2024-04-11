@@ -22,7 +22,7 @@ function ResetPasswordForm(props) {
   };
 
   const resetPassword = async () => {
-    const id = toast.loading("Reseting password...");
+    const id = toast.loading("Oporavak lozinke...");
     await axios
       .post(`${process.env.REACT_APP_API_URL}/password/reset`, {
         email,
