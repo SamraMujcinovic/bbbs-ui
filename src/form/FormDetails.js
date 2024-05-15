@@ -225,7 +225,7 @@ function FormDetails(props) {
       .then(() => navigateToForms())
       .catch((error) => {
         if (error.response.data.hasOwnProperty("303")) {
-          toast("Unos druženja za izabrani datum već postoji!", {
+          toast("Unos aktivnosti za izabrani datum već postoji!", {
             type: "error",
             position: "top-center",
             autoClose: false,
@@ -350,6 +350,13 @@ function FormDetails(props) {
     return formDescription === "" || countWords(formDescription) > 50;
   };
 
+  const isConsultingMeeting = () => {
+    return (
+      formActivityType === "Individualni savjetodavni" ||
+      formActivityType === "Grupni savjetodavni"
+    );
+  };
+
   if (authenticate) {
     return (
       <div>
@@ -363,7 +370,7 @@ function FormDetails(props) {
             />
           </div>
         ) : null}
-        {formChild ? (
+        {formChild && !isConsultingMeeting() ? (
           <div>
             <span className="title">Dijete:</span>
             <input value={formChild} disabled={true} />
@@ -415,7 +422,7 @@ function FormDetails(props) {
           </div>
         </div>
         <div className="formDiv">
-          <span className="title">Vrsta druženja</span>
+          <span className="title">Vrsta aktivnosti</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -449,6 +456,50 @@ function FormDetails(props) {
                 disabled={shouldDisableForm()}
               />
               <label>Grupna aktivnost</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Izlet"
+                name="activity_type"
+                checked={formActivityType === "Izlet"}
+                onChange={onActivityTypeChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Izlet</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Individualni savjetodavni"
+                name="activity_type"
+                checked={formActivityType === "Individualni savjetodavni"}
+                onChange={onActivityTypeChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Individualni savjetodavni</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Grupni savjetodavni"
+                name="activity_type"
+                checked={formActivityType === "Grupni savjetodavni"}
+                onChange={onActivityTypeChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Grupni savjetodavni</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Radionica za rad na sebi"
+                name="activity_type"
+                checked={formActivityType === "Radionica za rad na sebi"}
+                onChange={onActivityTypeChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Radionica za rad na sebi</label>
             </div>
           </div>
         </div>
@@ -490,72 +541,76 @@ function FormDetails(props) {
             </div>
           </div>
         </div>
-        <div className="formDiv">
-          <span className="title">Mjesto druženja</span>
-          {hangOutPlaces.map((item) => {
-            return (
-              <div className="checkBoxes" key={item.id}>
-                <input
-                  type="checkbox"
-                  value={item.id}
-                  checked={hasPlace(item)}
-                  onChange={onPlaceChange}
-                  disabled={shouldDisableForm()}
-                />
-                <label>{item.name}</label>
-              </div>
-            );
-          })}
-          {!checkHangOutPlacesValidity() && (
-            <span className="invalid-place">
-              Izaberite minimalno jednu, a maksimalno 3 opcije!
-            </span>
-          )}
-          {!checkHangOutPlacesSelectedOptions() && (
-            <span className="invalid-place">
-              Ako je izabrana opcija "Ostalo", obavezni ste da opišete druženje
-              u polju "Opis"!
-            </span>
-          )}
-        </div>
-        <div className="formDiv">
-          <span className="title">
-            Oblasti na koje su bile usmjerene aktivnosti
-          </span>
-          <div className="activityCategoryDiv">
-            {activityCategories.map((category) => {
+        {isConsultingMeeting() ? null : (
+          <div className="formDiv">
+            <span className="title">Mjesto aktivnosti</span>
+            {hangOutPlaces.map((item) => {
               return (
-                <div key={category.id}>
-                  <label className="categoryTitle">{category.name}</label>
-                  {activities.map((activity) => {
-                    if (activity.activity_category.name === category.name) {
-                      return (
-                        <div className="checkBoxes" key={activity.id}>
-                          <input
-                            type="checkbox"
-                            value={activity.id}
-                            checked={hasActivity(activity)}
-                            onChange={onActivityChange}
-                            disabled={shouldDisableForm()}
-                          />
-                          <label>{activity.name}</label>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })}
+                <div className="checkBoxes" key={item.id}>
+                  <input
+                    type="checkbox"
+                    value={item.id}
+                    checked={hasPlace(item)}
+                    onChange={onPlaceChange}
+                    disabled={shouldDisableForm()}
+                  />
+                  <label>{item.name}</label>
                 </div>
               );
             })}
+            {!checkHangOutPlacesValidity() && (
+              <span className="invalid-place">
+                Izaberite minimalno jednu, a maksimalno 3 opcije!
+              </span>
+            )}
+            {!checkHangOutPlacesSelectedOptions() && (
+              <span className="invalid-place">
+                Ako je izabrana opcija "Ostalo", obavezni ste da opišete
+                aktivnost u polju "Opis"!
+              </span>
+            )}
           </div>
-          {!checkActivitiesValidity() && (
-            <span className="invalid-activity">
-              Izaberite minimalno jednu, a maksimalno 6 opcija!
+        )}
+        {isConsultingMeeting() ? null : (
+          <div className="formDiv">
+            <span className="title">
+              Oblasti na koje su bile usmjerene aktivnosti
             </span>
-          )}
-        </div>
+            <div className="activityCategoryDiv">
+              {activityCategories.map((category) => {
+                return (
+                  <div key={category.id}>
+                    <label className="categoryTitle">{category.name}</label>
+                    {activities.map((activity) => {
+                      if (activity.activity_category.name === category.name) {
+                        return (
+                          <div className="checkBoxes" key={activity.id}>
+                            <input
+                              type="checkbox"
+                              value={activity.id}
+                              checked={hasActivity(activity)}
+                              onChange={onActivityChange}
+                              disabled={shouldDisableForm()}
+                            />
+                            <label>{activity.name}</label>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+            {!checkActivitiesValidity() && (
+              <span className="invalid-activity">
+                Izaberite minimalno jednu, a maksimalno 6 opcija!
+              </span>
+            )}
+          </div>
+        )}
         <div className="formDiv">
-          <span className="title">Opis druženja</span>
+          <span className="title">Opis aktivnosti</span>
           <textarea
             className={
               "" +
@@ -569,7 +624,7 @@ function FormDetails(props) {
             onChange={onDescriptionChange}
           />
           {!checkDescriptionValidity() && (
-            <span>Opisite druženje u MINIMALNO 50 riječi!</span>
+            <span>Opisite aktivnost u MINIMALNO 50 riječi!</span>
           )}
         </div>
         {shouldDisableForm() ? null : (
