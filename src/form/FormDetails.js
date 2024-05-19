@@ -660,7 +660,11 @@ function FormDetails(props) {
           </div>
         )}
         <div className="formDiv">
-          <span className="title">Opis aktivnosti</span>
+          <span className="title">
+            Opis aktivnosti, specifičnosti i zapažanja o djetetu (bilo pozitivni
+            ili negativni, zaključci, preporuke, specifičnosti vezane za
+            sadržaj)
+          </span>
           <textarea
             className={
               "" +
