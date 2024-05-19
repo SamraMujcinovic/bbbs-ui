@@ -315,9 +315,10 @@ function FormDetails(props) {
     return (
       isDateValid &&
       timeStringToNumber(formDuration) &&
-      checkHangOutPlacesValidity() &&
-      checkActivitiesValidity() &&
-      checkDescriptionValidity()
+      (isConsultingMeeting() ||
+        (checkHangOutPlacesValidity() &&
+          checkActivitiesValidity() &&
+          checkDescriptionValidity()))
     );
   };
 
@@ -353,7 +354,9 @@ function FormDetails(props) {
   const isConsultingMeeting = () => {
     return (
       formActivityType === "Individualni savjetodavni" ||
-      formActivityType === "Grupni savjetodavni"
+      formActivityType === "Grupni savjetodavni" ||
+      formActivityType === "Izlet" ||
+      formActivityType === "Radionica za rad na sebi"
     );
   };
 
