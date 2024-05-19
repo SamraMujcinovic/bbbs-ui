@@ -817,7 +817,7 @@ function ChildDetails() {
                 onChange={onFamilyModelChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Institucija</label>
+              <label>Živi u instituciji</label>
             </div>
           </div>
         </div>
@@ -834,7 +834,7 @@ function ChildDetails() {
                 onChange={onSchoolStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Pohađa</label>
+              <label>Pohađa školu</label>
             </div>
             <div className="radioButtons">
               <input
@@ -847,7 +847,7 @@ function ChildDetails() {
                 onChange={onSchoolStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Pohađa po prilagođenom programu</label>
+              <label>Pohađa školu po prilagođenom programu</label>
             </div>
             <div className="radioButtons">
               <input
@@ -869,7 +869,7 @@ function ChildDetails() {
                 onChange={onSchoolStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Ne pohađa</label>
+              <label>Ne pohađa školu</label>
             </div>
           </div>
         </div>
@@ -897,7 +897,7 @@ function ChildDetails() {
           )}
         </div>
         <div className="formDiv">
-          <span className="title">Razlog mentorstva</span>
+          <span className="title">Razlozi uključivanja djeteta u program</span>
           <div className="mentoringReasonCategoryDiv">
             {mentoringReasonCategories.map((category) => {
               return (
@@ -923,6 +923,19 @@ function ChildDetails() {
                 </div>
               );
             })}
+          </div>
+          <div className="moreInfoDiv">
+            <span>
+              *Faktor pasivnih oblika poremećaja u ponašanju: tikovi,
+              plašljivost, povučenost, potištenost, rastresenost i razmaženost.
+            </span>
+            <span>
+              **Faktor aktivnih oblika poremećaja u ponašanju: nemarnost,
+              neurednost, nediscipliniranost za vrijeme nastave, prkos, laganje,
+              psovanje, sudjelovanje u tučnjavama, pušenje, pijenje alkoholnih
+              pića, neopravdano izostajanje sa nastave, bježanje od kuće,
+              skitnja i činjenje imovinskih delikata.
+            </span>
           </div>
           {!checkMentoringReasonValidity() && (
             <span className="invalid-mentoring-reason">
