@@ -43,6 +43,8 @@ function ChildDetails() {
   const [childsVolunteer, setChildsVolunteer] = useState(undefined);
   const [childsCoordinator, setChildsCoordinator] = useState(undefined);
   const [childsGuardianConsent, setChildsGuardianConsent] = useState(false);
+  const [vaccinationStatus, setVaccinationStatus] = useState(true);
+
   const [childOrganisation, setChildsOrganisation] = useState();
   const [childCity, setChildsCity] = useState();
 
@@ -322,6 +324,7 @@ function ChildDetails() {
     setChildsFamilyModel(selectedChild.family_model);
     setChildsStatus(selectedChild.status);
     setChildsGuardianConsent(selectedChild.guardian_consent);
+    setVaccinationStatus(selectedChild.vaccination_status);
 
     setChildsCoordinator(selectedChild.coordinator);
 
@@ -363,6 +366,10 @@ function ChildDetails() {
 
   const onGuardianConsentChange = (event) => {
     setChildsGuardianConsent(str2bool(event.target.value));
+  };
+
+  const onVaccinationStatusChange = (event) => {
+    setVaccinationStatus(str2bool(event.target.value));
   };
 
   var str2bool = (value) => {
@@ -505,6 +512,7 @@ function ChildDetails() {
         Number(reason.id)
       ),
       guardian_consent: childsGuardianConsent,
+      vaccination_status: vaccinationStatus,
       volunteer:
         childsVolunteer && childsVolunteer.length > 0
           ? childsVolunteer[0].id
@@ -735,7 +743,35 @@ function ChildDetails() {
         </div>
 
         <div className="formDiv">
-          <span className="title">Sa kim dijete živi?</span>
+          <span className="title">Da li je dijete redovno vakcinisano?</span>
+          <div className="radioButtonsDiv">
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value={true}
+                name="vaccination_status"
+                checked={vaccinationStatus}
+                onChange={onVaccinationStatusChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Da</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value={false}
+                name="vaccination_status"
+                checked={!vaccinationStatus}
+                onChange={onVaccinationStatusChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Ne</label>
+            </div>
+          </div>
+        </div>
+
+        <div className="formDiv">
+          <span className="title">Porodični status djeteta</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -787,7 +823,7 @@ function ChildDetails() {
         </div>
 
         <div className="formDiv">
-          <span className="title">Škola</span>
+          <span className="title">Obrazovni status djeteta</span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -839,7 +875,7 @@ function ChildDetails() {
         </div>
 
         <div className="formDiv">
-          <span className="title">Poteškoće u razvoju</span>
+          <span className="title">Specifičnosti u razvoju djeteta</span>
           {developmentalDifficulties.map((item) => {
             return (
               <div className="checkBoxes" key={item.id}>
