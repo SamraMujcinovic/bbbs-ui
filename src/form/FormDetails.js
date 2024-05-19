@@ -35,7 +35,9 @@ function FormDetails(props) {
 
   // form details
   const [formDate, setFormDate] = useState(new Date());
-  const [formDuration, setFormDuration] = useState("01:30");
+  const [activityStartTime, setActivityStartTime] = useState("12:00");
+  const [activityEndTime, setActivityEndTime] = useState("13:30");
+  const [formDuration, setFormDuration] = useState("1h 30min");
   const [formActivityType, setFormActivityType] = useState("Individualno");
   const [formPlace, setFormPlace] = useState([]);
   const [formEvaluation, setFormEvaluation] = useState("Super");
@@ -83,7 +85,12 @@ function FormDetails(props) {
   // set initial data (if form is selected)
   const setInitialData = (selectedForm) => {
     setFormDate(stringToDate(selectedForm.date));
-    setFormDuration(numberToTimeString(selectedForm.duration));
+    setActivityStartTime(numberToTimeString(selectedForm.activity_start_time));
+    setActivityEndTime(numberToTimeString(selectedForm.activity_end_time));
+    calculateDuration(
+      numberToTimeString(selectedForm.activity_start_time),
+      numberToTimeString(selectedForm.activity_end_time)
+    );
     setFormActivityType(selectedForm.activity_type);
     setSelectedHangOutPlaces(selectedForm.place);
     setFormEvaluation(selectedForm.evaluation);
@@ -140,8 +147,23 @@ function FormDetails(props) {
       });
   };
 
-  const onDurationChange = (duration) => {
-    setFormDuration(duration);
+  const onStartTimeChange = (startTime) => {
+    setActivityStartTime(startTime);
+    calculateDuration(startTime, activityEndTime);
+  };
+
+  const onEndTimeChange = (endTime) => {
+    setActivityEndTime(endTime);
+    calculateDuration(activityStartTime, endTime);
+  };
+
+  const calculateDuration = (startTime, endTime) => {
+    const durationInMinutes =
+      timeStringToNumber(endTime) - timeStringToNumber(startTime);
+    const hours = parseInt(durationInMinutes / 60);
+    const min = durationInMinutes - hours * 60;
+
+    setFormDuration(`${hours}h ${min}min`);
   };
 
   const onDescriptionChange = (event) => {
@@ -239,7 +261,8 @@ function FormDetails(props) {
   const getSelectedValues = () => {
     return {
       date: dateToString(formDate),
-      duration: timeStringToNumber(formDuration),
+      activity_start_time: timeStringToNumber(activityStartTime),
+      activity_end_time: timeStringToNumber(activityEndTime),
       activity_type: formActivityType,
       place: selectedHangOutPlaces.map((place) => Number(place.id)),
       evaluation: formEvaluation,
@@ -314,7 +337,9 @@ function FormDetails(props) {
   const isFormValid = () => {
     return (
       isDateValid &&
-      timeStringToNumber(formDuration) &&
+      timeStringToNumber(activityEndTime) -
+        timeStringToNumber(activityStartTime) >
+        0 &&
       (isConsultingMeeting() ||
         (checkHangOutPlacesValidity() &&
           checkActivitiesValidity() &&
@@ -405,11 +430,11 @@ function FormDetails(props) {
             />
           </div>
           <div>
-            <span className="title timeSpan">Trajanje:</span>
+            <span className="title timeSpan">Početak:</span>
             <TimePicker
               className={
                 "time-picker " +
-                (timeStringToNumber(formDuration) === 0
+                (timeStringToNumber(activityStartTime) === 0
                   ? "invalid-duration"
                   : "")
               }
@@ -418,10 +443,32 @@ function FormDetails(props) {
               format="HH:mm"
               disableClock={true}
               amPmAriaLabel=""
-              onChange={onDurationChange}
-              value={formDuration}
+              onChange={onStartTimeChange}
+              value={activityStartTime}
               disabled={shouldDisableForm()}
             />
+          </div>
+          <div>
+            <span className="title timeSpan">Kraj:</span>
+            <TimePicker
+              className={
+                "time-picker " +
+                (timeStringToNumber(activityEndTime) === 0
+                  ? "invalid-duration"
+                  : "")
+              }
+              clearIcon={null}
+              clockIcon={null}
+              format="HH:mm"
+              disableClock={true}
+              amPmAriaLabel=""
+              onChange={onEndTimeChange}
+              value={activityEndTime}
+              disabled={shouldDisableForm()}
+            />
+          </div>
+          <div>
+            <span className="title">Trajanje: {formDuration} </span>
           </div>
         </div>
         <div className="formDiv">
