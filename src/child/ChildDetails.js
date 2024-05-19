@@ -628,17 +628,6 @@ function ChildDetails() {
               />
               <label>Ženski</label>
             </div>
-            <div className="radioButtons">
-              <input
-                type="radio"
-                value="Ostali"
-                name="gender"
-                checked={childsGender === "Ostali"}
-                onChange={onGenderChange}
-                disabled={isEditMode}
-              />
-              <label>Ostali</label>
-            </div>
           </div>
         </div>
         {hasAdminGroup(userGroups) ? (

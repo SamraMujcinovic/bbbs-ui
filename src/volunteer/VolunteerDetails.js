@@ -309,11 +309,15 @@ function VolunteerDetails() {
 
   const addVolunteer = async () => {
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/volunteers/`, getSelectedValues(), {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      })
+      .post(
+        `${process.env.REACT_APP_API_URL}/volunteers/`,
+        getSelectedValues(),
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      )
       .then(() => navigateToVolunteers())
       .catch((error) => {
         console.log(error);
@@ -457,17 +461,6 @@ function VolunteerDetails() {
                   disabled={isEditMode}
                 />
                 <label>Ženski</label>
-              </div>
-              <div className="radioButtons">
-                <input
-                  type="radio"
-                  value="Ostali"
-                  name="gender"
-                  checked={volunteerGender === "Ostali"}
-                  onChange={onGenderChange}
-                  disabled={isEditMode}
-                />
-                <label>Ostali</label>
               </div>
             </div>
           </div>
