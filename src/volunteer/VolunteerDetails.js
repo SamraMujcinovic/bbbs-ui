@@ -61,6 +61,7 @@ function VolunteerDetails() {
   const [volunteerCoordinator, setVolunteerCoordinator] = useState(undefined);
   const [volunteerOrganisation, setVolunteerOrganisation] = useState();
   const [volunteerCity, setVolunteerCity] = useState();
+  const [registrationDate, setRegistrationDate] = useState();
 
   const [childsCode, setChildsCode] = useState("");
 
@@ -169,6 +170,7 @@ function VolunteerDetails() {
     setVolunteerCoordinator(selectedVolunteer.coordinator);
     setVolunteerOrganisation(selectedVolunteer.volunteer_organisation);
     setVolunteerCity(selectedVolunteer.volunteer_city);
+    setRegistrationDate(selectedVolunteer.registration_date);
 
     setChildsCode(selectedVolunteer.child);
   };
@@ -733,6 +735,28 @@ function VolunteerDetails() {
             </div>
           </div>
         </div>
+        {isEditMode ? (
+          <div className="formDiv">
+            <label className="title dateSpan">Datum registracije:</label>
+            <DatePicker
+              render={
+                <InputIcon
+                  className={"dateInput"}
+                  value={dateInput}
+                  disabled={true}
+                />
+              }
+              value={new Date(registrationDate)}
+              months={months}
+              weekDays={days}
+              format="DD.MM.YYYY"
+              weekStartDayIndex={1}
+              required={true}
+              maxDate={currentDate}
+              disabled={true}
+            />
+          </div>
+        ) : null}
 
         <div className="buttons">
           {shouldDisableForm() ? null : (
