@@ -11,6 +11,11 @@ import {
   validEmailRegex,
 } from "../utilis/ServiceUtil";
 
+import { dateToString, stringToDate, months, days } from "../utilis/Date";
+
+import DatePicker from "react-multi-date-picker";
+import InputIcon from "react-multi-date-picker/components/input_icon";
+
 import "../volunteer/Volunteer.css";
 
 function VolunteerDetails() {
@@ -35,8 +40,13 @@ function VolunteerDetails() {
   const [volunteerEmail, setVolunteerEmail] = useState("");
   const [volunteerGender, setVolunteerGender] = useState("Muški");
 
-  const [volunteerBirthYear, setVolunteerBirthYear] = useState(undefined);
-  const [yearsToSelect, setYearsToSelect] = useState([]);
+  const currentDate = new Date();
+  const [volunteerBirthDate, setVolunteerBirthDate] = useState(
+    new Date(currentDate.getFullYear() - 30, currentDate.getMonth(), 1)
+  );
+  const [volunteerAge, setVolunteerAge] = useState(
+    currentDate.getFullYear() - volunteerBirthDate.getFullYear()
+  );
 
   const [volunteerPhoneNumber, setVolunteerPhoneNumber] = useState("");
   const [volunteerEducationLevel, setVolunteerEducationLevel] =
@@ -62,9 +72,10 @@ function VolunteerDetails() {
   // validation
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
+  const [dateInput, setDateInput] = useState("");
+  const [isDateValid, setIsDateValid] = useState(true);
 
   useEffect(() => {
-    setYearsToSelect(createYearsArray());
     getOrganisations();
     getCities();
     if (location.state.selectedVolunteer) {
@@ -93,22 +104,6 @@ function VolunteerDetails() {
       );
     }
   }, [coordinators]);
-
-  // data to select
-  const createYearsArray = () => {
-    const currentYear = new Date().getFullYear();
-    let i = currentYear;
-    let years = [];
-    while (i >= currentYear - 70) {
-      years.push({
-        label: i,
-        value: i,
-      });
-      i--;
-    }
-
-    return years;
-  };
 
   const getOrganisations = async () => {
     await axios
@@ -157,11 +152,10 @@ function VolunteerDetails() {
     setVolunteerLastName(selectedVolunteer.user.last_name);
     setVolunteerEmail(selectedVolunteer.user.email);
     setVolunteerGender(selectedVolunteer.gender);
-    setVolunteerBirthYear(
-      createYearsArray().filter((year) => {
-        return year.value === selectedVolunteer.birth_year;
-      })
-    );
+    const birthDateAsDate = stringToDate(selectedVolunteer.birth_date);
+
+    setVolunteerBirthDate(birthDateAsDate);
+    setVolunteerAge(currentDate.getFullYear() - birthDateAsDate.getFullYear());
 
     setVolunteerPhoneNumber(selectedVolunteer.phone_number);
 
@@ -285,6 +279,68 @@ function VolunteerDetails() {
     }
   };
 
+  const onDateChange = (date) => {
+    const dateAsDate = new Date(date);
+    setVolunteerBirthDate(dateAsDate);
+    if (checkDateValidity(date)) {
+      setIsDateValid(true);
+      setVolunteerAge(currentDate.getFullYear() - dateAsDate.getFullYear());
+    } else {
+      setIsDateValid(false);
+      setVolunteerAge(0);
+    }
+  };
+
+  const checkDateValidity = (date) => {
+    if (!date || date === null) {
+      return false;
+    }
+
+    const selectedDate = new Date(date);
+
+    if (selectedDate.getFullYear() > currentDate.getFullYear()) {
+      return false;
+    }
+
+    if (
+      selectedDate.getFullYear() === currentDate.getFullYear() &&
+      selectedDate.getMonth() > currentDate.getMonth()
+    ) {
+      return false;
+    }
+
+    if (
+      selectedDate.getFullYear() === currentDate.getFullYear() &&
+      selectedDate.getMonth() === currentDate.getMonth() &&
+      selectedDate.getDate() > currentDate.getDate()
+    ) {
+      return false;
+    }
+
+    if (selectedDate.getMonth() > 12) {
+      return false;
+    }
+
+    const lastDateInSelectedMonth = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + 1,
+      0
+    ).getDate();
+
+    if (selectedDate.getDate() > lastDateInSelectedMonth) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const onDateInputChange = (e) => {
+    // used to avoid date input
+    // date can be selected from calendar only
+    // with this approach we do not have to do lot of validations :)
+    setDateInput(e.target.value);
+  };
+
   const getSelectedValues = () => {
     return {
       user: {
@@ -293,7 +349,7 @@ function VolunteerDetails() {
         email: volunteerEmail,
       },
       gender: volunteerGender,
-      birth_year: volunteerBirthYear[0].value,
+      birth_date: dateToString(volunteerBirthDate),
       phone_number: volunteerPhoneNumber,
       education_level: volunteerEducationLevel,
       faculty_department: volunteerFacultyDepartment,
@@ -355,8 +411,7 @@ function VolunteerDetails() {
       volunteerLastName &&
       volunteerEmail &&
       volunteerPhoneNumber &&
-      volunteerBirthYear &&
-      volunteerBirthYear.length > 0 &&
+      volunteerBirthDate &&
       volunteerGender &&
       volunteerStatus !== undefined &&
       volunteerGoodConductCertificate !== undefined &&
@@ -427,16 +482,32 @@ function VolunteerDetails() {
           </div>
         </div>
         <div>
-          <label className="title">Godina rođenja</label>
-          <Select
-            values={volunteerBirthYear}
-            options={yearsToSelect}
-            onChange={(values) => setVolunteerBirthYear(values)}
-            placeholder="Godina rodjenja"
-            valueField="label"
-            labelField="value"
-            disabled={shouldDisableForm()}
-          />
+          <div className="formDiv">
+            <label className="title">Datum rođenja:</label>
+            <DatePicker
+              render={
+                <InputIcon
+                  className={
+                    "dateInput " + (!isDateValid ? "invalid-email" : "")
+                  }
+                  value={dateInput}
+                  onChange={onDateInputChange}
+                  disabled={shouldDisableForm()}
+                />
+              }
+              onChange={onDateChange}
+              value={volunteerBirthDate}
+              months={months}
+              weekDays={days}
+              format="DD.MM.YYYY"
+              weekStartDayIndex={1}
+              required={true}
+              maxDate={currentDate}
+              disabled={shouldDisableForm()}
+            />
+            <span className="title ageSpan">Starost volontera:</span>
+            <span className="ageSpan">{volunteerAge}</span>
+          </div>
           <div className="formDiv">
             <span className="title">Spol</span>
             <div className="radioButtonsDiv">
