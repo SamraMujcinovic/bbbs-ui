@@ -10,11 +10,17 @@ import {
 } from "../utilis/ServiceUtil";
 
 import "../child/Child.css";
+import { dateToString, stringToDate, months, days } from "../utilis/Date";
+
+import DatePicker from "react-multi-date-picker";
+import InputIcon from "react-multi-date-picker/components/input_icon";
 
 function ChildDetails() {
   // authenticate
   const authenticate = sessionStorage.getItem("token");
   const userGroups = sessionStorage.getItem("roles");
+
+  const currentDate = new Date();
 
   // navigation
   let navigate = useNavigate();
@@ -33,8 +39,12 @@ function ChildDetails() {
   const [childsLastName, setChildsLastName] = useState("");
   const [childsCode, setChildsCode] = useState("");
   const [childsGender, setChildsGender] = useState("Muški");
-  const [childsBirthYear, setChildsBirthYear] = useState(undefined);
-  const [yearsToSelect, setYearsToSelect] = useState([]);
+  const [childsBirthDate, setChildsBirthDate] = useState(
+    new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), 1)
+  );
+  const [childsAge, setChildsAge] = useState(
+    currentDate.getFullYear() - childsBirthDate.getFullYear()
+  );
 
   const [childSchoolStatus, setChildsSchoolStatus] = useState("Pohađa");
   const [childsFamilyModel, setChildsFamilyModel] =
@@ -73,8 +83,11 @@ function ChildDetails() {
   // data represented in edit mode
   const [childsVolunteerInput, setChildsVolunteerInput] = useState("");
 
+  // validations
+  const [dateInput, setDateInput] = useState("");
+  const [isDateValid, setIsDateValid] = useState(true);
+
   useEffect(() => {
-    setYearsToSelect(createYearsArray());
     getMentoringReasons();
     getMentoringReasonCategories();
     getDevelopmentalDifficulties();
@@ -132,22 +145,6 @@ function ChildDetails() {
       );
     }
   }, [volunteers]);
-
-  // data to select
-  const createYearsArray = () => {
-    const currentYear = new Date().getFullYear();
-    let i = currentYear;
-    let years = [];
-    while (i >= currentYear - 20) {
-      years.push({
-        label: i,
-        value: i,
-      });
-      i--;
-    }
-
-    return years;
-  };
 
   // APIs
 
@@ -315,11 +312,9 @@ function ChildDetails() {
   const setInitialData = (selectedChild) => {
     setChildsCode(selectedChild.code);
     setChildsGender(selectedChild.gender);
-    setChildsBirthYear(
-      createYearsArray().filter((year) => {
-        return year.value === selectedChild.birth_year;
-      })
-    );
+    const birthDateAsDate = stringToDate(selectedChild.birth_date);
+    setChildsBirthDate(birthDateAsDate);
+    setChildsAge(currentDate.getFullYear() - birthDateAsDate.getFullYear());
     setChildsSchoolStatus(selectedChild.school_status);
     setChildsFamilyModel(selectedChild.family_model);
     setChildsStatus(selectedChild.status);
@@ -455,6 +450,68 @@ function ChildDetails() {
     setChildsVolunteer(undefined);
   };
 
+  const onDateChange = (date) => {
+    const dateAsDate = new Date(date);
+    setChildsBirthDate(dateAsDate);
+    if (checkDateValidity(date)) {
+      setIsDateValid(true);
+      setChildsAge(currentDate.getFullYear() - dateAsDate.getFullYear());
+    } else {
+      setIsDateValid(false);
+      setChildsAge(0);
+    }
+  };
+
+  const checkDateValidity = (date) => {
+    if (!date || date === null) {
+      return false;
+    }
+
+    const selectedDate = new Date(date);
+
+    if (selectedDate.getFullYear() > currentDate.getFullYear()) {
+      return false;
+    }
+
+    if (
+      selectedDate.getFullYear() === currentDate.getFullYear() &&
+      selectedDate.getMonth() > currentDate.getMonth()
+    ) {
+      return false;
+    }
+
+    if (
+      selectedDate.getFullYear() === currentDate.getFullYear() &&
+      selectedDate.getMonth() === currentDate.getMonth() &&
+      selectedDate.getDate() > currentDate.getDate()
+    ) {
+      return false;
+    }
+
+    if (selectedDate.getMonth() > 12) {
+      return false;
+    }
+
+    const lastDateInSelectedMonth = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth() + 1,
+      0
+    ).getDate();
+
+    if (selectedDate.getDate() > lastDateInSelectedMonth) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const onDateInputChange = (e) => {
+    // used to avoid date input
+    // date can be selected from calendar only
+    // with this approach we do not have to do lot of validations :)
+    setDateInput(e.target.value);
+  };
+
   const getChildsGender = () => {
     if (childsGender === "Muški") {
       return "M";
@@ -501,7 +558,7 @@ function ChildDetails() {
       first_name: childsFirstName,
       last_name: childsLastName,
       gender: childsGender,
-      birth_year: childsBirthYear[0].value,
+      birth_date: dateToString(childsBirthDate),
       school_status: childSchoolStatus,
       status: childsStatus,
       developmental_difficulties: selectedDevelopmentalDifficulties.map(
@@ -536,8 +593,7 @@ function ChildDetails() {
       checkMentoringReasonValidity() &&
       checkDevelopmentalDifficultyValidity() &&
       ((childsFirstName && childsLastName) || isEditMode) &&
-      childsBirthYear &&
-      childsBirthYear.length > 0 &&
+      childsBirthDate &&
       childsGender &&
       childSchoolStatus !== undefined &&
       childSchoolStatus &&
@@ -601,16 +657,30 @@ function ChildDetails() {
             />
           </div>
         )}
-        <label className="title">Godina rođenja</label>
-        <Select
-          values={childsBirthYear}
-          options={yearsToSelect}
-          onChange={(values) => setChildsBirthYear(values)}
-          placeholder="Godina rodjenja"
-          valueField="label"
-          labelField="value"
-          disabled={shouldDisableForm()}
-        />
+        <div className="formDiv">
+          <label className="title dateSpan">Datum rođenja:</label>
+          <DatePicker
+            render={
+              <InputIcon
+                className={"dateInput " + (!isDateValid ? "invalid-email" : "")}
+                value={dateInput}
+                onChange={onDateInputChange}
+                disabled={shouldDisableForm()}
+              />
+            }
+            onChange={onDateChange}
+            value={childsBirthDate}
+            months={months}
+            weekDays={days}
+            format="DD.MM.YYYY"
+            weekStartDayIndex={1}
+            required={true}
+            maxDate={currentDate}
+            disabled={shouldDisableForm()}
+          />
+          <span className="title ageSpan">Starost djeteta:</span>
+          <span className="ageSpan">{childsAge}</span>
+        </div>
         <div className="formDiv">
           <span className="title">Spol</span>
           <div className="radioButtonsDiv">

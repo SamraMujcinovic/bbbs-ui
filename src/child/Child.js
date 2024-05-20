@@ -46,7 +46,6 @@ function Child(props) {
       id: child.id,
       code: child.code,
       gender: child.gender,
-      birth_year: child.birth_year,
       volunteer:
         child.volunteer != null
           ? `${child.volunteer.user.first_name} ${child.volunteer.user.last_name}`
@@ -57,14 +56,7 @@ function Child(props) {
   };
 
   // table header
-  const theadData = [
-    "Kod",
-    "Spol",
-    "Godina rođenja",
-    "Volonter",
-    "Organizacija",
-    "Grad",
-  ];
+  const theadData = ["Kod", "Spol", "Volonter", "Organizacija", "Grad"];
 
   // table functions
   const editChlid = (row) => {
