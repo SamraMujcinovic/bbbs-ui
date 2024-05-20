@@ -506,7 +506,7 @@ function VolunteerDetails() {
               disabled={shouldDisableForm()}
             />
             <span className="title ageSpan">Starost volontera:</span>
-            <span className="ageSpan">{volunteerAge}</span>
+            <span className="ageSpan">{volunteerAge} godina</span>
           </div>
           <div className="formDiv">
             <span className="title">Spol</span>
