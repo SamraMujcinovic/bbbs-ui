@@ -483,7 +483,7 @@ function VolunteerDetails() {
         </div>
         <div>
           <div className="formDiv">
-            <label className="title">Datum rođenja:</label>
+            <label className="title dateSpan">Datum rođenja:</label>
             <DatePicker
               render={
                 <InputIcon
