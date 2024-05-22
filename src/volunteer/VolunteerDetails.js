@@ -640,7 +640,10 @@ function VolunteerDetails() {
           </div>
         </div>
         <div className="formDiv">
-          <span className="title">Nivo obrazovanja</span>
+          <span className="title">
+            Nivo obrazovanja na kojem se trenutno nalazim (za zaposlene nivo
+            obrazovanja koji ste završili):
+          </span>
           <div className="radioButtonsDiv">
             <div className="radioButtons">
               <input
@@ -709,7 +712,7 @@ function VolunteerDetails() {
                 onChange={onEmploymentStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Zaposlen</label>
+              <label>Zaposlen/a</label>
             </div>
             <div className="radioButtons">
               <input
@@ -720,7 +723,7 @@ function VolunteerDetails() {
                 onChange={onEmploymentStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Nezaposlen</label>
+              <label>Nezaposlen/a</label>
             </div>
             <div className="radioButtons">
               <input
@@ -731,7 +734,7 @@ function VolunteerDetails() {
                 onChange={onEmploymentStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Student</label>
+              <label>Student/ica</label>
             </div>
           </div>
         </div>
