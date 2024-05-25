@@ -353,7 +353,13 @@ function ChildDetails() {
       setShowHealthDifficultiesTextbox(true);
     }
     setActvePUP(selectedChild.active_pup);
+    if (selectedChild.active_pup) {
+      setShowActivePUPTextbox(true);
+    }
     setPassivePUP(selectedChild.passive_pup);
+    if (selectedChild.passive_pup) {
+      setShowPassivePUPTextbox(true);
+    }
     setChildPotential(selectedChild.child_potential);
   };
 
@@ -438,11 +444,29 @@ function ChildDetails() {
           return reason.id !== selectedReason.id;
         })
       );
+      if (selectedReason.id === 25) {
+        // Pasivni PUP
+        setShowPassivePUPTextbox(false);
+        setPassivePUP(null);
+      }
+      if (selectedReason.id === 26) {
+        // Aktivni PUP
+        setShowActivePUPTextbox(false);
+        setActvePUP(null);
+      }
     } else {
       setSelectedMentoringReasons([
         ...selectedMentoringReasons,
         selectedReason,
       ]);
+      if (selectedReason.id === 25) {
+        // Pasivni PUP
+        setShowPassivePUPTextbox(true);
+      }
+      if (selectedReason.id === 26) {
+        // Aktivni PUP
+        setShowActivePUPTextbox(true);
+      }
     }
   };
 
@@ -634,7 +658,9 @@ function ChildDetails() {
         childsCoordinator &&
         childsCoordinator.length > 0) ||
         hasCoordinatorGroup(userGroups)) &&
-      checkHealthDifficulties()
+      checkHealthDifficulties() &&
+      checkActivePUP() &&
+      checkPassivePUP()
     );
   };
 
@@ -669,6 +695,28 @@ function ChildDetails() {
 
   const onChildPotentialChange = (event) => {
     setChildPotential(event.target.value);
+  };
+
+  const checkActivePUP = () => {
+    const isActivePUPChecked = selectedMentoringReasons.find(
+      (difficulty) => difficulty.id === 26
+    );
+    return !isActivePUPChecked || (isActivePUPChecked && activePUP?.length);
+  };
+
+  const onActivePUPChange = (event) => {
+    setActvePUP(event.target.value);
+  };
+
+  const checkPassivePUP = () => {
+    const isPassivePUPChecked = selectedMentoringReasons.find(
+      (difficulty) => difficulty.id === 25
+    );
+    return !isPassivePUPChecked || (isPassivePUPChecked && passivePUP?.length);
+  };
+
+  const onPassivePUPChange = (event) => {
+    setPassivePUP(event.target.value);
   };
 
   if (authenticate && !hasVolunteerGroup(userGroups)) {
@@ -1006,12 +1054,14 @@ function ChildDetails() {
             );
           })}
           {showHealthDifficultiesTextbox ? (
-            <textarea
-              rows="2"
-              placeholder="Navedite zdravstvene poteškoće djeteta"
-              value={healthDifficulties}
-              onChange={onHealthDifficultiesChange}
-            />
+            <div className="formDiv">
+              <span className="title">Zdravstvene poteškoće djeteta</span>
+              <textarea
+                rows="2"
+                value={healthDifficulties}
+                onChange={onHealthDifficultiesChange}
+              />
+            </div>
           ) : null}
           {!checkHealthDifficulties() && (
             <span className="invalid-developmental-difficulty">
@@ -1052,6 +1102,38 @@ function ChildDetails() {
               );
             })}
           </div>
+          {showActivePUPTextbox ? (
+            <div>
+              <span className="title">Aktivni PUP</span>
+              <textarea
+                rows="2"
+                placeholder="Navedite aktivne PUP kod djeteta"
+                value={activePUP}
+                onChange={onActivePUPChange}
+              />
+            </div>
+          ) : null}
+          {!checkActivePUP() && (
+            <span className="invalid-developmental-difficulty">
+              Navedite koje aktivne PUP dijete ima.
+            </span>
+          )}
+          {showPassivePUPTextbox ? (
+            <div>
+              <span className="title">Pasivni PUP</span>
+              <textarea
+                rows="2"
+                placeholder="Navedite pasivne PUP kod djeteta"
+                value={passivePUP}
+                onChange={onPassivePUPChange}
+              />
+            </div>
+          ) : null}
+          {!checkPassivePUP() && (
+            <span className="invalid-developmental-difficulty">
+              Navedite koje pasivne PUP dijete ima.
+            </span>
+          )}
           <div className="moreInfoDiv">
             <span>
               *Faktor pasivnih oblika poremećaja u ponašanju: tikovi,
