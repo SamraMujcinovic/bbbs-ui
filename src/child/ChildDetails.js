@@ -667,6 +667,10 @@ function ChildDetails() {
     setHealthDifficulties(event.target.value);
   };
 
+  const onChildPotentialChange = (event) => {
+    setChildPotential(event.target.value);
+  };
+
   if (authenticate && !hasVolunteerGroup(userGroups)) {
     return (
       <div>
@@ -1066,6 +1070,14 @@ function ChildDetails() {
               Izaberite najmanje jednu, a najviše 5 opcija!
             </span>
           )}
+          <div className="formDiv childPotentialDiv">
+            <span className="title">Očuvani potencijali djeteta</span>
+            <textarea
+              rows="2"
+              value={childPotential}
+              onChange={onChildPotentialChange}
+            />
+          </div>
         </div>
 
         <div className="buttons">

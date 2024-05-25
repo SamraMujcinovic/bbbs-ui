@@ -71,3 +71,7 @@ input::placeholder {
 .ageSpan {
   margin-left: 1rem;
 }
+
+.childPotentialDiv {
+  margin-top: 0.5rem;
+}
