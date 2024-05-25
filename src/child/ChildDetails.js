@@ -55,6 +55,15 @@ function ChildDetails() {
   const [childsGuardianConsent, setChildsGuardianConsent] = useState(false);
   const [vaccinationStatus, setVaccinationStatus] = useState(true);
 
+  const [healthDifficulties, setHealthDifficulties] = useState(undefined);
+  const [showHealthDifficultiesTextbox, setShowHealthDifficultiesTextbox] =
+    useState(false);
+  const [activePUP, setActvePUP] = useState(undefined);
+  const [showActivePUPTextbox, setShowActivePUPTextbox] = useState(false);
+  const [passivePUP, setPassivePUP] = useState(undefined);
+  const [showPassivePUPTextbox, setShowPassivePUPTextbox] = useState(false);
+  const [childPotential, setChildPotential] = useState(undefined);
+
   const [childOrganisation, setChildsOrganisation] = useState();
   const [childCity, setChildsCity] = useState();
 
@@ -339,6 +348,13 @@ function ChildDetails() {
 
     setChildsOrganisation(selectedChild.child_organisation);
     setChildsCity(selectedChild.child_city);
+    setHealthDifficulties(selectedChild.health_difficulties);
+    if (selectedChild.health_difficulties) {
+      setShowHealthDifficultiesTextbox(true);
+    }
+    setActvePUP(selectedChild.active_pup);
+    setPassivePUP(selectedChild.passive_pup);
+    setChildPotential(selectedChild.child_potential);
   };
 
   // on event change methods
@@ -388,11 +404,17 @@ function ChildDetails() {
           return difficulty.id !== selectedDifficulty.id;
         })
       );
+      setShowHealthDifficultiesTextbox(false);
+      setHealthDifficulties(null);
     } else {
       setSelectedDevelopmentalDifficulties([
         ...selectedDevelopmentalDifficulties,
         selectedDifficulty,
       ]);
+      if (selectedDifficulty.id === 14) {
+        // zdravstvene poteškoće
+        setShowHealthDifficultiesTextbox(true);
+      }
     }
   };
 
@@ -570,6 +592,10 @@ function ChildDetails() {
       ),
       guardian_consent: childsGuardianConsent,
       vaccination_status: vaccinationStatus,
+      health_difficulties: healthDifficulties,
+      active_pup: activePUP,
+      passive_pup: passivePUP,
+      child_potential: childPotential,
       volunteer:
         childsVolunteer && childsVolunteer.length > 0
           ? childsVolunteer[0].id
@@ -607,7 +633,8 @@ function ChildDetails() {
         childCity.length > 0 &&
         childsCoordinator &&
         childsCoordinator.length > 0) ||
-        hasCoordinatorGroup(userGroups))
+        hasCoordinatorGroup(userGroups)) &&
+      checkHealthDifficulties()
     );
   };
 
@@ -624,6 +651,20 @@ function ChildDetails() {
       selectedDevelopmentalDifficulties &&
       selectedDevelopmentalDifficulties.length > 0
     );
+  };
+
+  const checkHealthDifficulties = () => {
+    const isHealthDifficultiesChecked = selectedDevelopmentalDifficulties.find(
+      (difficulty) => difficulty.id === 14
+    );
+    return (
+      !isHealthDifficultiesChecked ||
+      (isHealthDifficultiesChecked && healthDifficulties?.length)
+    );
+  };
+
+  const onHealthDifficultiesChange = (event) => {
+    setHealthDifficulties(event.target.value);
   };
 
   if (authenticate && !hasVolunteerGroup(userGroups)) {
@@ -960,6 +1001,19 @@ function ChildDetails() {
               </div>
             );
           })}
+          {showHealthDifficultiesTextbox ? (
+            <textarea
+              rows="2"
+              placeholder="Navedite zdravstvene poteškoće djeteta"
+              value={healthDifficulties}
+              onChange={onHealthDifficultiesChange}
+            />
+          ) : null}
+          {!checkHealthDifficulties() && (
+            <span className="invalid-developmental-difficulty">
+              Navedite koje zdravstvene poteškoće dijete ima.
+            </span>
+          )}
           {!checkDevelopmentalDifficultyValidity() && (
             <span className="invalid-developmental-difficulty">
               Mora biti izabrana barem jedna opcija!
