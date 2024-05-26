@@ -571,12 +571,12 @@ function ChildDetails() {
   };
 
   const getChildsGender = () => {
-    if (childsGender === "Muški") {
-      return "M";
-    } else if (childsGender === "Ženski") {
+    // if female child then only female mentors
+    if (childsGender === "Ženski") {
       return "Z";
     }
-    return "N";
+    // else if child is male, volunteer can be female
+    return null;
   };
 
   const addChild = async () => {
