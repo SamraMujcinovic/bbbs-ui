@@ -51,8 +51,13 @@ function VolunteerDetails() {
   const [volunteerPhoneNumber, setVolunteerPhoneNumber] = useState("");
   const [volunteerEducationLevel, setVolunteerEducationLevel] =
     useState("Srednja škola");
-  const [volunteerFacultyDepartment, setVolunteerFacultyDepartment] =
+  const [volunteerFacultyDepartment, setVolunteerFacultyDepartment] = useState(
+    "Prirodno-matematički odsjeci (Matematika, fizika, biologija, geografija, hemija i sl.)"
+  );
+  const [volunteerFacultyDepartmentOther, setVolunteerFacultyDepartmentOther] =
     useState("");
+  const [showFacultyDepartmentOther, setShowFacultyDepartmentOther] =
+    useState(false);
   const [volunteerEmploymentStatus, setVolunteerEmploymentStatus] =
     useState("Zaposlen");
   const [volunteerGoodConductCertificate, setVolunteerGoodConductCertificate] =
@@ -162,6 +167,12 @@ function VolunteerDetails() {
 
     setVolunteerEducationLevel(selectedVolunteer.education_level);
     setVolunteerFacultyDepartment(selectedVolunteer.faculty_department);
+    setVolunteerFacultyDepartmentOther(
+      selectedVolunteer.faculty_other_department
+    );
+    if (selectedVolunteer.faculty_other_department) {
+      setShowFacultyDepartmentOther(true);
+    }
     setVolunteerEmploymentStatus(selectedVolunteer.employment_status);
     setVolunteerGoodConductCertificate(
       selectedVolunteer.good_conduct_certificate
@@ -355,6 +366,7 @@ function VolunteerDetails() {
       phone_number: volunteerPhoneNumber,
       education_level: volunteerEducationLevel,
       faculty_department: volunteerFacultyDepartment,
+      faculty_other_department: volunteerFacultyDepartmentOther,
       employment_status: volunteerEmploymentStatus,
       good_conduct_certificate: volunteerGoodConductCertificate,
       status: volunteerStatus,
@@ -419,6 +431,7 @@ function VolunteerDetails() {
       volunteerGoodConductCertificate !== undefined &&
       volunteerEducationLevel &&
       volunteerEmploymentStatus &&
+      checkFacultyDepartmentOther() &&
       ((volunteerOrganisation &&
         volunteerOrganisation.length > 0 &&
         volunteerCity &&
@@ -431,6 +444,24 @@ function VolunteerDetails() {
 
   const checkValidations = () => {
     return isEmailValid && isPhoneNumberValid;
+  };
+
+  const onFacultyDepartmentChange = (event) => {
+    setVolunteerFacultyDepartment(event.target.value);
+    if (event.target.value === "Drugo") {
+      setShowFacultyDepartmentOther(true);
+    } else {
+      setVolunteerFacultyDepartmentOther(null);
+      setShowFacultyDepartmentOther(false);
+    }
+  };
+
+  const checkFacultyDepartmentOther = () => {
+    return (
+      volunteerFacultyDepartment !== "Drugo" ||
+      (volunteerFacultyDepartment === "Drugo" &&
+        volunteerFacultyDepartmentOther.length)
+    );
   };
 
   if (authenticate && !hasVolunteerGroup(userGroups)) {
@@ -692,14 +723,159 @@ function VolunteerDetails() {
           </div>
         </div>
         <div className="formDiv">
-          <label className="title">Fakultet/odsjek</label>
-          <input
-            type="text"
-            value={volunteerFacultyDepartment ? volunteerFacultyDepartment : ""}
-            onChange={(e) => setVolunteerFacultyDepartment(e.target.value)}
-            disabled={shouldDisableForm()}
-          />
+          <span className="title">Fakultet/odsjek/zanimanje:</span>
+          <div className="radioButtonsDiv facultyDepartmentDiv">
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Prirodno-matematički odsjeci (Matematika, fizika, biologija, geografija, hemija i sl.)"
+                name="faculty_department"
+                checked={
+                  volunteerFacultyDepartment ===
+                  "Prirodno-matematički odsjeci (Matematika, fizika, biologija, geografija, hemija i sl.)"
+                }
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>
+                Prirodno-matematički odsjeci (Matematika, fizika, biologija,
+                geografija, hemija i sl)
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Tehničko - tehnološki odsjeci (mašinstvo, informatika, arhitektura, elektrotehnika i sl.)"
+                name="faculty_department"
+                checked={
+                  volunteerFacultyDepartment ===
+                  "Tehničko - tehnološki odsjeci (mašinstvo, informatika, arhitektura, elektrotehnika i sl.)"
+                }
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>
+                Tehničko - tehnološki odsjeci (mašinstvo, informatika,
+                arhitektura, elektrotehnika i sl.)
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Umjetnički odsjeci (scenske, likovne, muzičke i ostale umjetnosti)"
+                name="faculty_department"
+                checked={
+                  volunteerFacultyDepartment ===
+                  "Umjetnički odsjeci (scenske, likovne, muzičke i ostale umjetnosti)"
+                }
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>
+                Umjetnički odsjeci (scenske, likovne, muzičke i ostale
+                umjetnosti)
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Društveni odsjeci (ekonomija, pravo, politika, teologija, komunikologija, kriminalistika, historija,jezici i književnost i sl.)"
+                name="faculty_department"
+                checked={
+                  volunteerFacultyDepartment ===
+                  "Društveni odsjeci (ekonomija, pravo, politika, teologija, komunikologija, kriminalistika, historija,jezici i književnost i sl.)"
+                }
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>
+                Društveni odsjeci (ekonomija, pravo, politika, teologija,
+                komunikologija, kriminalistika, historija, jezici i književnost
+                i sl.)
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Humanistički i pomagački odsjeci (psihologija, pedagogija, sociologija, socijalni rad,
+                  defektologija, logopedija i sl.)"
+                name="faculty_department"
+                checked={
+                  volunteerFacultyDepartment ===
+                  "Humanistički i pomagački odsjeci (psihologija, pedagogija, sociologija, socijalni rad, defektologija, logopedija i sl.)"
+                }
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>
+                Humanistički i pomagački odsjeci (psihologija, pedagogija,
+                sociologija, socijalni rad, defektologija, logopedija i sl.)
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Zdravstveni odsjeci (primarna medicina, laboratorija, stomatologija, farmacija, fiziologija,
+                  radiologija i sl.)"
+                name="faculty_department"
+                checked={
+                  volunteerFacultyDepartment ===
+                  "Zdravstveni odsjeci (primarna medicina, laboratorija, stomatologija, farmacija, fiziologija, radiologija i sl.)"
+                }
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>
+                Zdravstveni odsjeci (primarna medicina, laboratorija,
+                stomatologija, farmacija, fiziologija, radiologija i sl.)
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Srednja škola/Zanat"
+                name="faculty_department"
+                checked={volunteerFacultyDepartment === "Srednja škola/Zanat"}
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Srednja škola/Zanat</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Drugo"
+                name="faculty_department"
+                checked={volunteerFacultyDepartment === "Drugo"}
+                onChange={onFacultyDepartmentChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Drugo</label>
+            </div>
+          </div>
         </div>
+        {showFacultyDepartmentOther ? (
+          <div className="formDiv">
+            <label className="title">Navedite naziv fakulteta i odsjeka:</label>
+            <input
+              type="text"
+              value={
+                volunteerFacultyDepartmentOther
+                  ? volunteerFacultyDepartmentOther
+                  : ""
+              }
+              onChange={(e) =>
+                setVolunteerFacultyDepartmentOther(e.target.value)
+              }
+              disabled={shouldDisableForm()}
+            />
+          </div>
+        ) : null}
+        {!checkFacultyDepartmentOther() && (
+          <span className="invalid-developmental-difficulty">
+            Navedite naziv fakulteta/odsjeka:
+          </span>
+        )}
         <div className="formDiv">
           <span className="title">Radni stauts</span>
           <div className="radioButtonsDiv">
