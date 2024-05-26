@@ -49,7 +49,9 @@ function ChildDetails() {
   const [childSchoolStatus, setChildsSchoolStatus] = useState("Pohađa");
   const [childsFamilyModel, setChildsFamilyModel] =
     useState("Potpuna porodica");
-  const [childsStatus, setChildsStatus] = useState(true);
+  const [childsStatus, setChildsStatus] = useState(
+    "Dijete prvi put učestvuje u programu"
+  );
   const [childsVolunteer, setChildsVolunteer] = useState(undefined);
   const [childsCoordinator, setChildsCoordinator] = useState(undefined);
   const [childsGuardianConsent, setChildsGuardianConsent] = useState(false);
@@ -378,7 +380,10 @@ function ChildDetails() {
   };
 
   const onStatusChange = (event) => {
-    setChildsStatus(str2bool(event.target.value));
+    setChildsStatus(event.target.value);
+    if (event.target.value === "Dijete nije aktivno uključeno u program") {
+      setChildsVolunteer(undefined);
+    }
   };
 
   const onGuardianConsentChange = (event) => {
@@ -482,6 +487,13 @@ function ChildDetails() {
     setChildsCoordinator(event);
     setChildsVolunteer(undefined);
     setVolunteers([]);
+  };
+
+  const onChildsVolunteerChange = (event) => {
+    setChildsVolunteer(event);
+    if (event && childsStatus === "Dijete nije aktivno uključeno u program") {
+      setChildsStatus("Dijete prvi put učestvuje u programu");
+    }
   };
 
   const onOrganisationChange = (value) => {
@@ -841,7 +853,7 @@ function ChildDetails() {
         <Select
           values={childsVolunteer}
           options={volunteers}
-          onChange={(values) => setChildsVolunteer(values)}
+          onChange={(values) => onChildsVolunteerChange(values)}
           placeholder="Volonter"
           valueField="id"
           labelField="name"
@@ -856,24 +868,62 @@ function ChildDetails() {
             <div className="radioButtons">
               <input
                 type="radio"
-                value={true}
+                value="Dijete prvi put učestvuje u programu"
                 name="status"
-                checked={childsStatus}
+                checked={
+                  childsStatus === "Dijete prvi put učestvuje u programu"
+                }
                 onChange={onStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Aktivan</label>
+              <label>Dijete prvi put učestvuje u programu</label>
             </div>
             <div className="radioButtons">
               <input
                 type="radio"
-                value={false}
+                value="Dijete je i ranije učestvovalo u programu i nastavlja sa starim volonterom/kom"
                 name="status"
-                checked={!childsStatus}
+                checked={
+                  childsStatus ===
+                  "Dijete je i ranije učestvovalo u programu i nastavlja sa starim volonterom/kom"
+                }
                 onChange={onStatusChange}
                 disabled={shouldDisableForm()}
               />
-              <label>Neaktivan</label>
+              <label>
+                Dijete je i ranije učestvovalo u programu i nastavlja sa starim
+                volonterom/kom
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Dijete je i ranije učestvovalo u programu i nastavlja sa novim volonterom/kom"
+                name="status"
+                checked={
+                  childsStatus ===
+                  "Dijete je i ranije učestvovalo u programu i nastavlja sa novim volonterom/kom"
+                }
+                onChange={onStatusChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>
+                Dijete je i ranije učestvovalo u programu i nastavlja sa novim
+                volonterom/kom
+              </label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
+                value="Dijete nije aktivno uključeno u program"
+                name="status"
+                checked={
+                  childsStatus === "Dijete nije aktivno uključeno u program"
+                }
+                onChange={onStatusChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Dijete nije aktivno uključeno u program</label>
             </div>
           </div>
         </div>
