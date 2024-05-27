@@ -231,6 +231,7 @@ function ChildDetails() {
           child: location.state.selectedChild
             ? location.state.selectedChild.id
             : undefined,
+          availableVolunteers: "True",
         },
 
         headers: {
