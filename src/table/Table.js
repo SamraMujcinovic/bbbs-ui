@@ -10,7 +10,7 @@ const Table = ({ data, header, actions }) => {
           {header.map((key) => (
             <th key={key}>{key}</th>
           ))}
-          <th>Akcije</th>
+          {actions?.length ? <th>Akcije</th> : null}
         </tr>
       </thead>
       <tbody>
@@ -35,21 +35,23 @@ const Table = ({ data, header, actions }) => {
                   </td>
                 ))
             )}
-            <td>
-              {actions?.length &&
-                actions?.map((action, actionIndex) =>
-                  action.showAction(row) ? (
-                    <button
-                      className="iconButton"
-                      key={actionIndex}
-                      onClick={() => action.onClick(row)}
-                      title={action.name}
-                    >
-                      <i className={action.iconClass}></i>
-                    </button>
-                  ) : null
-                )}
-            </td>
+            {actions?.length ? (
+              <td>
+                {actions?.length &&
+                  actions?.map((action, actionIndex) =>
+                    action.showAction(row) ? (
+                      <button
+                        className="iconButton"
+                        key={actionIndex}
+                        onClick={() => action.onClick(row)}
+                        title={action.name}
+                      >
+                        <i className={action.iconClass}></i>
+                      </button>
+                    ) : null
+                  )}
+              </td>
+            ) : null}
           </tr>
         ))}
       </tbody>

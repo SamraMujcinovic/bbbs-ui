@@ -8,6 +8,11 @@ import { logout } from "../LogoutAPI";
 const Sidebar = ({ children }) => {
   const menuItem = [
     {
+      path: "/organisations",
+      name: "Organizacije",
+      roles: ["admin"],
+    },
+    {
       path: "/coordinators",
       name: "Kordinatori",
       roles: ["admin"],

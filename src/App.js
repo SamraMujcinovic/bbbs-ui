@@ -15,6 +15,7 @@ import Sidebar from "./dashboard/components/Sidebar";
 
 import "./dashboard/Dashboard.css";
 import { ToastContainer } from "react-toastify";
+import Organisations from "./organisations/Organisations";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Sidebar>
           <Routes>
             <Route exact path="/" element={<MainPage />} />
+            <Route exact path="/organisations" element={<Organisations />} />
             <Route exact path="/coordinators" element={<Coordinators />} />
             <Route exact path="/volunteers" element={<Volunteer />} />
             <Route

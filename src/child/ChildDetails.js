@@ -166,7 +166,7 @@ function ChildDetails() {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       })
-      .then((response) => setOrganisations(response.data))
+      .then((response) => setOrganisations(response.data.results))
       .catch((error) => {
         console.log(error);
       });
