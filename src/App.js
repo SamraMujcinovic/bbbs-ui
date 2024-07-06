@@ -17,6 +17,9 @@ import "./dashboard/Dashboard.css";
 import { ToastContainer } from "react-toastify";
 import Organisations from "./organisations/Organisations";
 
+import { LoaderProvider } from "./loader/LoaderContext";
+import GlobalLoader from "./loader/GlobalLoader";
+
 function App() {
   return (
     <>
@@ -24,22 +27,26 @@ function App() {
       <Router>
         <ToastContainer />
         <Sidebar>
-          <Routes>
-            <Route exact path="/" element={<MainPage />} />
-            <Route exact path="/organisations" element={<Organisations />} />
-            <Route exact path="/coordinators" element={<Coordinators />} />
-            <Route exact path="/volunteers" element={<Volunteer />} />
-            <Route
-              exact
-              path="/volunteers/details"
-              element={<VolunteerDetails />}
-            />
-            <Route exact path="/hours" element={<VolunteerHours />} />
-            <Route exact path="/childs" element={<Child />} />
-            <Route exact path="/childs/details" element={<ChildDetails />} />
-            <Route exact path="/forms" element={<Form />} />
-            <Route exact path="/forms/details" element={<FormDetails />} />
-          </Routes>
+          <LoaderProvider>
+            <GlobalLoader />
+
+            <Routes>
+              <Route exact path="/" element={<MainPage />} />
+              <Route exact path="/organisations" element={<Organisations />} />
+              <Route exact path="/coordinators" element={<Coordinators />} />
+              <Route exact path="/volunteers" element={<Volunteer />} />
+              <Route
+                exact
+                path="/volunteers/details"
+                element={<VolunteerDetails />}
+              />
+              <Route exact path="/hours" element={<VolunteerHours />} />
+              <Route exact path="/childs" element={<Child />} />
+              <Route exact path="/childs/details" element={<ChildDetails />} />
+              <Route exact path="/forms" element={<Form />} />
+              <Route exact path="/forms/details" element={<FormDetails />} />
+            </Routes>
+          </LoaderProvider>
         </Sidebar>
       </Router>
     </>

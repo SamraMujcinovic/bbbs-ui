@@ -9,9 +9,12 @@ import FilterComponent from "../filter/FilterComponent";
 
 import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 
+import { useFetch } from "../FetchWrapper";
+
 function Form(props) {
   // navigation
   let navigate = useNavigate();
+  const fetchWrapper = useFetch();
 
   const userGroups = sessionStorage.getItem("roles");
   const [currentVolunteer, setCurrentVolunteer] = useState(undefined);
@@ -127,33 +130,36 @@ function Form(props) {
   };
 
   const getForms = async (filters) => {
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/forms/`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-        params: {
-          startDate: filters?.startDate ?? defaultStartDate,
-          endDate: filters?.endDate ?? defaultEndDate,
-          organisationFilter:
-            filters?.organisationFilter === ""
-              ? undefined
-              : filters?.organisationFilter,
-          volunteerFilter:
-            filters?.volunteerFilter === ""
-              ? undefined
-              : filters?.volunteerFilter,
-          activityTypeFilter:
-            filters?.activityTypeFilter === ""
-              ? undefined
-              : filters?.activityTypeFilter,
-          page: currentPage,
-        },
-      })
+    const apiUrl = `${process.env.REACT_APP_API_URL}/forms/`;
+
+    const params = {
+      startDate: filters?.startDate ?? defaultStartDate,
+      endDate: filters?.endDate ?? defaultEndDate,
+      organisationFilter:
+        filters?.organisationFilter === ""
+          ? undefined
+          : filters?.organisationFilter,
+      volunteerFilter:
+        filters?.volunteerFilter === "" ? undefined : filters?.volunteerFilter,
+      activityTypeFilter:
+        filters?.activityTypeFilter === ""
+          ? undefined
+          : filters?.activityTypeFilter,
+      page: currentPage,
+    };
+
+    const headers = {
+      Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      // Other headers as needed
+    };
+    fetchWrapper(apiUrl, {
+      params,
+      headers,
+    })
       .then((response) => {
-        setTotalElements(response.data.count);
-        setTotalPages(Math.ceil(response.data.count / PAGE_SIZE));
-        getConvertedForms(response.data);
+        setTotalElements(response.count);
+        setTotalPages(Math.ceil(response.count / PAGE_SIZE));
+        getConvertedForms(response.results);
         getTotalHoursSum(filters);
       })
       .catch((error) => {
@@ -163,7 +169,7 @@ function Form(props) {
 
   const getConvertedForms = (unConvertedForms) => {
     let newForms = [];
-    unConvertedForms.results.forEach((form) => {
+    unConvertedForms.forEach((form) => {
       newForms.push(covertToFormData(form));
     });
     setForms(newForms);
