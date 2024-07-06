@@ -1,3 +1,13 @@
+.filterComponentDiv {
+  display: flex;
+  justify-content: space-between;
+  margin-block: 1.5rem;
+}
+
+.filterComponentDiv button {
+  border-radius: 0%;
+}
+
 .invalid-date {
   border: 1px red solid;
 }

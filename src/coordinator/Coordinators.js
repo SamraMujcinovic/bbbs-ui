@@ -137,9 +137,12 @@ function Coordinators(props) {
     return (
       <div>
         <h1>Koordinatori</h1>
-        <button className="btn btn-success" onClick={openAddModal}>
-          Dodaj koordinatora
-        </button>
+        <div className="filterComponentDiv">
+          <div></div>
+          <button className="btn btn-success" onClick={openAddModal}>
+            Dodaj koordinatora
+          </button>
+        </div>
         <div className="footerDiv">
           <Table header={theadData} data={coordinators} actions={actions} />
           <div className="paginationDiv">

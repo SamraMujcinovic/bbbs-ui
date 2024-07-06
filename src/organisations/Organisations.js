@@ -83,9 +83,12 @@ function Organisations(props) {
     return (
       <div>
         <h1>Organizacije</h1>
-        <button className="btn btn-success" onClick={openAddModal}>
-          Dodaj organizaciju
-        </button>
+        <div className="filterComponentDiv">
+          <div></div>
+          <button className="btn btn-success" onClick={openAddModal}>
+            Dodaj organizaciju
+          </button>
+        </div>
         <div className="footerDiv">
           <Table header={theadData} data={organisations} />
           <div className="paginationDiv">

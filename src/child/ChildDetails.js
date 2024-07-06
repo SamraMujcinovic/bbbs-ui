@@ -1220,6 +1220,7 @@ function ChildDetails() {
                 <Button
                   className="submitButton"
                   type="submit"
+                  style={{ borderRadius: "0%" }}
                   onClick={addChild}
                   disabled={!enableSubmitButton()}
                 >
@@ -1229,6 +1230,7 @@ function ChildDetails() {
                 <Button
                   className="submitButton"
                   type="submit"
+                  style={{ borderRadius: "0%" }}
                   onClick={updateChild}
                   disabled={!enableSubmitButton()}
                 >
@@ -1237,7 +1239,11 @@ function ChildDetails() {
               )}
             </div>
           )}
-          <Button variant="secondary" onClick={navigateToChilds}>
+          <Button
+            variant="secondary"
+            style={{ borderRadius: "0%" }}
+            onClick={navigateToChilds}
+          >
             Zatvori
           </Button>
         </div>

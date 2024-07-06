@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import ReactPaginate from "react-paginate";
 
+import FilterComponent from "../filter/FilterComponent";
+
 import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 
 function Form(props) {
@@ -21,6 +23,18 @@ function Form(props) {
 
   const [totalHours, setTotalHours] = useState(0);
 
+  const [organisations, setOrganisations] = useState([]);
+  const [volunteers, setVolunteers] = useState([]);
+  const activityTypes = [
+    "Individualno",
+    "Druženje sa drugim parovima",
+    "Grupna aktivnost",
+    "Izlet",
+    "Individualni savjetodavni",
+    "Grupni savjetodavni",
+    "Radionica za rad na sebi",
+  ];
+
   // table data
   const theadData = [
     "Datum",
@@ -33,9 +47,20 @@ function Form(props) {
   ];
   const [forms, setForms] = useState([]);
 
+  const filters = {
+    showOrganisationFilter: true,
+    showVolunteerFilter: true,
+    showActivityTypeFilter: true,
+    showDateFilter: true,
+  };
+
+  const defaultStartDate = "2024-01-01";
+  const defaultEndDate = "2024-12-01";
+
   useEffect(() => {
+    getAccessibleVolunteers();
+    getAccessibleOrganisations();
     getForms();
-    getTotalHoursSum();
     if (hasVolunteerGroup(userGroups)) {
       getVolunteer();
     }
@@ -43,8 +68,44 @@ function Form(props) {
 
   useEffect(() => {
     getForms();
-    getTotalHoursSum();
   }, [currentPage]);
+
+  const getAccessibleOrganisations = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/organisations/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => setOrganisations(response.data.results))
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getAccessibleVolunteers = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setVolunteers(response.data.results.map(covertToVolunteerData));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const covertToVolunteerData = (volunteer) => {
+    return {
+      id: volunteer.id,
+      first_name: volunteer.user.first_name,
+      last_name: volunteer.user.last_name,
+      name: `${volunteer.user.first_name} ${volunteer.user.last_name}`,
+    };
+  };
 
   const getVolunteer = async () => {
     await axios
@@ -65,13 +126,27 @@ function Form(props) {
     navigateToFormDetails(row);
   };
 
-  const getForms = async () => {
+  const getForms = async (filters) => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/forms/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
         params: {
+          startDate: filters?.startDate ?? defaultStartDate,
+          endDate: filters?.endDate ?? defaultEndDate,
+          organisationFilter:
+            filters?.organisationFilter === ""
+              ? undefined
+              : filters?.organisationFilter,
+          volunteerFilter:
+            filters?.volunteerFilter === ""
+              ? undefined
+              : filters?.volunteerFilter,
+          activityTypeFilter:
+            filters?.activityTypeFilter === ""
+              ? undefined
+              : filters?.activityTypeFilter,
           page: currentPage,
         },
       })
@@ -79,6 +154,7 @@ function Form(props) {
         setTotalElements(response.data.count);
         setTotalPages(Math.ceil(response.data.count / PAGE_SIZE));
         getConvertedForms(response.data);
+        getTotalHoursSum(filters);
       })
       .catch((error) => {
         console.log(error);
@@ -107,11 +183,27 @@ function Form(props) {
     };
   };
 
-  const getTotalHoursSum = async () => {
+  const getTotalHoursSum = async (filters) => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/forms/totals`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+        params: {
+          startDate: filters?.startDate ?? defaultStartDate,
+          endDate: filters?.endDate ?? defaultEndDate,
+          organisationFilter:
+            filters?.organisationFilter === ""
+              ? undefined
+              : filters?.organisationFilter,
+          volunteerFilter:
+            filters?.volunteerFilter === ""
+              ? undefined
+              : filters?.volunteerFilter,
+          activityTypeFilter:
+            filters?.activityTypeFilter === ""
+              ? undefined
+              : filters?.activityTypeFilter,
         },
       })
       .then((response) => {
@@ -153,13 +245,25 @@ function Form(props) {
   return (
     <div>
       <h1>Forme</h1>
-      {hasVolunteerGroup(userGroups) &&
-      currentVolunteer?.child !== undefined &&
-      currentVolunteer?.child !== null ? (
-        <button className="btn btn-success" onClick={openAddFormPage}>
-          Dodaj formu
-        </button>
-      ) : null}
+      <div className="filterComponentDiv">
+        <FilterComponent
+          filters={filters}
+          organisationList={organisations}
+          volunteerList={volunteers}
+          activityTypeList={activityTypes}
+          defaultStartDate={defaultStartDate}
+          defaultEndDate={defaultEndDate}
+          onSearch={getForms}
+        />
+        {hasVolunteerGroup(userGroups) &&
+        currentVolunteer?.child !== undefined &&
+        currentVolunteer?.child !== null ? (
+          <button className="btn btn-success" onClick={openAddFormPage}>
+            Dodaj formu
+          </button>
+        ) : null}
+      </div>
+
       <div className="footerDiv">
         <Table header={theadData} data={forms} actions={actions} />
         <div className="paginationDiv">

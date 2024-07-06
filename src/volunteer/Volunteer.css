@@ -47,6 +47,7 @@ input::placeholder {
 
 .buttons {
   display: flex;
+  border-radius: 0%;
 }
 
 .ageSpan {

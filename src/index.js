@@ -52,6 +52,7 @@ axios.interceptors.response.use(
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("token"),
           },
+          params: originalRequest.params,
         });
       }
     }

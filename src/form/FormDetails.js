@@ -685,13 +685,18 @@ function FormDetails(props) {
           <Button
             type="submit"
             className="submitButton"
+            style={{ borderRadius: "0%" }}
             onClick={addForm}
             disabled={!isFormValid()}
           >
             Potvrdi
           </Button>
         )}
-        <Button variant="secondary" onClick={navigateToForms}>
+        <Button
+          variant="secondary"
+          style={{ borderRadius: "0%" }}
+          onClick={navigateToForms}
+        >
           Zatvori
         </Button>
       </div>

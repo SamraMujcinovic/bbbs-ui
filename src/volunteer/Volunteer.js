@@ -6,6 +6,8 @@ import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 
 import ReactPaginate from "react-paginate";
 
+import FilterComponent from "../filter/FilterComponent";
+
 function Volunteer(props) {
   // navigation
   let navigate = useNavigate();
@@ -23,11 +25,21 @@ function Volunteer(props) {
   const theadData = ["Ime", "Prezime", "E-mail", "Organizacija", "Grad"];
   const [volunteers, setVolunteers] = useState([]);
 
+  const [organisations, setOrganisations] = useState([]);
+
+  const filters = {
+    showOrganisationFilter: true,
+    showVolunteerFilter: false,
+    showActivityTypeFilter: false,
+    showDateFilter: false,
+  };
+
   const editVolunteeer = (row) => {
     navigateToVolunteerDetails(row);
   };
 
   useEffect(() => {
+    getAccessibleOrganisations();
     getVolunteers();
   }, []);
 
@@ -70,13 +82,17 @@ function Volunteer(props) {
     setVolunteers(newVolunteers);
   };
 
-  const getVolunteers = async () => {
+  const getVolunteers = async (filters) => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
         params: {
+          organisationFilter:
+            filters?.organisationFilter === ""
+              ? undefined
+              : filters?.organisationFilter,
           page: currentPage,
         },
       })
@@ -94,6 +110,19 @@ function Volunteer(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const getAccessibleOrganisations = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/organisations/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => setOrganisations(response.data.results))
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const actions = [
     {
       name: "Edituj",
@@ -107,9 +136,16 @@ function Volunteer(props) {
     return (
       <div>
         <h1>Volonteri</h1>
-        <button className="btn btn-success" onClick={openAddVolunteerPage}>
-          Dodaj volontera
-        </button>
+        <div className="filterComponentDiv">
+          <FilterComponent
+            filters={filters}
+            organisationList={organisations}
+            onSearch={getVolunteers}
+          />
+          <button className="btn btn-success" onClick={openAddVolunteerPage}>
+            Dodaj volontera
+          </button>
+        </div>
         <div className="footerDiv">
           <Table header={theadData} data={volunteers} actions={actions} />
           <div className="paginationDiv">

@@ -6,6 +6,8 @@ import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 
 import "../table/Pagination.css";
 
+import FilterComponent from "../filter/FilterComponent";
+
 import ReactPaginate from "react-paginate";
 
 function Child(props) {
@@ -21,7 +23,17 @@ function Child(props) {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [organisations, setOrganisations] = useState([]);
+
+  const filters = {
+    showOrganisationFilter: true,
+    showVolunteerFilter: false,
+    showActivityTypeFilter: false,
+    showDateFilter: false,
+  };
+
   useEffect(() => {
+    getAccessibleOrganisations();
     getChilds();
   }, []);
 
@@ -79,13 +91,17 @@ function Child(props) {
   };
 
   // APIs
-  const getChilds = async () => {
+  const getChilds = async (filters) => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/childs/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
         params: {
+          organisationFilter:
+            filters?.organisationFilter === ""
+              ? undefined
+              : filters?.organisationFilter,
           page: currentPage,
         },
       })
@@ -103,6 +119,19 @@ function Child(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const getAccessibleOrganisations = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/organisations/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => setOrganisations(response.data.results))
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const actions = [
     {
       name: "Edituj",
@@ -116,9 +145,16 @@ function Child(props) {
     return (
       <div>
         <h1>Djeca</h1>
-        <button className="btn btn-success" onClick={openAddChildPage}>
-          Dodaj dijete
-        </button>
+        <div className="filterComponentDiv">
+          <FilterComponent
+            filters={filters}
+            organisationList={organisations}
+            onSearch={getChilds}
+          />
+          <button className="btn btn-success" onClick={openAddChildPage}>
+            Dodaj dijete
+          </button>
+        </div>
         <div className="footerDiv">
           <Table header={theadData} data={childs} actions={actions} />
           <div className="paginationDiv">

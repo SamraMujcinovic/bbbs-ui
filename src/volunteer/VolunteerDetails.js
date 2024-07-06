@@ -944,6 +944,7 @@ function VolunteerDetails() {
                 <Button
                   className="submitButton"
                   type="submit"
+                  style={{ borderRadius: "0%" }}
                   onClick={addVolunteer}
                   disabled={!enableSubmitButton()}
                 >
@@ -953,6 +954,7 @@ function VolunteerDetails() {
                 <Button
                   className="submitButton"
                   type="submit"
+                  style={{ borderRadius: "0%" }}
                   onClick={updateVolunteer}
                   disabled={!enableSubmitButton()}
                 >
@@ -961,7 +963,11 @@ function VolunteerDetails() {
               )}
             </div>
           )}
-          <Button variant="secondary" onClick={navigateToVolunteers}>
+          <Button
+            variant="secondary"
+            style={{ borderRadius: "0%" }}
+            onClick={navigateToVolunteers}
+          >
             Zatvori
           </Button>
         </div>

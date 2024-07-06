@@ -171,6 +171,7 @@ function CoordinatorModal(props) {
           {props.data ? (
             <Button
               type="submit"
+              style={{ borderRadius: "0%" }}
               onClick={updateCoordinator}
               disabled={disableSubmitButton()}
             >
@@ -179,13 +180,18 @@ function CoordinatorModal(props) {
           ) : (
             <Button
               type="submit"
+              style={{ borderRadius: "0%" }}
               onClick={addCoordinator}
               disabled={disableSubmitButton()}
             >
               Potvrdi
             </Button>
           )}
-          <Button variant="secondary" onClick={props.handleClose}>
+          <Button
+            variant="secondary"
+            style={{ borderRadius: "0%" }}
+            onClick={props.handleClose}
+          >
             Zatvori
           </Button>
         </Modal.Footer>
