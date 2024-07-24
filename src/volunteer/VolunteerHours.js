@@ -120,7 +120,7 @@ function VolunteerHours(props) {
       name: "Posalji e-mail",
       iconClass: "far fa-envelope redIcon",
       onClick: sendReminderEmail,
-      showAction: (row) => row.hours < 4,
+      showAction: (row) => row.hours < 16,
     },
   ];
 
