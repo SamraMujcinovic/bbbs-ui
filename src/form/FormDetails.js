@@ -333,7 +333,7 @@ function FormDetails(props) {
     }
     return true;
   };
-  //fd
+
   const isFormValid = () => {
     return (
       isDateValid &&
