@@ -16,7 +16,7 @@ axios.interceptors.response.use(
 
     if (
       error.response.status === 401 &&
-      originalRequest.url === "http://127.0.0.1:3000/login/refresh"
+      originalRequest.url === `${process.env.REACT_APP_REFRESH_URL}`
     ) {
       return Promise.reject(error);
     }
