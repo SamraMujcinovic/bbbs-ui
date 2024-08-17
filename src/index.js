@@ -20,7 +20,6 @@ axios.interceptors.response.use(
     ) {
       return Promise.reject(error);
     }
-    // smth
 
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
