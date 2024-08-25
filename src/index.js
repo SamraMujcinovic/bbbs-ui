@@ -16,7 +16,9 @@ axios.interceptors.response.use(
 
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const newAxios = axios.create();
+      const newAxios = axios.create({
+        baseURL: `${process.env.REACT_APP_API_URL}`,
+      });
       const res = await newAxios
         .post("/login/refresh", {
           withCredentials: true,
