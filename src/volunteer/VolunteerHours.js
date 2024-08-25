@@ -40,7 +40,12 @@ function VolunteerHours(props) {
   lastDayOfMonth.setDate(0);
   const defaultEndDate = format(lastDayOfMonth, "yyyy-MM-dd");
 
+  const [selectedStartDate, setSelectedStartDate] = useState(defaultStartDate);
+  const [selectedEndDate, setSelectedEndDate] = useState(defaultEndDate);
+
   const getvolunteerHours = async (filters) => {
+    setSelectedStartDate(filters?.startDate ?? defaultStartDate);
+    setSelectedEndDate(filters?.endDate ?? defaultEndDate);
     await axios
       .get(`${process.env.REACT_APP_API_URL}/hours/`, {
         headers: {
@@ -80,8 +85,8 @@ function VolunteerHours(props) {
         `${process.env.REACT_APP_API_URL}/reminders`,
         {
           volunteer_user_id: volunteer_user_id,
-          start_date: filters?.startDate ?? defaultStartDate,
-          end_date: filters?.endDate ?? defaultEndDate,
+          start_date: selectedStartDate,
+          end_date: selectedEndDate,
         },
         {
           headers: {
