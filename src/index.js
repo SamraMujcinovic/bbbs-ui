@@ -14,13 +14,6 @@ axios.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config;
 
-    if (
-      error.response.status === 401 &&
-      originalRequest.url === `${process.env.REACT_APP_REFRESH_URL}`
-    ) {
-      return Promise.reject(error);
-    }
-
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const newAxios = axios.create();
