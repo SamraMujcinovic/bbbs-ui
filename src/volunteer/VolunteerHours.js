@@ -80,7 +80,8 @@ function VolunteerHours(props) {
         `${process.env.REACT_APP_API_URL}/reminders`,
         {
           volunteer_user_id: volunteer_user_id,
-          monthAndYear: "2022-12-01",
+          start_date: filters?.startDate ?? defaultStartDate,
+          end_date: filters?.endDate ?? defaultEndDate,
         },
         {
           headers: {
