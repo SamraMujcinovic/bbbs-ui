@@ -35,7 +35,7 @@ axios.interceptors.response.use(
             sessionStorage.removeItem("token");
             sessionStorage.removeItem("roles");
             sessionStorage.removeItem("user");
-            window.location.href = "/";
+            //window.location.href = "/";
           }
         });
 
