@@ -24,11 +24,8 @@ axios.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const res = await axios
-        .post("https://sbss.hopto.org/login/refresh", {
+        .post("https://sbss.hopto.org/login/refresh", null, {
           withCredentials: true, // Ensures that cookies are sent with the request
-          headers: {
-            Accept: "application/json",
-          },
         })
         .catch((error) => {
           if (error.response.status === 401) {
