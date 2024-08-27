@@ -24,7 +24,7 @@ axios.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const res = await axios
-        .post("https://sbss.hopto.org/login/refresh", null, {
+        .post(`${process.env.REACT_APP_API_URL}/login/refresh`, null, {
           withCredentials: true, // Ensures that cookies are sent with the request
         })
         .catch((error) => {
@@ -32,18 +32,14 @@ axios.interceptors.response.use(
             sessionStorage.removeItem("token");
             sessionStorage.removeItem("roles");
             sessionStorage.removeItem("user");
-            //window.location.href = "/";
+            window.location.href = "/";
           }
         });
 
       if (res.status === 200) {
         // first remove old token, then set new
         sessionStorage.removeItem("token");
-        console.log(res);
-        console.log(res.data);
-        console.log(res.data.access);
         sessionStorage.setItem("token", res.data.access);
-        console.log(originalRequest);
 
         return axios({
           method: originalRequest.method,
