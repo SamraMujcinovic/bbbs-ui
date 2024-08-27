@@ -42,7 +42,11 @@ axios.interceptors.response.use(
       if (res.status === 200) {
         // first remove old token, then set new
         sessionStorage.removeItem("token");
+        console.log(res);
+        console.log(res.data);
+        console.log(res.data.access);
         sessionStorage.setItem("token", res.data.access);
+        console.log(originalRequest);
 
         return axios({
           method: originalRequest.method,
