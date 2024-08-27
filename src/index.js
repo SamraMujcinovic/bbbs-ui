@@ -27,7 +27,7 @@ axios.interceptors.response.use(
         .post("https://sbss.hopto.org/login/refresh", {
           withCredentials: true, // Ensures that cookies are sent with the request
           headers: {
-            "Content-Type": "application/json",
+            Accept: "application/json",
           },
         })
         .catch((error) => {
