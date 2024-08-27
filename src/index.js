@@ -23,9 +23,7 @@ axios.interceptors.response.use(
 
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const newAxios = axios.create({
-        baseURL: "https://sbss.hopto.org",
-      });
+      const newAxios = axios.create();
       const res = await newAxios
         .post("/login/refresh", {
           withCredentials: true,
