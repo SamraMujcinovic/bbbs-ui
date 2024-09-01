@@ -67,7 +67,7 @@ const AccountActivation = ({ isFirstLogin = false }) => {
         U polje ispod unesite šifru koju ćete koristiti za pristup aplikaciji.
       </p>
       <div className="formDiv">
-        <div className="passwordDiv">
+        <div className="passwordDivActivation">
           <label>Lozinka</label>
           <input
             className="form-control"

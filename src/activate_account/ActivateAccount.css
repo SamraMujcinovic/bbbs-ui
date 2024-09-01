@@ -13,12 +13,12 @@
   margin-top: 1rem;
 }
 
-.passwordDiv {
+.passwordDivActivation {
   position: relative;
   width: 20rem;
 }
 
-.passwordDiv button {
+.passwordDivActivation button {
   position: absolute;
   top: 24px;
   right: 0;
