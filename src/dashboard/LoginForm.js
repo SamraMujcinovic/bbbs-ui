@@ -62,7 +62,6 @@ function LoginForm(props) {
   };
 
   const login = async () => {
-    console.log(`${process.env.REACT_APP_API_URL}`)
     try {
       await axios
         .post(
@@ -107,7 +106,7 @@ function LoginForm(props) {
           </div>
 
           <div className="passwordDiv">
-            <label>Password</label>
+            <label>Lozinka</label>
             <input
               className="form-control"
               type={passwordType}

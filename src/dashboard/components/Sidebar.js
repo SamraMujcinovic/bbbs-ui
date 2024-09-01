@@ -4,6 +4,7 @@ import LoginForm from "../LoginForm";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import ChangePasswordForm from "../ChangePasswordForm";
 import { logout } from "../LogoutAPI";
+import { useLocation } from "react-router-dom";
 
 const Sidebar = ({ children }) => {
   const menuItem = [
@@ -39,7 +40,11 @@ const Sidebar = ({ children }) => {
     },
   ];
 
+  const location = useLocation();
   const authenticate = sessionStorage.getItem("token");
+  const isActivationPage =
+    location.pathname.startsWith("/activate/") ||
+    location.pathname.startsWith("/reset-password/");
   const userRole = sessionStorage.getItem("roles");
   const user = sessionStorage.getItem("user");
 
@@ -117,7 +122,7 @@ const Sidebar = ({ children }) => {
                 </div>
               ) : null}
             </div>
-          ) : (
+          ) : isActivationPage ? null : (
             <button className="loginButton" onClick={openLoginForm}>
               Prijavi se
             </button>
@@ -130,7 +135,7 @@ const Sidebar = ({ children }) => {
             handleClose={handleChangePassClose}
           />
         ) : null}
-        {authenticate ? <main>{children}</main> : null}
+        {authenticate || isActivationPage ? <main>{children}</main> : null}
       </div>
     </div>
   );

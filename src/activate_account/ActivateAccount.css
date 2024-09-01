@@ -1,0 +1,25 @@
+.mainDiv {
+  padding: 20px;
+}
+
+.formDiv {
+  margin-top: 20px;
+  margin-block: 1rem;
+}
+
+.submitButton {
+  width: 10rem;
+  background: #0655c9 !important;
+  margin-top: 1rem;
+}
+
+.passwordDiv {
+  position: relative;
+  width: 20rem;
+}
+
+.passwordDiv button {
+  position: absolute;
+  top: 24px;
+  right: 0;
+}

@@ -11,11 +11,13 @@ import ChildDetails from "./child/ChildDetails";
 import VolunteerDetails from "./volunteer/VolunteerDetails";
 import Form from "./form/Form";
 import FormDetails from "./form/FormDetails";
+import ActivationPage from "./activate_account/ActivateAccountPage";
 import Sidebar from "./dashboard/components/Sidebar";
 
 import "./dashboard/Dashboard.css";
 import { ToastContainer } from "react-toastify";
 import Organisations from "./organisations/Organisations";
+import ResetPasswordConfirmationPage from "./activate_account/ResetPasswordConfirmationPage";
 
 function App() {
   return (
@@ -39,6 +41,11 @@ function App() {
             <Route exact path="/childs/details" element={<ChildDetails />} />
             <Route exact path="/forms" element={<Form />} />
             <Route exact path="/forms/details" element={<FormDetails />} />
+            <Route path="/activate/:uid/:token/" element={<ActivationPage />} />
+            <Route
+              path="/reset-password/:uid/:token/"
+              element={<ResetPasswordConfirmationPage />}
+            />
           </Routes>
         </Sidebar>
       </Router>

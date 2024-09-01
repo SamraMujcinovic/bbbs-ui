@@ -254,7 +254,6 @@ function FormDetails(props) {
             hideProgressBar: true,
           });
         }
-        console.log(error.response.data.hasOwnProperty("303"));
       });
   };
 
