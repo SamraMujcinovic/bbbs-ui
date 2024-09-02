@@ -3,13 +3,14 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import jwt from "jwt-decode";
-import { Button, Modal } from "react-bootstrap";
-import ResetPasswordForm from "./ResetPasswordForm";
+import ResetPasswordForm from "../dashboard/ResetPasswordForm";
 import { validEmailRegex } from "../utilis/ServiceUtil";
 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-function LoginForm(props) {
+import "./LoginPage.css";
+
+function LoginPage(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,11 +26,7 @@ function LoginForm(props) {
   const [error, setError] = useState(false);
   const [responseError, setResponseError] = useState(false);
 
-  const [showLoginForm, setShowLoginForm] = useState(true);
-
-  useEffect(() => {
-    setShowLoginForm(true);
-  }, []);
+  useEffect(() => {}, []);
 
   let navigate = useNavigate();
 
@@ -37,12 +34,10 @@ function LoginForm(props) {
   const [showForgotPassModal, setShowForgotPassModal] = useState(false);
   const handleForgotPassClose = () => {
     setShowForgotPassModal(false);
-    setShowLoginForm(true);
   };
   const handleForgotPassOpen = () => setShowForgotPassModal(true);
 
   const openForgotPassForm = () => {
-    setShowLoginForm(false);
     handleForgotPassOpen();
   };
 
@@ -79,8 +74,8 @@ function LoginForm(props) {
           sessionStorage.setItem("token", response.data.data);
           sessionStorage.setItem("roles", claims.group);
           sessionStorage.setItem("user", user);
-          props.handleClose();
-          navigate(`/`);
+          console.log("hello");
+          navigate("/");
         });
     } catch (error) {
       setResponseError(true);
@@ -88,14 +83,16 @@ function LoginForm(props) {
   };
 
   return (
-    <div>
-      <Modal show={showLoginForm} onHide={props.handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Prijavi se</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <div>
+    <div className="login-container">
+      <div className="login-box">
+        <img
+          src={require("../images/logo.png")}
+          alt="Logo"
+          className="login-logo"
+        />
+        <h1>Prijavi se</h1>
+        <div className="login-inputs">
+          <div className="emailDiv">
             <label>Email</label>
             <input
               className={"form-control " + (error ? "invalid-email" : "")}
@@ -114,7 +111,7 @@ function LoginForm(props) {
               onChange={onPasswordChange}
             />
             <button
-              className="btn btn-outline-primary"
+              className="btn btn-outline-primary togglePasswordButton"
               onClick={togglePassword}
               disabled={!password}
             >
@@ -127,7 +124,7 @@ function LoginForm(props) {
             )}
           </div>
 
-          <div>
+          <div className="forgotPasswordButtonDiv">
             <button
               className="forgotPasswordButton"
               onClick={openForgotPassForm}
@@ -135,29 +132,27 @@ function LoginForm(props) {
               Zaboravili ste lozinku?
             </button>
           </div>
-        </Modal.Body>
 
-        <Modal.Footer>
-          <Button
-            type="submit"
-            onClick={login}
-            disabled={!username || !password}
-          >
-            Potvrdi
-          </Button>
-          <Button variant="secondary" onClick={props.handleClose}>
-            Odustani
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      {showForgotPassModal ? (
-        <ResetPasswordForm
-          show={showForgotPassModal}
-          handleClose={handleForgotPassClose}
-        />
-      ) : null}
+          <div>
+            <button
+              className="login-button"
+              onClick={login}
+              disabled={!username || !password}
+            >
+              Prijavi se
+            </button>
+          </div>
+        </div>
+
+        {showForgotPassModal ? (
+          <ResetPasswordForm
+            show={showForgotPassModal}
+            handleClose={handleForgotPassClose}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }
 
-export default LoginForm;
+export default LoginPage;

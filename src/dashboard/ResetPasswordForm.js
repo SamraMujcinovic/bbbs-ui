@@ -35,6 +35,7 @@ function ResetPasswordForm(props) {
           autoClose: false,
           closeButton: true,
         });
+        props.handleClose();
       })
       .catch(() => {
         toast.dismiss(id);
@@ -46,7 +47,7 @@ function ResetPasswordForm(props) {
     <div>
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Resetuj šifru</Modal.Title>
+          <Modal.Title>Resetuj lozinku</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>

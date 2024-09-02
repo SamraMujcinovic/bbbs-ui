@@ -62,6 +62,11 @@ input::placeholder {
   display: flex;
 }
 
+.buttons button {
+  width: 10rem;
+  margin-bottom: 1.5rem;
+}
+
 .moreInfoDiv {
   display: flex;
   flex-direction: column;

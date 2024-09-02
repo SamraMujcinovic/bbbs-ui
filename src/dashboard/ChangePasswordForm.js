@@ -94,7 +94,7 @@ function ChangePasswordForm(props) {
     <div>
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Promijeni šifru</Modal.Title>
+          <Modal.Title>Promijeni lozinku</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
@@ -107,7 +107,7 @@ function ChangePasswordForm(props) {
               onChange={onOldPasswordChange}
             />
             <button
-              className="btn btn-outline-primary"
+              className="btn btn-outline-primary togglePasswordButton"
               onClick={toggleOldPassword}
               disabled={!oldPassword}
             >
@@ -129,7 +129,7 @@ function ChangePasswordForm(props) {
               onChange={onNewPasswordChange}
             />
             <button
-              className="btn btn-outline-primary"
+              className="btn btn-outline-primary togglePasswordButton"
               onClick={toggleNewPassword}
               disabled={!newPassword}
             >
@@ -149,7 +149,7 @@ function ChangePasswordForm(props) {
               <span className="errorMessage">Nije ista kao nova lozinka!</span>
             ) : null}
             <button
-              className="btn btn-outline-primary"
+              className="btn btn-outline-primary togglePasswordButton"
               onClick={toggleConfirmPassword}
               disabled={!confirmPassword}
             >

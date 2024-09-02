@@ -3,7 +3,7 @@ h1 {
   font-size: 2rem !important;
 }
 
-.sidebarContainerDiv {
+.dashboard {
   display: flex;
 }
 
@@ -15,12 +15,14 @@ h1 {
   background-color: white !important;
 }
 
-main {
+.main {
   width: 100%;
   padding: 20px;
   background-color: #fafafa;
   height: 100vh;
+  margin-top: 3rem;
 }
+
 .sidebar {
   background: #014;
   color: rgb(76, 124, 212);
@@ -28,9 +30,11 @@ main {
   width: 15rem;
   position: fixed;
 }
-.sidebarContent {
+
+.content {
   width: 100%;
   margin-left: 15rem;
+  background-color: #fafafa;
 }
 
 .logo {
@@ -42,11 +46,13 @@ main {
   color: #0655c9;
   border-bottom: 1px solid #b6bdb9;
 }
+
 .bars {
   display: flex;
   font-size: 25px;
   margin-left: 50px;
 }
+
 .link {
   display: flex;
   color: #0655c9;
@@ -55,15 +61,18 @@ main {
   text-decoration: none;
   font-weight: bold;
 }
+
 .link:hover {
   background: #b6bdb9;
   color: #0655c9;
   transition: all 0.5s;
 }
+
 .active {
   background: #b6bdb9;
   color: #0655c9;
 }
+
 .link_text {
   font-size: 20px;
 }
@@ -87,6 +96,7 @@ main {
 
 .logoutButtonDiv {
   float: right;
+  margin-top: 0.5rem;
 }
 
 .logoutButtonDiv button {
@@ -114,13 +124,13 @@ main {
 .usernameDiv {
   display: flex;
   justify-content: flex-end;
-  min-width: 160px;
+  min-width: 11rem;
   margin-top: 0.5rem;
 }
 
 .settingsDiv {
   position: absolute;
-  top: 2rem;
+  top: 2.5rem;
   margin-right: 1rem;
   background-color: #eee;
   border-radius: 0.5rem;
@@ -201,4 +211,12 @@ main {
 .pagination {
   display: flex;
   list-style-type: none;
+}
+
+.form-control {
+  border-radius: 0px !important;
+}
+
+.togglePasswordButton {
+  border-radius: 0px !important;
 }

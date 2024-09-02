@@ -36,7 +36,7 @@ const AccountActivation = ({ isFirstLogin = false }) => {
       : `${process.env.REACT_APP_API_URL}/password/reset/confirm`;
     const successMessage = isFirstLogin
       ? "Vaš nalog je aktiviran! Sada se možete prijaviti."
-      : "Vaša šifra je uspješno promijenjena! Sada se možete prijaviti.";
+      : "Vaša lozinka je uspješno promijenjena! Sada se možete prijaviti.";
 
     await axios
       .post(apiUrl, { uid, token, password })
@@ -53,8 +53,8 @@ const AccountActivation = ({ isFirstLogin = false }) => {
       .catch(() => {
         toast.dismiss(id);
         const errorMessage = isFirstLogin
-          ? "Postavljanje šifre nije uspjelo. Molimo kontaktirajte odgovornu osobu za detalje."
-          : "Promjena šifre nije uspjela. Molimo kontaktirajte odgovornu osobu za detalje.";
+          ? "Postavljanje lozinke nije uspjelo. Molimo kontaktirajte odgovornu osobu za detalje."
+          : "Promjena lozinke nije uspjela. Molimo kontaktirajte odgovornu osobu za detalje.";
 
         setError(errorMessage);
       });
@@ -64,7 +64,7 @@ const AccountActivation = ({ isFirstLogin = false }) => {
     <div className="mainDiv">
       <h1>Dobrodosli u organizaciju 'Stariji brat, starija sestra'</h1>
       <p>
-        U polje ispod unesite šifru koju ćete koristiti za pristup aplikaciji.
+        U polje ispod unesite lozinku koju ćete koristiti za pristup aplikaciji.
       </p>
       <div className="formDiv">
         <div className="passwordDivActivation">
@@ -76,7 +76,7 @@ const AccountActivation = ({ isFirstLogin = false }) => {
             onChange={onPasswordChange}
           />
           <button
-            className="btn btn-outline-primary"
+            className="btn btn-outline-primary togglePasswordButton"
             onClick={togglePassword}
             disabled={!password}
           >
@@ -84,7 +84,7 @@ const AccountActivation = ({ isFirstLogin = false }) => {
           </button>
         </div>
         <Button
-          className="submitButton"
+          className="activateAccountButton"
           type="submit"
           style={{ borderRadius: "0%" }}
           onClick={handleSubmit}
