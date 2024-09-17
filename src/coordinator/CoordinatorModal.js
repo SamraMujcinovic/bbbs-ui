@@ -111,9 +111,9 @@ function CoordinatorModal(props) {
       <Modal show={props.show} onHide={props.handleClose}>
         <Modal.Header closeButton>
           {props.data ? (
-            <Modal.Title>Dodaj koordinatora</Modal.Title>
-          ) : (
             <Modal.Title>Izmijeni koordinatora</Modal.Title>
+          ) : (
+            <Modal.Title>Dodaj koordinatora</Modal.Title>
           )}
         </Modal.Header>
 
