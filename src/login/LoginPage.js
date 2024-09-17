@@ -74,7 +74,6 @@ function LoginPage(props) {
           sessionStorage.setItem("token", response.data.data);
           sessionStorage.setItem("roles", claims.group);
           sessionStorage.setItem("user", user);
-          console.log("hello");
           navigate("/");
         });
     } catch (error) {
