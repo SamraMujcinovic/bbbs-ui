@@ -39,7 +39,6 @@ function Form(props) {
   const theadData = [
     "Datum",
     "Volonter",
-    "Dijete",
     "Organizacija",
     "Grad",
     "Trajanje",
@@ -175,7 +174,6 @@ function Form(props) {
       id: form.id,
       date: form.date,
       volunteer: `${form.volunteer.user.first_name} ${form.volunteer.user.last_name}`,
-      child: form.child,
       organisation: form.volunteer.volunteer_organisation[0].name,
       city: form.volunteer.volunteer_city[0].name,
       duration: form.duration,
@@ -255,9 +253,7 @@ function Form(props) {
           defaultEndDate={defaultEndDate}
           onSearch={getForms}
         />
-        {hasVolunteerGroup(userGroups) &&
-        currentVolunteer?.child !== undefined &&
-        currentVolunteer?.child !== null ? (
+        {hasVolunteerGroup(userGroups) ? (
           <button className="btn btn-success" onClick={openAddFormPage}>
             Dodaj formu
           </button>
