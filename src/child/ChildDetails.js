@@ -57,14 +57,14 @@ function ChildDetails() {
   const [childsGuardianConsent, setChildsGuardianConsent] = useState(false);
   const [vaccinationStatus, setVaccinationStatus] = useState(true);
 
-  const [healthDifficulties, setHealthDifficulties] = useState(undefined);
+  const [healthDifficulties, setHealthDifficulties] = useState("");
   const [showHealthDifficultiesTextbox, setShowHealthDifficultiesTextbox] =
     useState(false);
-  const [activePUP, setActvePUP] = useState(undefined);
+  const [activePUP, setActvePUP] = useState("");
   const [showActivePUPTextbox, setShowActivePUPTextbox] = useState(false);
-  const [passivePUP, setPassivePUP] = useState(undefined);
+  const [passivePUP, setPassivePUP] = useState("");
   const [showPassivePUPTextbox, setShowPassivePUPTextbox] = useState(false);
-  const [childPotential, setChildPotential] = useState(undefined);
+  const [childPotential, setChildPotential] = useState("");
 
   const [childOrganisation, setChildsOrganisation] = useState();
   const [childCity, setChildsCity] = useState();
@@ -352,15 +352,15 @@ function ChildDetails() {
     setChildsOrganisation(selectedChild.child_organisation);
     setChildsCity(selectedChild.child_city);
     setHealthDifficulties(selectedChild.health_difficulties);
-    if (selectedChild.health_difficulties) {
+    if (selectedChild.health_difficulties?.length) {
       setShowHealthDifficultiesTextbox(true);
     }
     setActvePUP(selectedChild.active_pup);
-    if (selectedChild.active_pup) {
+    if (selectedChild.active_pup?.length) {
       setShowActivePUPTextbox(true);
     }
     setPassivePUP(selectedChild.passive_pup);
-    if (selectedChild.passive_pup) {
+    if (selectedChild.passive_pup?.length) {
       setShowPassivePUPTextbox(true);
     }
     setChildPotential(selectedChild.child_potential);
@@ -417,7 +417,7 @@ function ChildDetails() {
         })
       );
       setShowHealthDifficultiesTextbox(false);
-      setHealthDifficulties(null);
+      setHealthDifficulties(""); // textbox
     } else {
       setSelectedDevelopmentalDifficulties([
         ...selectedDevelopmentalDifficulties,
@@ -453,12 +453,12 @@ function ChildDetails() {
       if (selectedReason.id === 25) {
         // Pasivni PUP
         setShowPassivePUPTextbox(false);
-        setPassivePUP(null);
+        setPassivePUP("");
       }
       if (selectedReason.id === 26) {
         // Aktivni PUP
         setShowActivePUPTextbox(false);
-        setActvePUP(null);
+        setActvePUP("");
       }
     } else {
       setSelectedMentoringReasons([
