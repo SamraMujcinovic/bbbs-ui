@@ -580,6 +580,17 @@ function FormDetails(props) {
             <div className="radioButtons">
               <input
                 type="radio"
+                value="Nije loše"
+                name="evaluation"
+                checked={formEvaluation === "Nije loše"}
+                onChange={onEvaluationChange}
+                disabled={shouldDisableForm()}
+              />
+              <label>Nije loše</label>
+            </div>
+            <div className="radioButtons">
+              <input
+                type="radio"
                 value="Loše"
                 name="evaluation"
                 checked={formEvaluation === "Loše"}

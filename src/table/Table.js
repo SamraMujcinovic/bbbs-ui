@@ -27,9 +27,11 @@ const Table = ({ data, header, actions }) => {
                       className={
                         row[key] === "Loše"
                           ? "fas fa-exclamation-circle redIcon"
+                          : row[key] === "Nije loše"
+                          ? "fas fa-exclamation-circle orangeIcon"
                           : row[key] === "Dobro"
-                          ? "fas fa-check orangeIcon"
-                          : "fas fa-check greenIcon"
+                          ? "far fa-smile yellowGreenIcon"
+                          : "far fa-smile greenIcon"
                       }
                     ></i>
                   </td>
