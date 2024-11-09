@@ -37,7 +37,7 @@ button {
 }
 
 .redIcon {
-  color: rgb(206, 66, 66);
+  color: rgb(244, 80, 80);
 }
 
 .orangeIcon {
@@ -45,7 +45,11 @@ button {
 }
 
 .greenIcon {
-  color: rgb(64, 172, 64);
+  color: #14bc26;
+}
+
+.yellowGreenIcon {
+  color: #a0da07;
 }
 
 .editButton {
