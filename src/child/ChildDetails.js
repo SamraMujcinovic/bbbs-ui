@@ -89,8 +89,9 @@ function ChildDetails() {
   );
   const [selectedMentoringReasons, setSelectedMentoringReasons] = useState([]);
 
-  // data represented in edit mode
-  const [childsVolunteerInput, setChildsVolunteerInput] = useState("");
+  const [somethingElseTextBox, setSomethingElseTextBox] = useState("");
+  const [showSomethingElseTextBox, setShowSomethingElseTextBox] =
+    useState(false);
 
   // validations
   const [dateInput, setDateInput] = useState("");
@@ -362,6 +363,11 @@ function ChildDetails() {
       setShowPassivePUPTextbox(true);
     }
     setChildPotential(selectedChild.child_potential);
+
+    if (selectedChild.something_else?.length) {
+      setSomethingElseTextBox(selectedChild.something_else);
+      setShowSomethingElseTextBox(true);
+    }
   };
 
   // on event change methods
@@ -443,11 +449,12 @@ function ChildDetails() {
 
     if (hasMentoringReason(selectedReason)) {
       // if already exist => deselect that reason
-      setSelectedMentoringReasons(
-        selectedMentoringReasons.filter((reason) => {
+      const mentoringReasonsFiltered = selectedMentoringReasons.filter(
+        (reason) => {
           return reason.id !== selectedReason.id;
-        })
+        }
       );
+      setSelectedMentoringReasons(mentoringReasonsFiltered);
       if (selectedReason.id === 25) {
         // Pasivni PUP
         setShowPassivePUPTextbox(false);
@@ -457,6 +464,14 @@ function ChildDetails() {
         // Aktivni PUP
         setShowActivePUPTextbox(false);
         setActvePUP("");
+      }
+      if (
+        !mentoringReasonsFiltered.some(
+          (reason) => reason.name === "Nešto drugo"
+        )
+      ) {
+        setShowSomethingElseTextBox(false);
+        setSomethingElseTextBox("");
       }
     } else {
       setSelectedMentoringReasons([
@@ -470,6 +485,9 @@ function ChildDetails() {
       if (selectedReason.id === 26) {
         // Aktivni PUP
         setShowActivePUPTextbox(true);
+      }
+      if (selectedReason.name === "Nešto drugo") {
+        setShowSomethingElseTextBox(true);
       }
     }
   };
@@ -627,6 +645,7 @@ function ChildDetails() {
       guardian_consent: childsGuardianConsent,
       vaccination_status: vaccinationStatus,
       health_difficulties: healthDifficulties,
+      something_else: somethingElseTextBox,
       active_pup: activePUP,
       passive_pup: passivePUP,
       child_potential: childPotential,
@@ -727,6 +746,10 @@ function ChildDetails() {
 
   const onPassivePUPChange = (event) => {
     setPassivePUP(event.target.value);
+  };
+
+  const onSomethingElseChange = (event) => {
+    setSomethingElseTextBox(event.target.value);
   };
 
   if (authenticate && !hasVolunteerGroup(userGroups)) {
@@ -1134,6 +1157,17 @@ function ChildDetails() {
               );
             })}
           </div>
+          {showSomethingElseTextBox ? (
+            <div className="formDiv">
+              <span className="title">Nešto drugo</span>
+              <textarea
+                rows="2"
+                placeholder="Navedite druge razloge uključivanja djeteta u program"
+                value={somethingElseTextBox}
+                onChange={onSomethingElseChange}
+              />
+            </div>
+          ) : null}
           {showActivePUPTextbox ? (
             <div>
               <span className="title">Aktivni PUP</span>
