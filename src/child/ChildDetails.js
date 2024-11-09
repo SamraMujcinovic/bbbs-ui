@@ -35,8 +35,6 @@ function ChildDetails() {
 
   // child details
   const [child, setChild] = useState(undefined);
-  const [childsFirstName, setChildsFirstName] = useState("");
-  const [childsLastName, setChildsLastName] = useState("");
   const [childsCode, setChildsCode] = useState("");
   const [childsGender, setChildsGender] = useState("Muški");
   const [childsBirthDate, setChildsBirthDate] = useState(
@@ -614,8 +612,7 @@ function ChildDetails() {
 
   const getSelectedValues = () => {
     return {
-      first_name: childsFirstName,
-      last_name: childsLastName,
+      code: childsCode,
       gender: childsGender,
       birth_date: dateToString(childsBirthDate),
       school_status: childSchoolStatus,
@@ -655,7 +652,7 @@ function ChildDetails() {
     return (
       checkMentoringReasonValidity() &&
       checkDevelopmentalDifficultyValidity() &&
-      ((childsFirstName && childsLastName) || isEditMode) &&
+      childsCode &&
       childsBirthDate &&
       childsGender &&
       childSchoolStatus !== undefined &&
@@ -737,32 +734,16 @@ function ChildDetails() {
       <div>
         {location.state.selectedChild ? <h1>Dijete</h1> : <h1>Dodaj dijete</h1>}
 
-        {location.state.selectedChild ? (
-          <div className="formDiv">
-            <label className="title">Kod</label>
-            <input type="text" disabled={true} value={childsCode} />
-          </div>
-        ) : null}
-        {location.state.selectedChild ? null : (
-          <div className="formDiv">
-            <label className="title">Ime</label>
-            <input
-              type="text"
-              value={childsFirstName}
-              onChange={(e) => setChildsFirstName(e.target.value)}
-            />
-          </div>
-        )}
-        {location.state.selectedChild ? null : (
-          <div className="formDiv">
-            <label className="title">Prezime</label>
-            <input
-              type="text"
-              value={childsLastName}
-              onChange={(e) => setChildsLastName(e.target.value)}
-            />
-          </div>
-        )}
+        <div className="formDiv">
+          <label className="title">Kod</label>
+          <input
+            type="text"
+            value={childsCode}
+            onChange={(e) => setChildsCode(e.target.value)}
+            disabled={location.state.selectedChild}
+          />
+        </div>
+
         <div className="formDiv">
           <label className="title dateSpan">Datum rođenja:</label>
           <DatePicker
