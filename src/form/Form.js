@@ -277,7 +277,7 @@ function Form(props) {
       name: "Obriši",
       iconClass: "fas fa-trash redIcon",
       onClick: deleteForm,
-      showAction: () => true,
+      showAction: () => !hasVolunteerGroup(userGroups),
     },
   ];
 
