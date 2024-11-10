@@ -8,6 +8,7 @@ import ReactPaginate from "react-paginate";
 import FilterComponent from "../filter/FilterComponent";
 
 import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
+import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
 
 function Form(props) {
   // navigation
@@ -231,11 +232,51 @@ function Form(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [formToDelete, setFormToDelete] = useState(undefined);
+
+  const deleteForm = (row) => {
+    setShowConfirmationModal(true);
+    setFormToDelete(row);
+  };
+
+  const onConfirmationModalClose = (isConfirmed) => {
+    if (isConfirmed) {
+      deleteFormRequest(formToDelete);
+    } else {
+      setShowConfirmationModal(false);
+    }
+  };
+
+  // table functions
+  const deleteFormRequest = async (row) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/forms/${row.id}/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setShowConfirmationModal(false);
+        setFormToDelete(undefined);
+        getForms();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const actions = [
     {
       name: "Edituj",
       iconClass: "fas fa-pencil-alt orangeIcon",
       onClick: editForm,
+      showAction: () => true,
+    },
+    {
+      name: "Obriši",
+      iconClass: "fas fa-trash redIcon",
+      onClick: deleteForm,
       showAction: () => true,
     },
   ];
@@ -274,6 +315,12 @@ function Form(props) {
           />
         </div>
       </div>
+      {showConfirmationModal && (
+        <ConfirmationModal
+          message="Da li ste sigurni da želite izbrisati ovu formu?"
+          onModalClose={onConfirmationModalClose}
+        />
+      )}
     </div>
   );
 }
