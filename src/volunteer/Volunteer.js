@@ -8,6 +8,9 @@ import ReactPaginate from "react-paginate";
 
 import FilterComponent from "../filter/FilterComponent";
 
+import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
+import { toast } from "react-toastify";
+
 function Volunteer(props) {
   // navigation
   let navigate = useNavigate();
@@ -123,11 +126,65 @@ function Volunteer(props) {
       });
   };
 
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [volunteerToDelete, setVolunteerToDelete] = useState(undefined);
+
+  const deleteVolunteer = (row) => {
+    setShowConfirmationModal(true);
+    setVolunteerToDelete(row);
+  };
+
+  const onConfirmationModalClose = (isConfirmed) => {
+    if (isConfirmed) {
+      deleteVolunteerRequest(volunteerToDelete);
+    } else {
+      setShowConfirmationModal(false);
+    }
+  };
+
+  // table functions
+  const deleteVolunteerRequest = async (row) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/volunteers/${row.id}/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setShowConfirmationModal(false);
+        setVolunteerToDelete(undefined);
+        getVolunteers();
+      })
+      .catch((error) => {
+        if (error.response.status === 409) {
+          setShowConfirmationModal(false);
+          toast(
+            "Volonter ne može biti izbrisan jer postoje forme druženja ili dijete koje je vezano za ovog volontera!",
+            {
+              type: "error",
+              position: "top-center",
+              autoClose: false,
+              hideProgressBar: true,
+              className: "toastToFront",
+            }
+          );
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   const actions = [
     {
       name: "Edituj",
       iconClass: "fas fa-pencil-alt orangeIcon",
       onClick: editVolunteeer,
+      showAction: () => true,
+    },
+    {
+      name: "Obriši",
+      iconClass: "fas fa-trash redIcon",
+      onClick: deleteVolunteer,
       showAction: () => true,
     },
   ];
@@ -160,6 +217,12 @@ function Volunteer(props) {
             />
           </div>
         </div>
+        {showConfirmationModal && (
+          <ConfirmationModal
+            message="Da li ste sigurni da želite izbrisati ovog volontera?"
+            onModalClose={onConfirmationModalClose}
+          />
+        )}
       </div>
     );
   }
