@@ -166,7 +166,6 @@ function CoordinatorModal(props) {
               placeholder="Grad"
               valueField="name"
               labelField="name"
-              disabled={props.data !== undefined}
             />
           </div>
         </Modal.Body>
