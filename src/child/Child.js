@@ -10,6 +10,9 @@ import FilterComponent from "../filter/FilterComponent";
 
 import ReactPaginate from "react-paginate";
 
+import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
+import { toast } from "react-toastify";
+
 function Child(props) {
   // navigation
   let navigate = useNavigate();
@@ -132,11 +135,62 @@ function Child(props) {
       });
   };
 
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [childToDelete, setChildToDelete] = useState(undefined);
+
+  const deleteChild = (row) => {
+    setShowConfirmationModal(true);
+    setChildToDelete(row);
+  };
+
+  const onConfirmationModalClose = (isConfirmed) => {
+    if (isConfirmed) {
+      deleteChildRequest(childToDelete);
+    } else {
+      setShowConfirmationModal(false);
+    }
+  };
+
+  // table functions
+  const deleteChildRequest = async (row) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/childs/${row.id}/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setShowConfirmationModal(false);
+        setChildToDelete(undefined);
+        getChilds();
+      })
+      .catch((error) => {
+        if (error.response.status === 409) {
+          setShowConfirmationModal(false);
+          toast("Dijete ne može biti izbrisano jer je vezano za volontera!", {
+            type: "error",
+            position: "top-center",
+            autoClose: false,
+            hideProgressBar: true,
+            className: "toastToFront",
+          });
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   const actions = [
     {
       name: "Edituj",
       iconClass: "fas fa-pencil-alt orangeIcon",
       onClick: editChlid,
+      showAction: () => true,
+    },
+    {
+      name: "Obriši",
+      iconClass: "fas fa-trash redIcon",
+      onClick: deleteChild,
       showAction: () => true,
     },
   ];
@@ -169,6 +223,12 @@ function Child(props) {
             />
           </div>
         </div>
+        {showConfirmationModal && (
+          <ConfirmationModal
+            message="Da li ste sigurni da želite izbrisati ovo dijete?"
+            onModalClose={onConfirmationModalClose}
+          />
+        )}
       </div>
     );
   }
