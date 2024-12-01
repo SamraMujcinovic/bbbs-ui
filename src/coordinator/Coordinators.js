@@ -7,6 +7,9 @@ import ReactPaginate from "react-paginate";
 import CoordinatorModal from "./CoordinatorModal";
 import { hasAdminGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 
+import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
+import { toast } from "react-toastify";
+
 function Coordinators(props) {
   // authentication
   const authenticate = sessionStorage.getItem("token");
@@ -124,11 +127,65 @@ function Coordinators(props) {
     setCurrentPage(event.selected + 1);
   };
 
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [coordinatorToDelete, setCoordinatorToDelete] = useState(undefined);
+
+  const deleteCoordinator = (row) => {
+    setShowConfirmationModal(true);
+    setCoordinatorToDelete(row);
+  };
+
+  const onConfirmationModalClose = (isConfirmed) => {
+    if (isConfirmed) {
+      deleteCoordinatorRequest(coordinatorToDelete);
+    } else {
+      setShowConfirmationModal(false);
+    }
+  };
+
+  // table functions
+  const deleteCoordinatorRequest = async (row) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/coordinators/${row.id}/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setShowConfirmationModal(false);
+        setCoordinatorToDelete(undefined);
+        getCoordinators();
+      })
+      .catch((error) => {
+        if (error.response.status === 409) {
+          setShowConfirmationModal(false);
+          toast(
+            "Koordinator ne može biti izbrisan jer postoje volonteri ili djeca koja su vezana za ovog koordinatora!",
+            {
+              type: "error",
+              position: "top-center",
+              autoClose: false,
+              hideProgressBar: true,
+              className: "toastToFront",
+            }
+          );
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   const actions = [
     {
       name: "Edituj",
       iconClass: "fas fa-pencil-alt orangeIcon",
       onClick: editCoordinator,
+      showAction: () => true,
+    },
+    {
+      name: "Obriši",
+      iconClass: "fas fa-trash redIcon",
+      onClick: deleteCoordinator,
       showAction: () => true,
     },
   ];
@@ -166,6 +223,12 @@ function Coordinators(props) {
             cities={cities}
           />
         ) : null}
+        {showConfirmationModal && (
+          <ConfirmationModal
+            message="Da li ste sigurni da želite izbrisati ovog koordinatora?"
+            onModalClose={onConfirmationModalClose}
+          />
+        )}
       </div>
     );
   }
