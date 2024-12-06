@@ -9,6 +9,7 @@ import FilterComponent from "../filter/FilterComponent";
 
 import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
 import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
+import { format } from "date-fns";
 
 function Form(props) {
   // navigation
@@ -54,8 +55,12 @@ function Form(props) {
     showDateFilter: true,
   };
 
-  const defaultStartDate = "2024-01-01";
-  const defaultEndDate = "2024-12-01";
+  const today = new Date();
+  const defaultStartDate = format(
+    new Date(today.getFullYear(), 0, 1), // 01.01.currentYear
+    "yyyy-MM-dd"
+  );
+  const defaultEndDate = format(today, "yyyy-MM-dd");
 
   useEffect(() => {
     getAccessibleVolunteers();
