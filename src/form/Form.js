@@ -43,7 +43,7 @@ function Form(props) {
     "Volonter",
     "Organizacija",
     "Grad",
-    "Trajanje",
+    "Trajanje (h)",
     "Ocjena",
   ];
   const [forms, setForms] = useState([]);
@@ -182,7 +182,7 @@ function Form(props) {
       volunteer: `${form.volunteer.user.first_name} ${form.volunteer.user.last_name}`,
       organisation: form.volunteer.volunteer_organisation[0].name,
       city: form.volunteer.volunteer_city[0].name,
-      duration: form.duration,
+      duration: form.duration.toFixed(2),
       evaluation: form.evaluation,
     };
   };
@@ -211,7 +211,7 @@ function Form(props) {
         },
       })
       .then((response) => {
-        setTotalHours(response.data.totalHours);
+        setTotalHours(response.data.totalHours.toFixed(2));
       })
       .catch((error) => {
         console.log(error);

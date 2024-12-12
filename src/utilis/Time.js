@@ -9,7 +9,6 @@ export function numberToTimeString(number) {
 }
 
 export function timeStringToNumber(timeString) {
-  console.log(timeString);
   if (timeString) {
     const time = timeString.split(":");
     const hours = Number(time[0]);
