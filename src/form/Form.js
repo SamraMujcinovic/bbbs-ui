@@ -43,6 +43,7 @@ function Form(props) {
     "Volonter",
     "Organizacija",
     "Grad",
+    "Vrsta aktivnosti",
     "Trajanje (h)",
     "Ocjena",
   ];
@@ -182,6 +183,7 @@ function Form(props) {
       volunteer: `${form.volunteer.user.first_name} ${form.volunteer.user.last_name}`,
       organisation: form.volunteer.volunteer_organisation[0].name,
       city: form.volunteer.volunteer_city[0].name,
+      activity: form.activity_type,
       duration: form.duration.toFixed(2),
       evaluation: form.evaluation,
     };

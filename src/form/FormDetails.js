@@ -246,14 +246,7 @@ function FormDetails(props) {
       })
       .then(() => navigateToForms())
       .catch((error) => {
-        if (error.response.data.hasOwnProperty("303")) {
-          toast("Unos aktivnosti za izabrani datum već postoji!", {
-            type: "error",
-            position: "top-center",
-            autoClose: false,
-            hideProgressBar: true,
-          });
-        }
+        console.log(error);
       });
   };
 
