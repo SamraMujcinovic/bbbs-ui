@@ -184,9 +184,20 @@ function Form(props) {
       organisation: form.volunteer.volunteer_organisation[0].name,
       city: form.volunteer.volunteer_city[0].name,
       activity: form.activity_type,
-      duration: form.duration.toFixed(2),
+      duration: calculateDuration(
+        form.activity_start_time,
+        form.activity_end_time
+      ),
       evaluation: form.evaluation,
     };
+  };
+
+  const calculateDuration = (startTime, endTime) => {
+    const durationInMinutes = endTime - startTime;
+    const hours = parseInt(durationInMinutes / 60);
+    const min = durationInMinutes - hours * 60;
+
+    return `${hours}h ${min}min`;
   };
 
   const getTotalHoursSum = async (filters) => {
