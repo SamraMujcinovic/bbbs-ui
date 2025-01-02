@@ -15,6 +15,8 @@ import { dateToString, stringToDate, months, days } from "../utilis/Date";
 import DatePicker from "react-multi-date-picker";
 import InputIcon from "react-multi-date-picker/components/input_icon";
 
+const PAGE_SIZE = 100000;
+
 function ChildDetails() {
   // authenticate
   const authenticate = sessionStorage.getItem("token");
@@ -127,7 +129,8 @@ function ChildDetails() {
       getVolunteers(
         childsCoordinator[0].organisation_id,
         childsCoordinator[0].city_id,
-        childsCoordinator[0].id
+        childsCoordinator[0].id,
+        PAGE_SIZE
       );
     }
   }, [childsCoordinator, childsGender]);
@@ -218,7 +221,7 @@ function ChildDetails() {
     };
   };
 
-  const getVolunteers = async (organisation, city, coordinator) => {
+  const getVolunteers = async (organisation, city, coordinator, pageSize) => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
         params: {
@@ -231,6 +234,7 @@ function ChildDetails() {
             ? location.state.selectedChild.id
             : undefined,
           availableVolunteers: "True",
+          page_size: pageSize,
         },
 
         headers: {
