@@ -36,6 +36,7 @@ function Volunteer(props) {
     showActivityTypeFilter: false,
     showDateFilter: false,
   };
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   const editVolunteeer = (row) => {
     navigateToVolunteerDetails(row);
@@ -48,7 +49,7 @@ function Volunteer(props) {
 
   useEffect(() => {
     getVolunteers();
-  }, [currentPage]);
+  }, [currentPage, selectedFilters]);
 
   // add volunteer page
   const openAddVolunteerPage = () => {
@@ -85,7 +86,12 @@ function Volunteer(props) {
     setVolunteers(newVolunteers);
   };
 
-  const getVolunteers = async (filters) => {
+  const searchClicked = async (filters) => {
+    setCurrentPage(1);
+    setSelectedFilters(filters);
+  };
+
+  const getVolunteers = async () => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
         headers: {
@@ -93,9 +99,9 @@ function Volunteer(props) {
         },
         params: {
           organisationFilter:
-            filters?.organisationFilter === ""
+            selectedFilters?.organisationFilter === ""
               ? undefined
-              : filters?.organisationFilter,
+              : selectedFilters?.organisationFilter,
           page: currentPage,
         },
       })
@@ -197,7 +203,7 @@ function Volunteer(props) {
           <FilterComponent
             filters={filters}
             organisationList={organisations}
-            onSearch={getVolunteers}
+            onSearch={searchClicked}
           />
           <button className="btn btn-success" onClick={openAddVolunteerPage}>
             Dodaj volontera
@@ -214,6 +220,7 @@ function Volunteer(props) {
               renderOnZeroPageCount={null}
               previousLabel="<"
               nextLabel=">"
+              forcePage={currentPage - 1}
             />
           </div>
         </div>

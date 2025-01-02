@@ -60,6 +60,7 @@ function Form(props) {
     showActivityTypeFilter: true,
     showDateFilter: true,
   };
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   const today = new Date();
   const defaultStartDate = format(
@@ -79,7 +80,7 @@ function Form(props) {
 
   useEffect(() => {
     getForms();
-  }, [currentPage]);
+  }, [currentPage, selectedFilters]);
 
   const getAccessibleOrganisations = async () => {
     await axios
@@ -140,27 +141,32 @@ function Form(props) {
     navigateToFormDetails(row);
   };
 
-  const getForms = async (filters) => {
+  const searchClicked = async (filters) => {
+    setCurrentPage(1);
+    setSelectedFilters(filters);
+  };
+
+  const getForms = async () => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/forms/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
         params: {
-          startDate: filters?.startDate ?? defaultStartDate,
-          endDate: filters?.endDate ?? defaultEndDate,
+          startDate: selectedFilters?.startDate ?? defaultStartDate,
+          endDate: selectedFilters?.endDate ?? defaultEndDate,
           organisationFilter:
-            filters?.organisationFilter === ""
+            selectedFilters?.organisationFilter === ""
               ? undefined
-              : filters?.organisationFilter,
+              : selectedFilters?.organisationFilter,
           volunteerFilter:
-            filters?.volunteerFilter === ""
+            selectedFilters?.volunteerFilter === ""
               ? undefined
-              : filters?.volunteerFilter,
+              : selectedFilters?.volunteerFilter,
           activityTypeFilter:
-            filters?.activityTypeFilter === ""
+            selectedFilters?.activityTypeFilter === ""
               ? undefined
-              : filters?.activityTypeFilter,
+              : selectedFilters?.activityTypeFilter,
           page: currentPage,
         },
       })
@@ -168,7 +174,7 @@ function Form(props) {
         setTotalElements(response.data.count);
         setTotalPages(Math.ceil(response.data.count / PAGE_SIZE));
         getConvertedForms(response.data);
-        getTotalHoursSum(filters);
+        getTotalHoursSum();
       })
       .catch((error) => {
         console.log(error);
@@ -208,27 +214,27 @@ function Form(props) {
     return `${hours}h ${min}min`;
   };
 
-  const getTotalHoursSum = async (filters) => {
+  const getTotalHoursSum = async () => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/forms/totals`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
         params: {
-          startDate: filters?.startDate ?? defaultStartDate,
-          endDate: filters?.endDate ?? defaultEndDate,
+          startDate: selectedFilters?.startDate ?? defaultStartDate,
+          endDate: selectedFilters?.endDate ?? defaultEndDate,
           organisationFilter:
-            filters?.organisationFilter === ""
+            selectedFilters?.organisationFilter === ""
               ? undefined
-              : filters?.organisationFilter,
+              : selectedFilters?.organisationFilter,
           volunteerFilter:
-            filters?.volunteerFilter === ""
+            selectedFilters?.volunteerFilter === ""
               ? undefined
-              : filters?.volunteerFilter,
+              : selectedFilters?.volunteerFilter,
           activityTypeFilter:
-            filters?.activityTypeFilter === ""
+            selectedFilters?.activityTypeFilter === ""
               ? undefined
-              : filters?.activityTypeFilter,
+              : selectedFilters?.activityTypeFilter,
         },
       })
       .then((response) => {
@@ -318,7 +324,7 @@ function Form(props) {
           activityTypeList={activityTypes}
           defaultStartDate={defaultStartDate}
           defaultEndDate={defaultEndDate}
-          onSearch={getForms}
+          onSearch={searchClicked}
         />
         {hasVolunteerGroup(userGroups) ? (
           <button className="btn btn-success" onClick={openAddFormPage}>
@@ -338,6 +344,7 @@ function Form(props) {
             renderOnZeroPageCount={null}
             previousLabel="<"
             nextLabel=">"
+            forcePage={currentPage - 1}
           />
         </div>
       </div>
