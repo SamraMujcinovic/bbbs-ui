@@ -31,6 +31,7 @@ function VolunteerHours(props) {
     showActivityTypeFilter: false,
     showDateFilter: true,
   };
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   const today = new Date();
   const defaultStartDate = format(
@@ -44,17 +45,22 @@ function VolunteerHours(props) {
   const [selectedStartDate, setSelectedStartDate] = useState(defaultStartDate);
   const [selectedEndDate, setSelectedEndDate] = useState(defaultEndDate);
 
-  const getvolunteerHours = async (filters) => {
-    setSelectedStartDate(filters?.startDate ?? defaultStartDate);
-    setSelectedEndDate(filters?.endDate ?? defaultEndDate);
+  const searchClicked = async (filters) => {
+    setCurrentPage(1);
+    setSelectedFilters(filters);
+  };
+
+  const getvolunteerHours = async () => {
+    setSelectedStartDate(selectedFilters?.startDate ?? defaultStartDate);
+    setSelectedEndDate(selectedFilters?.endDate ?? defaultEndDate);
     await axios
       .get(`${process.env.REACT_APP_API_URL}/hours/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
         params: {
-          startDate: filters?.startDate ?? defaultStartDate,
-          endDate: filters?.endDate ?? defaultEndDate,
+          startDate: selectedFilters?.startDate ?? defaultStartDate,
+          endDate: selectedFilters?.endDate ?? defaultEndDate,
           page: currentPage,
         },
       })
@@ -112,7 +118,7 @@ function VolunteerHours(props) {
 
   useEffect(() => {
     getvolunteerHours();
-  }, [currentPage]);
+  }, [currentPage, selectedFilters]);
 
   const handlePaginationChange = (event) => {
     setCurrentPage(event.selected + 1);
@@ -140,7 +146,7 @@ function VolunteerHours(props) {
             filters={filters}
             defaultStartDate={defaultStartDate}
             defaultEndDate={defaultEndDate}
-            onSearch={getvolunteerHours}
+            onSearch={searchClicked}
           />
         </div>
         <div className="footerDiv">
@@ -154,6 +160,7 @@ function VolunteerHours(props) {
               renderOnZeroPageCount={null}
               previousLabel="<"
               nextLabel=">"
+              forcePage={currentPage - 1}
             />
           </div>
         </div>
