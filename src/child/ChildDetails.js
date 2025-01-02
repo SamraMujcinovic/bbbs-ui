@@ -7,6 +7,7 @@ import {
   hasAdminGroup,
   hasCoordinatorGroup,
   hasVolunteerGroup,
+  MAX_PAGE_SIZE,
 } from "../utilis/ServiceUtil";
 
 import "../child/Child.css";
@@ -14,8 +15,6 @@ import { dateToString, stringToDate, months, days } from "../utilis/Date";
 
 import DatePicker from "react-multi-date-picker";
 import InputIcon from "react-multi-date-picker/components/input_icon";
-
-const PAGE_SIZE = 100000;
 
 function ChildDetails() {
   // authenticate
@@ -130,7 +129,7 @@ function ChildDetails() {
         childsCoordinator[0].organisation_id,
         childsCoordinator[0].city_id,
         childsCoordinator[0].id,
-        PAGE_SIZE
+        MAX_PAGE_SIZE
       );
     }
   }, [childsCoordinator, childsGender]);

@@ -7,7 +7,11 @@ import ReactPaginate from "react-paginate";
 
 import FilterComponent from "../filter/FilterComponent";
 
-import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
+import {
+  hasVolunteerGroup,
+  MAX_PAGE_SIZE,
+  PAGE_SIZE,
+} from "../utilis/ServiceUtil";
 import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
 import { format } from "date-fns";
 
@@ -64,7 +68,7 @@ function Form(props) {
   const defaultEndDate = format(today, "yyyy-MM-dd");
 
   useEffect(() => {
-    getAccessibleVolunteers();
+    getAccessibleVolunteers(MAX_PAGE_SIZE);
     getAccessibleOrganisations();
     getForms();
     if (hasVolunteerGroup(userGroups)) {
@@ -89,11 +93,14 @@ function Form(props) {
       });
   };
 
-  const getAccessibleVolunteers = async () => {
+  const getAccessibleVolunteers = async (pageSize) => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/volunteers/`, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+        params: {
+          page_size: pageSize,
         },
       })
       .then((response) => {

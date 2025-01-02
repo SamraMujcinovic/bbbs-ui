@@ -1,4 +1,5 @@
 export const PAGE_SIZE = 15;
+export const MAX_PAGE_SIZE = 100000;
 
 export function hasAdminGroup(userGroups) {
   return userGroups === "admin";
