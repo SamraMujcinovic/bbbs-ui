@@ -46,6 +46,7 @@ const FilterComponent = ({
       ...selectedFilters,
       startDate: format(selectedFilters.startDate, "yyyy-MM-dd"),
       endDate: format(selectedFilters.endDate, "yyyy-MM-dd"),
+      page: 0,
     };
     onSearch(formattedFilters);
   };
