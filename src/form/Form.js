@@ -14,6 +14,7 @@ import {
 } from "../utilis/ServiceUtil";
 import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
 import { format } from "date-fns";
+import { calculateTotalTimeDuration } from "../utilis/Time";
 
 function Form(props) {
   // navigation
@@ -231,7 +232,7 @@ function Form(props) {
         },
       })
       .then((response) => {
-        setTotalHours(response.data.totalHours.toFixed(2));
+        setTotalHours(calculateTotalTimeDuration(response.data.totalHours));
       })
       .catch((error) => {
         console.log(error);

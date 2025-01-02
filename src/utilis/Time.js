@@ -19,3 +19,14 @@ export function timeStringToNumber(timeString) {
 
   return undefined;
 }
+
+export function calculateTotalTimeDuration(number) {
+  if (!number) {
+    return "0h 0min";
+  }
+  number = number.toFixed(2);
+  const hours = parseInt(Math.trunc(number));
+  const minutes = (number - hours) * 60;
+
+  return `${hours}h ${Math.round(minutes)}min`;
+}

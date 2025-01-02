@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import FilterComponent from "../filter/FilterComponent";
+import { calculateTotalTimeDuration } from "../utilis/Time";
 
 function VolunteerHours(props) {
   // authentication
@@ -74,7 +75,7 @@ function VolunteerHours(props) {
       last_name: volunteerHours.volunteer_last_name,
       organisation: volunteerHours.volunteer_organisation,
       city: volunteerHours.volunteer_city,
-      hours: volunteerHours.volunteer_hours,
+      hours: calculateTotalTimeDuration(volunteerHours.volunteer_hours),
     };
   };
 
