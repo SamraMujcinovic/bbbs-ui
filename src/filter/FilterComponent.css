@@ -9,10 +9,6 @@
   width: 10rem;
 }
 
-.filter-component input {
-  width: 10rem;
-}
-
 .filter-component button {
   background-color: #0655c9;
   color: white;
@@ -22,10 +18,11 @@
 .date-picker,
 .react-datepicker__input-container {
   height: 100% !important;
+  width: 8rem !important;
 }
 
-select {
-  background: none;
-  box-shadow: none;
-  border: solid 1px #ccc;
+.react-dropdown-select {
+  min-width: 10rem !important;
+  margin-bottom: 0 !important;
+  height: 100%;
 }

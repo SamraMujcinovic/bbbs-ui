@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-
+import Select from "react-dropdown-select"; // Import react-dropdown-select
 import DatePicker, { registerLocale } from "react-datepicker";
 import { format, parseISO } from "date-fns";
 import { bs } from "date-fns/locale"; // Import Bosnian
 
 import "react-datepicker/dist/react-datepicker.css";
-
 import "../filter/FilterComponent.css";
 
 // Register the locale
@@ -21,18 +20,17 @@ const FilterComponent = ({
   onSearch,
 }) => {
   const [selectedFilters, setSelectedFilters] = useState({
-    organisationFilter: "",
-    volunteerFilter: "",
-    activityTypeFilter: "",
+    organisationFilter: null,
+    volunteerFilter: null,
+    activityTypeFilter: null,
     startDate: parseISO(defaultStartDate ?? format(new Date(), "yyyy-MM-dd")),
     endDate: parseISO(defaultEndDate ?? format(new Date(), "yyyy-MM-dd")),
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (values, name) => {
     setSelectedFilters({
       ...selectedFilters,
-      [name]: value === "" ? undefined : value,
+      [name]: values.length > 0 ? values[0].value : undefined,
     });
   };
 
@@ -60,48 +58,74 @@ const FilterComponent = ({
   return (
     <div className="filter-component">
       {filters.showOrganisationFilter && (
-        <select
+        <Select
           name="organisationFilter"
-          value={selectedFilters.organisationFilter}
-          onChange={handleInputChange}
-        >
-          <option value="">Organizacija</option>
-          {organisationList?.map((option, index) => (
-            <option key={index} value={option.id}>
-              {option.name}
-            </option>
-          ))}
-        </select>
+          values={
+            selectedFilters.organisationFilter
+              ? [
+                  {
+                    value: selectedFilters.organisationFilter,
+                    label: organisationList.find(
+                      (option) =>
+                        option.id === selectedFilters.organisationFilter
+                    )?.name,
+                  },
+                ]
+              : []
+          }
+          onChange={(values) => handleInputChange(values, "organisationFilter")}
+          options={organisationList.map((option) => ({
+            value: option.id,
+            label: option.name,
+          }))}
+          placeholder="Organizacija"
+        />
       )}
 
       {filters.showVolunteerFilter && (
-        <select
+        <Select
           name="volunteerFilter"
-          value={selectedFilters.volunteerFilter}
-          onChange={handleInputChange}
-        >
-          <option value="">Volonter</option>
-          {volunteerList?.map((option, index) => (
-            <option key={index} value={option.id}>
-              {option.name}
-            </option>
-          ))}
-        </select>
+          values={
+            selectedFilters.volunteerFilter
+              ? [
+                  {
+                    value: selectedFilters.volunteerFilter,
+                    label: volunteerList.find(
+                      (option) => option.id === selectedFilters.volunteerFilter
+                    )?.name,
+                  },
+                ]
+              : []
+          }
+          onChange={(values) => handleInputChange(values, "volunteerFilter")}
+          options={volunteerList.map((option) => ({
+            value: option.id,
+            label: option.name,
+          }))}
+          placeholder="Volonter"
+        />
       )}
 
       {filters.showActivityTypeFilter && (
-        <select
+        <Select
           name="activityTypeFilter"
-          value={selectedFilters.activityTypeFilter}
-          onChange={handleInputChange}
-        >
-          <option value="">Vrsta aktivnosti</option>
-          {activityTypeList.map((option, index) => (
-            <option key={index} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+          values={
+            selectedFilters.activityTypeFilter
+              ? [
+                  {
+                    value: selectedFilters.activityTypeFilter,
+                    label: selectedFilters.activityTypeFilter,
+                  },
+                ]
+              : []
+          }
+          onChange={(values) => handleInputChange(values, "activityTypeFilter")}
+          options={activityTypeList.map((option) => ({
+            value: option,
+            label: option,
+          }))}
+          placeholder="Vrsta aktivnosti"
+        />
       )}
 
       {filters.showDateFilter && (
