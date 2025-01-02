@@ -34,6 +34,7 @@ function Child(props) {
     showActivityTypeFilter: false,
     showDateFilter: false,
   };
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   useEffect(() => {
     getAccessibleOrganisations();
@@ -42,7 +43,7 @@ function Child(props) {
 
   useEffect(() => {
     getChilds();
-  }, [currentPage]);
+  }, [currentPage, selectedFilters]);
 
   // Table
   // table data
@@ -93,8 +94,13 @@ function Child(props) {
     });
   };
 
+  const searchClicked = async (filters) => {
+    setCurrentPage(1);
+    setSelectedFilters(filters);
+  };
+
   // APIs
-  const getChilds = async (filters) => {
+  const getChilds = async () => {
     await axios
       .get(`${process.env.REACT_APP_API_URL}/childs/`, {
         headers: {
@@ -102,9 +108,9 @@ function Child(props) {
         },
         params: {
           organisationFilter:
-            filters?.organisationFilter === ""
+            selectedFilters?.organisationFilter === ""
               ? undefined
-              : filters?.organisationFilter,
+              : selectedFilters?.organisationFilter,
           page: currentPage,
         },
       })
@@ -203,7 +209,7 @@ function Child(props) {
           <FilterComponent
             filters={filters}
             organisationList={organisations}
-            onSearch={getChilds}
+            onSearch={searchClicked}
           />
           <button className="btn btn-success" onClick={openAddChildPage}>
             Dodaj dijete
@@ -220,6 +226,7 @@ function Child(props) {
               renderOnZeroPageCount={null}
               previousLabel="<"
               nextLabel=">"
+              forcePage={currentPage - 1}
             />
           </div>
         </div>
