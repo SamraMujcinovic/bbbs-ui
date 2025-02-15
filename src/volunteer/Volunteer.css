@@ -58,3 +58,9 @@ input::placeholder {
   display: flex;
   flex-direction: column;
 }
+
+.volunteer-filter-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
