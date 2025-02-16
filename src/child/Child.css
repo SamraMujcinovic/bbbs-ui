@@ -80,3 +80,9 @@ input::placeholder {
 .childPotentialDiv {
   margin-top: 0.5rem;
 }
+
+.childFilterButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}

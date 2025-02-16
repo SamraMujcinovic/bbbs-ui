@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "../table/Table";
 import axios from "axios";
-import { hasVolunteerGroup, PAGE_SIZE } from "../utilis/ServiceUtil";
+import {
+  hasVolunteerGroup,
+  hasAdminGroup,
+  hasCoordinatorGroup,
+  PAGE_SIZE,
+} from "../utilis/ServiceUtil";
 
 import "../table/Pagination.css";
 
@@ -186,6 +191,42 @@ function Child(props) {
       });
   };
 
+  const downloadExcelFile = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/childs/download`, {
+        params: {
+          organisationFilter:
+            selectedFilters?.organisationFilter === ""
+              ? undefined
+              : selectedFilters?.organisationFilter,
+        },
+        responseType: "blob", // To handle the file response correctly
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        // Get the filename from the response headers
+        const contentDisposition = response.headers["content-disposition"];
+        const matches =
+          contentDisposition && contentDisposition.match(/filename="(.+)"/);
+        const filename =
+          matches && matches[1] ? matches[1] : "default_filename.xlsx"; // Fallback if no filename
+
+        // Create a link to trigger the download
+        const blob = new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }); // Excel MIME type
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename; // Use the filename from the server
+        link.click();
+      })
+      .catch((error) => {
+        console.error("Error downloading the file:", error);
+      });
+  };
+
   const actions = [
     {
       name: "Edituj",
@@ -211,9 +252,20 @@ function Child(props) {
             organisationList={organisations}
             onSearch={searchClicked}
           />
-          <button className="btn btn-success" onClick={openAddChildPage}>
-            Dodaj dijete
-          </button>
+          <div className="childFilterButtons">
+            <button className="btn btn-success" onClick={openAddChildPage}>
+              Dodaj dijete
+            </button>
+            {hasAdminGroup(userRoles) || hasCoordinatorGroup(userRoles) ? (
+              <button
+                className="excel-button"
+                title="Generiši excel dokument"
+                onClick={downloadExcelFile}
+              >
+                <i className="fas fa-file-excel"></i>
+              </button>
+            ) : null}
+          </div>
         </div>
         <div className="footerDiv">
           <Table header={theadData} data={childs} actions={actions} />
