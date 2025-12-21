@@ -64,20 +64,24 @@ ul.pagination li:hover {
     flex-wrap: wrap;
     gap: 5px;
     justify-content: flex-start;
+    flex-shrink: 0;
+    flex-basis: auto;
   }
 
   .paginationDiv > div {
     order: 2;
     width: 100%;
     text-align: left;
+    flex-shrink: 0;
+    flex-basis: auto;
   }
 
   ul.pagination li {
-    min-width: 2.5rem;
-    font-size: 18px;
+    min-width: 2.3rem;
+    font-size: 16px;
   }
 
   ul.pagination li a {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
