@@ -54,24 +54,20 @@ ul.pagination li:hover {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    overflow: visible;
   }
 
   .paginationDiv .pagination {
     order: 1;
     width: 100%;
-    flex: 0 0 auto;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    flex-wrap: nowrap;
+    display: inline-flex;
+    flex-wrap: wrap;
     gap: 5px;
+    justify-content: flex-start;
   }
 
   .paginationDiv > div {
     order: 2;
     width: 100%;
-    flex: 0 0 auto;
     text-align: left;
   }
 
