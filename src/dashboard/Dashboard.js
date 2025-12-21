@@ -30,7 +30,7 @@ const Dashboard = () => {
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="content">
         <button className="hamburger" onClick={() => setSidebarOpen(true)}>
-          ☰
+          <i className="fa fa-bars"></i>
         </button>
 
         {/* OVERLAY */}
