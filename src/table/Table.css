@@ -1,41 +1,72 @@
-table {
-  border-spacing: 0;
-  border: 1px solid black;
+/* ================================
+   TABLE WRAPPER 
+================================ */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  border: 1px solid #000;
 }
 
-thead,
-tbody,
-tfoot,
-tr,
-td,
-th {
-  border-color: inherit;
-  border-style: solid;
-  border-width: 0;
+/* ================================
+   TABLE
+================================ */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-table th,
-table td {
-  padding: 0.5rem 1.5rem;
-  border-bottom: 1px solid black;
-  border-right: 1px solid black;
+/* ================================
+   CELLS (TH + TD)
+================================ */
+.table-container th,
+.table-container td {
+  padding: 0.75rem 1.25rem;
+  vertical-align: middle;
+  background-color: #fff;
+  box-shadow: inset 0 -1px 0 #000, inset -1px 0 0 #000;
 }
 
-td:last-child {
-  border-right: 0;
+/* ================================
+   HEADER
+================================ */
+.table-container th {
+  font-weight: 600;
+
+  box-shadow: inset 0 -2px 0 #000, inset -1px 0 0 #000;
 }
 
-td i {
+.table-container th:last-child,
+.table-container td:last-child {
+  box-shadow: inset 0 -1px 0 #000;
+}
+
+.table-container th:last-child {
+  box-shadow: inset 0 -2px 0 #000;
+}
+
+/* ================================
+   ICONS
+================================ */
+.table-container td i {
   font-size: 20px;
   margin-inline: 1rem;
 }
 
-button {
+/* ================================
+   BUTTON RESET
+================================ */
+.table-container button {
   border: none;
   outline: none;
   background: none;
+  cursor: pointer;
 }
 
+/* ================================
+   ICON COLORS
+================================ */
 .redIcon {
   color: rgb(244, 80, 80);
 }
@@ -54,6 +85,14 @@ button {
 
 .editButton {
   color: orange;
-  border: none;
-  background: none;
+}
+
+/* ================================
+   MOBILE OPTIMIZATION
+================================ */
+@media (max-width: 768px) {
+  .table-container th,
+  .table-container td {
+    padding: 0.5rem 0.75rem;
+  }
 }

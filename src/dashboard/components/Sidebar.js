@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const menuItem = [
     {
       path: "/organisations",
@@ -38,12 +38,13 @@ const Sidebar = () => {
   const userRole = sessionStorage.getItem("roles");
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
       <div className="logo">
         <div>
           <img src={require("../../images/logo.png")} />
         </div>
       </div>
+
       {menuItem
         .filter((item) => item.roles.includes(userRole))
         .map((item, index) => (
@@ -52,11 +53,10 @@ const Sidebar = () => {
             key={index}
             className="link"
             activeclassname="active"
+            onClick={() => setSidebarOpen(false)}
           >
             <div className="icon">{item.icon}</div>
-            <div style={{ display: "block" }} className="link_text">
-              {item.name}
-            </div>
+            <div className="link_text">{item.name}</div>
           </NavLink>
         ))}
     </div>

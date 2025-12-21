@@ -11,6 +11,9 @@ const Dashboard = () => {
   // change password modal
   const [settingsOpened, setSettingsOpened] = useState(false);
 
+  // open/close sidebar
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const [showChangePassModal, setShowChangePassModal] = useState(false);
   const handleChangePassClose = () => {
     setShowChangePassModal(false);
@@ -23,8 +26,20 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <Sidebar />
+      {/* SIDEBAR */}
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="content">
+        <button className="hamburger" onClick={() => setSidebarOpen(true)}>
+          ☰
+        </button>
+
+        {/* OVERLAY */}
+        {sidebarOpen && (
+          <div
+            className="sidebar-overlay"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
         <div className="logoutButtonDiv">
           <div className="usernameDiv">
             {settingsOpened ? (

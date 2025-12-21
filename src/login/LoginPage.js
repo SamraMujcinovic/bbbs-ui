@@ -74,7 +74,7 @@ function LoginPage(props) {
           sessionStorage.setItem("token", response.data.data);
           sessionStorage.setItem("roles", claims.group);
           sessionStorage.setItem("user", user);
-          navigate("/");
+          navigate("/forms");
         });
     } catch (error) {
       setResponseError(true);

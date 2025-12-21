@@ -64,3 +64,23 @@ input::placeholder {
   gap: 1rem;
   justify-content: center;
 }
+
+@media (max-width: 768px) {
+  .volunteer-filter-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .volunteer-filter-buttons button {
+    width: 100%;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .buttons button {
+    width: 100%;
+  }
+}

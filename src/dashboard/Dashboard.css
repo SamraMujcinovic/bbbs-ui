@@ -3,8 +3,18 @@ h1 {
   font-size: 2rem !important;
 }
 
+/* =========================
+   LAYOUT
+   ========================= */
 .dashboard {
   display: flex;
+}
+
+/* prevents scroll of whole page */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
 }
 
 .settingsIcon {
@@ -15,28 +25,41 @@ h1 {
   background-color: white !important;
 }
 
+/* =========================
+   SIDEBAR
+   ========================= */
+.sidebar {
+  background: #014;
+  color: rgb(76, 124, 212);
+  width: 15rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* =========================
+   CONTENT
+   ========================= */
+.content {
+  margin-left: 15rem;
+  width: calc(100% - 15rem);
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #fafafa;
+}
+
 .main {
   width: 100%;
   padding: 20px;
   background-color: #fafafa;
-  height: 100vh;
   margin-top: 3rem;
 }
 
-.sidebar {
-  background: #014;
-  color: rgb(76, 124, 212);
-  height: 100vh;
-  width: 15rem;
-  position: fixed;
-}
-
-.content {
-  width: 100%;
-  margin-left: 15rem;
-  background-color: #fafafa;
-}
-
+/* =========================
+   LOGO & LINKS
+   ========================= */
 .logo {
   display: flex;
   flex-direction: column;
@@ -77,6 +100,9 @@ h1 {
   font-size: 20px;
 }
 
+/* =========================
+   AUTH / SETTINGS
+   ========================= */
 .loginButtonDiv {
   position: relative;
   width: 100%;
@@ -95,8 +121,11 @@ h1 {
 }
 
 .logoutButtonDiv {
-  float: right;
-  margin-top: 0.5rem;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: inline-block;
+  z-index: 1000;
 }
 
 .logoutButtonDiv button {
@@ -121,27 +150,36 @@ h1 {
   cursor: pointer;
 }
 
-.usernameDiv {
+.usernameDiv button {
   display: flex;
-  justify-content: flex-end;
-  min-width: 11rem;
-  margin-top: 0.5rem;
+  align-items: center;
+  gap: 0.25rem;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .settingsDiv {
   position: absolute;
-  top: 2.5rem;
-  margin-right: 1rem;
+  top: 100%;
+  right: 0;
   background-color: #eee;
   border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  min-width: max-content;
+  white-space: nowrap;
+  padding: 0.5rem 0;
+  z-index: 1001;
 }
 
 .settingsDiv button {
-  color: black;
+  display: block;
+  width: 100%;
+  text-align: left;
   border: none;
   background: none;
-  margin: 0.5rem;
-  white-space: nowrap;
+  margin: 0.5rem 1rem;
+  color: black;
 }
 
 .settingsDiv button:hover {
@@ -149,6 +187,9 @@ h1 {
   color: #0d6efd;
 }
 
+/* =========================
+   FORMS / ERRORS
+   ========================= */
 .errorMessage {
   color: rgb(230, 72, 72);
 }
@@ -219,4 +260,76 @@ h1 {
 
 .togglePasswordButton {
   border-radius: 0px !important;
+}
+
+/* =========================
+   MOBILE HAMBURGER SIDEBAR
+   ========================= */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2000;
+  font-size: 1.75rem;
+  background: none;
+  border: none;
+  color: #0655c9;
+}
+
+.hamburger:hover {
+  cursor: pointer;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+    position: static;
+    top: auto;
+    left: auto;
+    z-index: auto;
+    font-size: 1.75rem;
+    background: none;
+    border: none;
+    color: #0655c9;
+    cursor: pointer;
+    margin: 0 0 1rem 0;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 2000;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .content {
+    margin-left: 0;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .main {
+    margin-top: 1rem;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1500;
+  }
+
+  .settingsDiv {
+    left: 0;
+    right: auto;
+    max-width: 95vw;
+  }
 }

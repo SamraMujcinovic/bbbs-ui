@@ -26,3 +26,18 @@
   margin-bottom: 0 !important;
   height: 100%;
 }
+
+@media (max-width: 768px) {
+  .filter-component {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-component select,
+  .date-picker,
+  .react-datepicker__input-container,
+  .react-dropdown-select,
+  .filter-component button {
+    width: 100% !important;
+  }
+}

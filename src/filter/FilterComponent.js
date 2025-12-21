@@ -139,6 +139,44 @@ const FilterComponent = ({
             placeholderText="Od"
             className="date-picker"
             calendarStartDay={1} // Week starts on Monday
+            renderCustomHeader={({
+              date,
+              decreaseMonth,
+              increaseMonth,
+              prevMonthButtonDisabled,
+              nextMonthButtonDisabled,
+            }) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  padding: "0 0.5rem",
+                }}
+              >
+                <button
+                  onClick={decreaseMonth}
+                  disabled={prevMonthButtonDisabled}
+                  style={{ fontSize: "1rem", padding: "0.25rem 0.5rem" }}
+                >
+                  {"<"}
+                </button>
+                <span style={{ textAlign: "center", flexGrow: 1 }}>
+                  {date.toLocaleString("bs-BA", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+                <button
+                  onClick={increaseMonth}
+                  disabled={nextMonthButtonDisabled}
+                  style={{ fontSize: "1rem", padding: "0.25rem 0.5rem" }}
+                >
+                  {">"}
+                </button>
+              </div>
+            )}
           />
           <DatePicker
             selected={selectedFilters.endDate}
@@ -148,6 +186,44 @@ const FilterComponent = ({
             placeholderText="Do"
             className="date-picker"
             calendarStartDay={1} // Week starts on Monday
+            renderCustomHeader={({
+              date,
+              decreaseMonth,
+              increaseMonth,
+              prevMonthButtonDisabled,
+              nextMonthButtonDisabled,
+            }) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  padding: "0 0.5rem",
+                }}
+              >
+                <button
+                  onClick={decreaseMonth}
+                  disabled={prevMonthButtonDisabled}
+                  style={{ fontSize: "1rem", padding: "0.25rem 0.5rem" }}
+                >
+                  {"<"}
+                </button>
+                <span style={{ textAlign: "center", flexGrow: 1 }}>
+                  {date.toLocaleString("bs-BA", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+                <button
+                  onClick={increaseMonth}
+                  disabled={nextMonthButtonDisabled}
+                  style={{ fontSize: "1rem", padding: "0.25rem 0.5rem" }}
+                >
+                  {">"}
+                </button>
+              </div>
+            )}
           />
         </>
       )}

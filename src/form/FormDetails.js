@@ -684,24 +684,26 @@ function FormDetails(props) {
             <span>Opisite aktivnost u MINIMALNO 50 riječi!</span>
           )}
         </div>
-        {shouldDisableForm() ? null : (
+        <div className="buttons">
+          {shouldDisableForm() ? null : (
+            <Button
+              type="submit"
+              className="submitButton"
+              style={{ borderRadius: "0%" }}
+              onClick={addForm}
+              disabled={!isFormValid()}
+            >
+              Potvrdi
+            </Button>
+          )}
           <Button
-            type="submit"
-            className="submitButton"
+            variant="secondary"
             style={{ borderRadius: "0%" }}
-            onClick={addForm}
-            disabled={!isFormValid()}
+            onClick={navigateToForms}
           >
-            Potvrdi
+            Zatvori
           </Button>
-        )}
-        <Button
-          variant="secondary"
-          style={{ borderRadius: "0%" }}
-          onClick={navigateToForms}
-        >
-          Zatvori
-        </Button>
+        </div>
       </div>
     );
   }

@@ -85,3 +85,79 @@ textarea {
   color: white;
   font-weight: unset;
 }
+
+/* =========================
+   MOBILE RESPONSIVE
+   ========================= */
+@media (max-width: 768px) {
+  .filterComponentDiv {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .filterComponentDiv button {
+    width: 100%;
+  }
+
+  .activityCategoryDiv {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .dateTimeDiv {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .dateInput {
+    width: 100%;
+  }
+
+  .react-time-picker {
+    width: 100%;
+  }
+
+  .react-time-picker__wrapper {
+    width: 100%;
+  }
+
+  textarea {
+    width: 100%;
+  }
+
+  .excel-button {
+    width: 100%;
+    height: 2.75rem;
+    justify-content: center;
+  }
+
+  .dateSpan,
+  .timeSpan {
+    margin-right: 0;
+    margin-bottom: 0.25rem;
+  }
+
+  .radioButtonsDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .radioButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+    margin-block: 1rem;
+  }
+
+  .buttons button {
+    width: 100%;
+  }
+}
