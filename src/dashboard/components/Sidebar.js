@@ -33,6 +33,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       name: "Sati",
       roles: ["admin", "coordinator", "volunteer"],
     },
+    {
+      path: "/bills",
+      name: "Računi",
+      roles: ["admin"],
+    },
   ];
 
   const userRole = sessionStorage.getItem("roles");

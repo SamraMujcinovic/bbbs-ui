@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
+import Table from "../table/Table";
 
 import DatePicker from "react-multi-date-picker";
 import InputIcon from "react-multi-date-picker/components/input_icon";
 import TimePicker from "react-time-picker";
+import BillModal from "./bills/Bill";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -13,7 +15,6 @@ import { numberToTimeString, timeStringToNumber } from "../utilis/Time";
 import { countWords, hasVolunteerGroup } from "../utilis/ServiceUtil";
 
 import "../form/Form.css";
-import { toast } from "react-toastify";
 
 function FormDetails(props) {
   // authenticate
@@ -57,9 +58,38 @@ function FormDetails(props) {
   const [dateInput, setDateInput] = useState("");
   const [isDateValid, setIsDateValid] = useState(true);
 
+  // table data
+  const theadData = ["Mjesto", "Iznos (KM)"];
+  const [bills, setBills] = useState([]);
+  const [showBillModal, setShowBillModal] = useState(false);
+
+  const handleAddBill = (bill) => {
+    bills.push(bill);
+    setBills(bills);
+  };
+
+  const deleteBill = (billToRemove) => {
+    setBills((prev) =>
+      prev.filter(
+        (b) =>
+          !(b.place === billToRemove.place && b.amount === billToRemove.amount)
+      )
+    );
+  };
+
+  const actions = [
+    {
+      name: "Obriši",
+      iconClass: "fas fa-trash redIcon",
+      onClick: deleteBill,
+      showAction: () => !isEditMode,
+    },
+  ];
+
   useEffect(() => {
     if (location.state.selectedForm) {
       setIsEditMode(true);
+      console.log(location.state.selectedForm.id);
       getForm(location.state.selectedForm.id);
     }
     getHangOutPlaces();
@@ -100,6 +130,7 @@ function FormDetails(props) {
     }
     setFormVolunteer(selectedForm.volunteer);
     setFormChild(selectedForm.child);
+    setBills(selectedForm.bills ?? []);
   };
 
   const getHangOutPlaces = async () => {
@@ -260,6 +291,7 @@ function FormDetails(props) {
       evaluation: formEvaluation,
       activities: selectedActivities.map((activity) => Number(activity.id)),
       description: formDescription.trim() === "" ? null : formDescription,
+      bills: bills,
     };
   };
 
@@ -684,6 +716,26 @@ function FormDetails(props) {
             <span>Opisite aktivnost u MINIMALNO 50 riječi!</span>
           )}
         </div>
+        {!isConsultingMeeting() ? (
+          <div className="billsDiv">
+            <div className="billsDivHeader">
+              {bills.length ? <span>Računi</span> : null}
+              {hasVolunteerGroup(userRoles) && !isEditMode ? (
+                <Button
+                  type="submit"
+                  className="submitButton"
+                  style={{ borderRadius: "0%" }}
+                  onClick={() => setShowBillModal(true)}
+                >
+                  Dodaj račun
+                </Button>
+              ) : null}
+            </div>
+            {bills.length ? (
+              <Table header={theadData} data={bills} actions={actions} />
+            ) : null}
+          </div>
+        ) : null}
         <div className="buttons">
           {shouldDisableForm() ? null : (
             <Button
@@ -704,6 +756,13 @@ function FormDetails(props) {
             Zatvori
           </Button>
         </div>
+        {showBillModal && (
+          <BillModal
+            show={showBillModal}
+            handleClose={() => setShowBillModal(false)}
+            onSave={handleAddBill}
+          />
+        )}
       </div>
     );
   }
