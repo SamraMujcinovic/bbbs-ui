@@ -19,6 +19,7 @@ import ResetPasswordConfirmationPage from "./activate_account/ResetPasswordConfi
 import LoginPage from "./login/LoginPage";
 import Dashboard from "./dashboard/Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import Bills from "./bills/Bills";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
           <Route exact path="/childs/details" element={<ChildDetails />} />
           <Route exact path="/forms" element={<Form />} />
           <Route exact path="/forms/details" element={<FormDetails />} />
+          <Route exact path="/bills" element={<Bills />} />
         </Route>
       </Routes>
     </Router>
