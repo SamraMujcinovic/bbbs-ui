@@ -1,1 +1,5 @@
-
+input[type="radio"] {
+  transform: none !important;
+  position: relative;
+  z-index: 1;
+}
