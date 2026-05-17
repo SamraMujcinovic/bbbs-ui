@@ -29,7 +29,7 @@ function ResetPasswordForm(props) {
       })
       .then(() => {
         toast.update(id, {
-          render: "Link za promjenu lozinke je poslan na uneseni e-mail.",
+          render: "Novi korisnički podaci su poslani na uneseni e-mail.",
           type: "success",
           isLoading: false,
           autoClose: false,
