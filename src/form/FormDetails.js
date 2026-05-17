@@ -89,7 +89,7 @@ function FormDetails(props) {
     setActivityEndTime(numberToTimeString(selectedForm.activity_end_time));
     calculateDuration(
       numberToTimeString(selectedForm.activity_start_time),
-      numberToTimeString(selectedForm.activity_end_time)
+      numberToTimeString(selectedForm.activity_end_time),
     );
     setFormActivityType(selectedForm.activity_type);
     setSelectedHangOutPlaces(selectedForm.place);
@@ -189,7 +189,7 @@ function FormDetails(props) {
 
   const onPlaceChange = (event) => {
     const selectedPlace = hangOutPlaces.filter(
-      (place) => place.id === Number(event.target.value)
+      (place) => place.id === Number(event.target.value),
     )[0];
 
     if (hasPlace(selectedPlace)) {
@@ -197,7 +197,7 @@ function FormDetails(props) {
       setSelectedHangOutPlaces(
         selectedHangOutPlaces.filter((place) => {
           return place.id !== selectedPlace.id;
-        })
+        }),
       );
     } else {
       setSelectedHangOutPlaces([...selectedHangOutPlaces, selectedPlace]);
@@ -214,7 +214,7 @@ function FormDetails(props) {
 
   const onActivityChange = (event) => {
     const selectedActivity = activities.filter(
-      (activity) => activity.id === Number(event.target.value)
+      (activity) => activity.id === Number(event.target.value),
     )[0];
 
     if (hasActivity(selectedActivity)) {
@@ -222,7 +222,7 @@ function FormDetails(props) {
       setSelectedActivities(
         selectedActivities.filter((activity) => {
           return activity.id !== selectedActivity.id;
-        })
+        }),
       );
     } else {
       setSelectedActivities([...selectedActivities, selectedActivity]);
@@ -301,7 +301,7 @@ function FormDetails(props) {
     const lastDateInSelectedMonth = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth() + 1,
-      0
+      0,
     ).getDate();
 
     if (selectedDate.getDate() > lastDateInSelectedMonth) {
@@ -693,16 +693,9 @@ function FormDetails(props) {
               onClick={addForm}
               disabled={!isFormValid()}
             >
-              Potvrdi
+              Sacuvaj izmjene
             </Button>
           )}
-          <Button
-            variant="secondary"
-            style={{ borderRadius: "0%" }}
-            onClick={navigateToForms}
-          >
-            Zatvori
-          </Button>
         </div>
       </div>
     );
