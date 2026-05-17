@@ -26,6 +26,7 @@ function LoginPage(props) {
   const [error, setError] = useState(false);
   const [responseError, setResponseError] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {}, []);
 
   let navigate = useNavigate();
@@ -65,7 +66,7 @@ function LoginPage(props) {
             username,
             password,
           },
-          { withCredentials: true }
+          { withCredentials: true },
         )
         .then((response) => {
           const token = response.data.data;

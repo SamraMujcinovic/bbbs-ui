@@ -47,11 +47,13 @@ function Volunteer(props) {
     navigateToVolunteerDetails(row);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getAccessibleOrganisations();
     getVolunteers();
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getVolunteers();
   }, [currentPage, selectedFilters]);
@@ -177,7 +179,7 @@ function Volunteer(props) {
               autoClose: false,
               hideProgressBar: true,
               className: "toastToFront",
-            }
+            },
           );
         } else {
           console.log(error);

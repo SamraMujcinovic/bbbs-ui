@@ -51,6 +51,7 @@ const FilterComponent = ({
     onSearch(formattedFilters);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // Trigger the initial search when the component mounts
     handleSearch();
@@ -68,7 +69,7 @@ const FilterComponent = ({
                     value: selectedFilters.organisationFilter,
                     label: organisationList.find(
                       (option) =>
-                        option.id === selectedFilters.organisationFilter
+                        option.id === selectedFilters.organisationFilter,
                     )?.name,
                   },
                 ]
@@ -92,7 +93,7 @@ const FilterComponent = ({
                   {
                     value: selectedFilters.volunteerFilter,
                     label: volunteerList.find(
-                      (option) => option.id === selectedFilters.volunteerFilter
+                      (option) => option.id === selectedFilters.volunteerFilter,
                     )?.name,
                   },
                 ]

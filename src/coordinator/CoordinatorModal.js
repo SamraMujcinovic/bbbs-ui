@@ -20,6 +20,7 @@ function CoordinatorModal(props) {
   const [coordinatorOrganisation, setCoordinatorOrganisation] = useState();
   const [coordinatorCity, setCoordinatorCity] = useState();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (props.data) {
       setInitialState();
@@ -33,12 +34,12 @@ function CoordinatorModal(props) {
 
     setCoordinatorOrganisation(
       props.organisations.filter(
-        (value) => value.name === props.data.organisation
-      )
+        (value) => value.name === props.data.organisation,
+      ),
     );
 
     setCoordinatorCity(
-      props.cities.filter((value) => value.name === props.data.city)
+      props.cities.filter((value) => value.name === props.data.city),
     );
   };
 
@@ -64,7 +65,7 @@ function CoordinatorModal(props) {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-        }
+        },
       )
       .then((response) => props.handleClose())
       .catch((error) => {

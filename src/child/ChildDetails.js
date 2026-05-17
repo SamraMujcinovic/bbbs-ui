@@ -39,17 +39,17 @@ function ChildDetails() {
   const [childsCode, setChildsCode] = useState("");
   const [childsGender, setChildsGender] = useState("Muški");
   const [childsBirthDate, setChildsBirthDate] = useState(
-    new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), 1)
+    new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), 1),
   );
   const [childsAge, setChildsAge] = useState(
-    currentDate.getFullYear() - childsBirthDate.getFullYear()
+    currentDate.getFullYear() - childsBirthDate.getFullYear(),
   );
 
   const [childSchoolStatus, setChildsSchoolStatus] = useState("Pohađa");
   const [childsFamilyModel, setChildsFamilyModel] =
     useState("Potpuna porodica");
   const [childsStatus, setChildsStatus] = useState(
-    "Dijete prvi put učestvuje u programu"
+    "Dijete prvi put učestvuje u programu",
   );
   const [childsVolunteer, setChildsVolunteer] = useState(undefined);
   const [childsCoordinator, setChildsCoordinator] = useState(undefined);
@@ -78,7 +78,7 @@ function ChildDetails() {
   const [organisations, setOrganisations] = useState([]);
   const [cities, setCities] = useState([]);
   const [developmentalDifficulties, setDevelopmentalDifficulties] = useState(
-    []
+    [],
   );
   const [
     selectedDevelopmentalDifficulties,
@@ -86,7 +86,7 @@ function ChildDetails() {
   ] = useState([]);
   const [mentoringReasons, setMentoringReasons] = useState([]);
   const [mentoringReasonCategories, setMentoringReasonCategories] = useState(
-    []
+    [],
   );
   const [selectedMentoringReasons, setSelectedMentoringReasons] = useState([]);
 
@@ -98,6 +98,7 @@ function ChildDetails() {
   const [dateInput, setDateInput] = useState("");
   const [isDateValid, setIsDateValid] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getMentoringReasons();
     getMentoringReasonCategories();
@@ -110,6 +111,7 @@ function ChildDetails() {
     }
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (
       childOrganisation &&
@@ -121,6 +123,7 @@ function ChildDetails() {
     }
   }, [childOrganisation, childCity]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (hasCoordinatorGroup(userGroups)) {
       getVolunteers(undefined, undefined, undefined);
@@ -129,21 +132,23 @@ function ChildDetails() {
         childsCoordinator[0].organisation_id,
         childsCoordinator[0].city_id,
         childsCoordinator[0].id,
-        MAX_PAGE_SIZE
+        MAX_PAGE_SIZE,
       );
     }
   }, [childsCoordinator, childsGender]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (childsCoordinator) {
       setChildsCoordinator(
         coordinators.filter((coordinator) => {
           return coordinator.id === childsCoordinator.id;
-        })
+        }),
       );
     }
   }, [coordinators]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // use this way, it does not work on the other way!!!
     if (
@@ -153,7 +158,7 @@ function ChildDetails() {
       setChildsVolunteer(
         volunteers.filter((volunteer) => {
           return volunteer.childCode === location.state.selectedChild.code;
-        })
+        }),
       );
     }
   }, [volunteers]);
@@ -339,15 +344,15 @@ function ChildDetails() {
 
     setChildsDevelopmentalDifficulties(
       selectedChild.developmental_difficulties.map(
-        (difficulty) => difficulty.id
-      )
+        (difficulty) => difficulty.id,
+      ),
     );
     setSelectedDevelopmentalDifficulties(
-      selectedChild.developmental_difficulties
+      selectedChild.developmental_difficulties,
     );
 
     setChildMentoringReason(
-      selectedChild.mentoring_reason.map((reason) => reason.id)
+      selectedChild.mentoring_reason.map((reason) => reason.id),
     );
     setSelectedMentoringReasons(selectedChild.mentoring_reason);
 
@@ -413,7 +418,7 @@ function ChildDetails() {
 
   const onDifficultyChange = (event) => {
     const selectedDifficulty = developmentalDifficulties.filter(
-      (difficulty) => difficulty.id === Number(event.target.value)
+      (difficulty) => difficulty.id === Number(event.target.value),
     )[0];
 
     if (hasDevelopmentalDifficulty(selectedDifficulty)) {
@@ -421,7 +426,7 @@ function ChildDetails() {
       setSelectedDevelopmentalDifficulties(
         selectedDevelopmentalDifficulties.filter((difficulty) => {
           return difficulty.id !== selectedDifficulty.id;
-        })
+        }),
       );
       setShowHealthDifficultiesTextbox(false);
       setHealthDifficulties(""); // textbox
@@ -447,7 +452,7 @@ function ChildDetails() {
 
   const onMentoringReasonChange = (event) => {
     const selectedReason = mentoringReasons.filter(
-      (reason) => reason.id === Number(event.target.value)
+      (reason) => reason.id === Number(event.target.value),
     )[0];
 
     if (hasMentoringReason(selectedReason)) {
@@ -455,7 +460,7 @@ function ChildDetails() {
       const mentoringReasonsFiltered = selectedMentoringReasons.filter(
         (reason) => {
           return reason.id !== selectedReason.id;
-        }
+        },
       );
       setSelectedMentoringReasons(mentoringReasonsFiltered);
       if (selectedReason.id === 25) {
@@ -470,7 +475,7 @@ function ChildDetails() {
       }
       if (
         !mentoringReasonsFiltered.some(
-          (reason) => reason.name === "Nešto drugo"
+          (reason) => reason.name === "Nešto drugo",
         )
       ) {
         setShowSomethingElseTextBox(false);
@@ -573,7 +578,7 @@ function ChildDetails() {
     const lastDateInSelectedMonth = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth() + 1,
-      0
+      0,
     ).getDate();
 
     if (selectedDate.getDate() > lastDateInSelectedMonth) {
@@ -621,7 +626,7 @@ function ChildDetails() {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-        }
+        },
       )
       .then(() => {
         navigateToChilds();
@@ -639,11 +644,11 @@ function ChildDetails() {
       school_status: childSchoolStatus,
       status: childsStatus,
       developmental_difficulties: selectedDevelopmentalDifficulties.map(
-        (difficulty) => Number(difficulty.id)
+        (difficulty) => Number(difficulty.id),
       ),
       family_model: childsFamilyModel,
       mentoring_reason: selectedMentoringReasons.map((reason) =>
-        Number(reason.id)
+        Number(reason.id),
       ),
       guardian_consent: childsGuardianConsent,
       vaccination_status: vaccinationStatus,
@@ -713,7 +718,7 @@ function ChildDetails() {
 
   const checkHealthDifficulties = () => {
     const isHealthDifficultiesChecked = selectedDevelopmentalDifficulties.find(
-      (difficulty) => difficulty.id === 14
+      (difficulty) => difficulty.id === 14,
     );
     return (
       !isHealthDifficultiesChecked ||
@@ -731,7 +736,7 @@ function ChildDetails() {
 
   const checkActivePUP = () => {
     const isActivePUPChecked = selectedMentoringReasons.find(
-      (difficulty) => difficulty.id === 26
+      (difficulty) => difficulty.id === 26,
     );
     return !isActivePUPChecked || (isActivePUPChecked && activePUP?.length);
   };
@@ -742,7 +747,7 @@ function ChildDetails() {
 
   const checkPassivePUP = () => {
     const isPassivePUPChecked = selectedMentoringReasons.find(
-      (difficulty) => difficulty.id === 25
+      (difficulty) => difficulty.id === 25,
     );
     return !isPassivePUPChecked || (isPassivePUPChecked && passivePUP?.length);
   };

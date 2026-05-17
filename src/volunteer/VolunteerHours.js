@@ -36,7 +36,7 @@ function VolunteerHours(props) {
   const today = new Date();
   const defaultStartDate = format(
     new Date(today.getFullYear(), today.getMonth() - 1, 1),
-    "yyyy-MM-dd"
+    "yyyy-MM-dd",
   );
   const lastDayOfMonth = new Date();
   lastDayOfMonth.setDate(0);
@@ -99,7 +99,7 @@ function VolunteerHours(props) {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-        }
+        },
       )
       .then(() => {
         toast.update(id, {
@@ -116,6 +116,7 @@ function VolunteerHours(props) {
       });
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getvolunteerHours();
   }, [currentPage, selectedFilters]);

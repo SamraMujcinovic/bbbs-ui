@@ -71,6 +71,7 @@ function Organisations(props) {
     };
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getOrganisations();
   }, [currentPage]);
@@ -119,7 +120,7 @@ function Organisations(props) {
               autoClose: false,
               hideProgressBar: true,
               className: "toastToFront",
-            }
+            },
           );
         } else {
           console.log(error);

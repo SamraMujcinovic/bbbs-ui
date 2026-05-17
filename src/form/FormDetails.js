@@ -57,6 +57,7 @@ function FormDetails(props) {
   const [dateInput, setDateInput] = useState("");
   const [isDateValid, setIsDateValid] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (location.state.selectedForm) {
       setIsEditMode(true);

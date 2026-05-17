@@ -67,10 +67,11 @@ function Form(props) {
   const today = new Date();
   const defaultStartDate = format(
     new Date(today.getFullYear(), 0, 1), // 01.01.currentYear
-    "yyyy-MM-dd"
+    "yyyy-MM-dd",
   );
   const defaultEndDate = format(today, "yyyy-MM-dd");
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getAccessibleVolunteers(MAX_PAGE_SIZE);
     getAccessibleOrganisations();
@@ -80,6 +81,7 @@ function Form(props) {
     }
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getForms();
   }, [currentPage, selectedFilters]);
@@ -202,7 +204,7 @@ function Form(props) {
       activity: form.activity_type,
       duration: calculateDuration(
         form.activity_start_time,
-        form.activity_end_time
+        form.activity_end_time,
       ),
       evaluation: form.evaluation,
     };

@@ -41,11 +41,13 @@ function Child(props) {
   };
   const [selectedFilters, setSelectedFilters] = useState({});
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getAccessibleOrganisations();
     getChilds();
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getChilds();
   }, [currentPage, selectedFilters]);

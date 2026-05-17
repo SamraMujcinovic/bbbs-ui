@@ -42,17 +42,17 @@ function VolunteerDetails() {
 
   const currentDate = new Date();
   const [volunteerBirthDate, setVolunteerBirthDate] = useState(
-    new Date(currentDate.getFullYear() - 30, currentDate.getMonth(), 1)
+    new Date(currentDate.getFullYear() - 30, currentDate.getMonth(), 1),
   );
   const [volunteerAge, setVolunteerAge] = useState(
-    currentDate.getFullYear() - volunteerBirthDate.getFullYear()
+    currentDate.getFullYear() - volunteerBirthDate.getFullYear(),
   );
 
   const [volunteerPhoneNumber, setVolunteerPhoneNumber] = useState("");
   const [volunteerEducationLevel, setVolunteerEducationLevel] =
     useState("Srednja škola");
   const [volunteerFacultyDepartment, setVolunteerFacultyDepartment] = useState(
-    "Prirodno-matematički odsjeci (Matematika, fizika, biologija, geografija, hemija i sl.)"
+    "Prirodno-matematički odsjeci (Matematika, fizika, biologija, geografija, hemija i sl.)",
   );
   const [volunteerFacultyDepartmentOther, setVolunteerFacultyDepartmentOther] =
     useState("");
@@ -81,6 +81,7 @@ function VolunteerDetails() {
   const [dateInput, setDateInput] = useState("");
   const [isDateValid, setIsDateValid] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getOrganisations();
     getCities();
@@ -90,6 +91,7 @@ function VolunteerDetails() {
     }
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (
       volunteerOrganisation &&
@@ -101,12 +103,13 @@ function VolunteerDetails() {
     }
   }, [volunteerOrganisation, volunteerCity]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (volunteerCoordinator) {
       setVolunteerCoordinator(
         coordinators.filter((coordinator) => {
           return coordinator.id === volunteerCoordinator.id;
-        })
+        }),
       );
     }
   }, [coordinators]);
@@ -168,14 +171,14 @@ function VolunteerDetails() {
     setVolunteerEducationLevel(selectedVolunteer.education_level);
     setVolunteerFacultyDepartment(selectedVolunteer.faculty_department);
     setVolunteerFacultyDepartmentOther(
-      selectedVolunteer.faculty_other_department
+      selectedVolunteer.faculty_other_department,
     );
     if (selectedVolunteer.faculty_other_department) {
       setShowFacultyDepartmentOther(true);
     }
     setVolunteerEmploymentStatus(selectedVolunteer.employment_status);
     setVolunteerGoodConductCertificate(
-      selectedVolunteer.good_conduct_certificate
+      selectedVolunteer.good_conduct_certificate,
     );
     setVolunteerStatus(selectedVolunteer.status);
     setVolunteerCoordinator(selectedVolunteer.coordinator);
@@ -337,7 +340,7 @@ function VolunteerDetails() {
     const lastDateInSelectedMonth = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth() + 1,
-      0
+      0,
     ).getDate();
 
     if (selectedDate.getDate() > lastDateInSelectedMonth) {
@@ -386,7 +389,7 @@ function VolunteerDetails() {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-        }
+        },
       )
       .then(() => navigateToVolunteers())
       .catch((error) => {
@@ -403,7 +406,7 @@ function VolunteerDetails() {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-        }
+        },
       )
       .then(() => navigateToVolunteers())
       .catch((error) => {

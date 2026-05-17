@@ -87,12 +87,14 @@ function Coordinators(props) {
     };
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getCoordinators();
     getOrganisations();
     getCities();
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getCoordinators();
   }, [currentPage]);
@@ -167,7 +169,7 @@ function Coordinators(props) {
               autoClose: false,
               hideProgressBar: true,
               className: "toastToFront",
-            }
+            },
           );
         } else {
           console.log(error);
