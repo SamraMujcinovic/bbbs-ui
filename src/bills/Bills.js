@@ -8,12 +8,16 @@ import ReactPaginate from "react-paginate";
 
 import { MAX_PAGE_SIZE, PAGE_SIZE } from "../utilis/ServiceUtil";
 import { format } from "date-fns";
+import ConfirmationModal from "../confirmation_modal/ConfirmationModal";
 
 function Bills() {
   const [organisations, setOrganisations] = useState([]);
   const [volunteers, setVolunteers] = useState([]);
   const [bills, setBills] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0.0);
+
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [billToDelete, setBillToDelete] = useState(undefined);
 
   const navigate = useNavigate();
 
@@ -45,7 +49,7 @@ function Bills() {
   const today = new Date();
   const defaultStartDate = format(
     new Date(today.getFullYear(), today.getMonth() - 1, 1), // 01.01.currentYear
-    "yyyy-MM-dd"
+    "yyyy-MM-dd",
   );
   const defaultEndDate = format(today, "yyyy-MM-dd");
 
@@ -165,11 +169,48 @@ function Bills() {
     });
   };
 
+  const deleteBill = (row) => {
+    setShowConfirmationModal(true);
+    setBillToDelete(row);
+  };
+
+  const onConfirmationModalClose = (isConfirmed) => {
+    if (isConfirmed) {
+      deleteBillRequest(billToDelete);
+    } else {
+      setShowConfirmationModal(false);
+    }
+  };
+
+  // table functions
+  const deleteBillRequest = async (row) => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/bills/${row.id}/`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setShowConfirmationModal(false);
+        setBillToDelete(undefined);
+        getBills();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const actions = [
     {
       name: "Forma druženja",
       iconClass: "fas fa-file-alt blueIcon",
       onClick: navigateToFormDetails,
+      showAction: () => true,
+    },
+    {
+      name: "Obriši",
+      iconClass: "fas fa-trash redIcon",
+      onClick: deleteBill,
       showAction: () => true,
     },
   ];
@@ -203,6 +244,12 @@ function Bills() {
           />
         </div>
       </div>
+      {showConfirmationModal && (
+        <ConfirmationModal
+          message="Da li ste sigurni da želite izbrisati ovaj račun?"
+          onModalClose={onConfirmationModalClose}
+        />
+      )}
     </div>
   );
 }
