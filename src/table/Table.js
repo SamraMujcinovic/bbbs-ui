@@ -17,26 +17,29 @@ const Table = ({ data, header, actions }) => {
         <tbody>
           {data.map((row, rowIndex) => (
             <tr key={rowIndex} onDoubleClick={() => actions[0].onClick(row)}>
-              {Object.keys(row).map(
-                (key) =>
-                  key != "id" &&
-                  (key != "evaluation" ? (
-                    <td key={key}>{row[key]}</td>
-                  ) : (
-                    <td key={key}>
-                      <i
-                        className={
-                          row[key] === "Loše"
-                            ? "fas fa-exclamation-circle redIcon"
-                            : row[key] === "Nije loše"
-                            ? "fas fa-exclamation-circle orangeIcon"
-                            : row[key] === "Dobro"
-                            ? "far fa-smile yellowGreenIcon"
-                            : "far fa-smile greenIcon"
-                        }
-                      ></i>
-                    </td>
-                  ))
+              {Object.keys(row).map((key, column) =>
+                column <= header.length // If the model has more data than should be shown in the table,
+                  ? // add that data at the end of the object's property list.
+                    // This condition ensures the extra data is not displayed in the table.
+                    key != "id" &&
+                    (key != "evaluation" ? (
+                      <td key={key}>{row[key]}</td>
+                    ) : (
+                      <td key={key}>
+                        <i
+                          className={
+                            row[key] === "Loše"
+                              ? "fas fa-exclamation-circle redIcon"
+                              : row[key] === "Nije loše"
+                              ? "fas fa-exclamation-circle orangeIcon"
+                              : row[key] === "Dobro"
+                              ? "far fa-smile yellowGreenIcon"
+                              : "far fa-smile greenIcon"
+                          }
+                        ></i>
+                      </td>
+                    ))
+                  : null
               )}
               {actions?.length ? (
                 <td>

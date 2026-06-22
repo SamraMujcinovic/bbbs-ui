@@ -86,6 +86,25 @@ textarea {
   font-weight: unset;
 }
 
+.billsDiv {
+  margin-bottom: 1rem;
+}
+
+.billsDivHeader {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0rem;
+}
+
+.billsDivHeader span {
+  font-weight: bold;
+  padding-top: 0.5rem;
+}
+
+.billsDivHeader button {
+  margin-right: 0rem;
+}
+
 /* =========================
    MOBILE RESPONSIVE
    ========================= */
