@@ -67,6 +67,8 @@ function VolunteerDetails() {
   const [volunteerOrganisation, setVolunteerOrganisation] = useState();
   const [volunteerCity, setVolunteerCity] = useState();
   const [registrationDate, setRegistrationDate] = useState();
+  const [reflection, setReflection] = useState(undefined);
+  const [error, setError] = useState("");
 
   const [childsCode, setChildsCode] = useState("");
 
@@ -185,6 +187,7 @@ function VolunteerDetails() {
     setVolunteerOrganisation(selectedVolunteer.volunteer_organisation);
     setVolunteerCity(selectedVolunteer.volunteer_city);
     setRegistrationDate(selectedVolunteer.registration_date);
+    setReflection(selectedVolunteer.reflection);
 
     setChildsCode(selectedVolunteer.child);
   };
@@ -242,6 +245,25 @@ function VolunteerDetails() {
 
   const onEmploymentStatusChange = (event) => {
     setVolunteerEmploymentStatus(event.target.value);
+  };
+
+  const onReflectionChange = (event) => {
+    const value = event.target.value;
+
+    const words = countWords(value);
+
+    setReflection(value);
+
+    if (words > 100) {
+      setError("Maksimalno 100 riječi.");
+    } else {
+      setError("");
+    }
+  };
+
+  const countWords = (text) => {
+    if (!text) return 0;
+    return text.trim().split(/\s+/).filter(Boolean).length;
   };
 
   var str2bool = (value) => {
@@ -373,6 +395,7 @@ function VolunteerDetails() {
       employment_status: volunteerEmploymentStatus,
       good_conduct_certificate: volunteerGoodConductCertificate,
       status: volunteerStatus,
+      reflection: reflection,
       coordinator:
         volunteerCoordinator && volunteerCoordinator.length > 0
           ? volunteerCoordinator[0].id
@@ -916,6 +939,24 @@ function VolunteerDetails() {
               <label>Student/ica</label>
             </div>
           </div>
+        </div>
+        <div className="form-group">
+          <label className="title">
+            Osvrt koordinatora na volonterski angažman i odnos sa djetetom na
+            kraju ciklusa
+          </label>
+
+          <textarea
+            id="reflectionid"
+            name="reflection"
+            value={reflection}
+            onChange={onReflectionChange}
+            rows={6}
+            className="form-control"
+          />
+          {error && (
+            <div style={{ color: "red", marginTop: "5px" }}>{error}</div>
+          )}
         </div>
         {isEditMode ? (
           <div className="formDiv">

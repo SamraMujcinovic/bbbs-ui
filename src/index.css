@@ -1,5 +1,4 @@
 input[type="radio"] {
-  transform: none !important;
-  position: relative;
-  z-index: 1;
+  width: auto;
+  flex: 0 0 auto;
 }

@@ -72,6 +72,9 @@ function ChildDetails() {
   const [childsDevelopmentalDifficulties, setChildsDevelopmentalDifficulties] =
     useState([]);
 
+  const [reflection, setReflection] = useState(undefined);
+  const [error, setError] = useState("");
+
   // data to select
   const [coordinators, setCoordinators] = useState([]);
   const [volunteers, setVolunteers] = useState([]);
@@ -376,6 +379,8 @@ function ChildDetails() {
       setSomethingElseTextBox(selectedChild.something_else);
       setShowSomethingElseTextBox(true);
     }
+
+    setReflection(selectedChild.reflection);
   };
 
   // on event change methods
@@ -405,6 +410,25 @@ function ChildDetails() {
 
   const onVaccinationStatusChange = (event) => {
     setVaccinationStatus(str2bool(event.target.value));
+  };
+
+  const onReflectionChange = (event) => {
+    const value = event.target.value;
+
+    const words = countWords(value);
+
+    setReflection(value);
+
+    if (words > 100) {
+      setError("Maksimalno 100 riječi.");
+    } else {
+      setError("");
+    }
+  };
+
+  const countWords = (text) => {
+    if (!text) return 0;
+    return text.trim().split(/\s+/).filter(Boolean).length;
   };
 
   var str2bool = (value) => {
@@ -657,6 +681,7 @@ function ChildDetails() {
       active_pup: activePUP,
       passive_pup: passivePUP,
       child_potential: childPotential,
+      reflection: reflection,
       volunteer:
         childsVolunteer && childsVolunteer.length > 0
           ? childsVolunteer[0].id
@@ -1234,6 +1259,25 @@ function ChildDetails() {
               onChange={onChildPotentialChange}
             />
           </div>
+        </div>
+
+        <div className="formDiv">
+          <label className="title">
+            Osvrt koordinatora na napredak djeteta i odnos sa volonterom na
+            kraju ciklusa
+          </label>
+
+          <textarea
+            id="reflectionid"
+            name="reflection"
+            value={reflection}
+            onChange={onReflectionChange}
+            rows={6}
+            className="form-control"
+          />
+          {error && (
+            <div style={{ color: "red", marginTop: "5px" }}>{error}</div>
+          )}
         </div>
 
         <div className="buttons">
